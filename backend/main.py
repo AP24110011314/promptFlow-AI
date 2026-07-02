@@ -14,6 +14,7 @@ from app.ml_engine.classifier import ml_classifier
 from app.ml_engine.summarizer import summarizer
 
 def seed_initial_data():
+    Base.metadata.create_all(bind=engine)
     db = SessionLocal()
     try:
         # 1. Seed Users

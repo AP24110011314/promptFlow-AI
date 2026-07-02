@@ -187,14 +187,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   paddingAngle={4}
                   dataKey="count"
                   nameKey="category"
-                  label={({ x, y, textAnchor, name, percent }: any) => (
+                  label={({ x, y, textAnchor, name, percent, fill }: any) => (
                     <text
                       x={x}
                       y={y}
-                      fill="#98989D"
+                      fill={fill}
                       textAnchor={textAnchor}
                       dominantBaseline="central"
-                      className="text-[11px] font-bold fill-brand-gray"
+                      className="text-[12px] font-bold"
                     >
                       {`${name?.split(' ')[0]} (${((percent || 0) * 100).toFixed(0)}%)`}
                     </text>

@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+venv/
+env/
+*.db
+*.sqlite3
+storage/pdfs/*
+storage/exports/*
+!storage/pdfs/.gitkeep
+!storage/exports/.gitkeep
+
+# Node / Frontend
+node_modules/
+dist/
+build/
+*.log
+.env
+.DS_Store

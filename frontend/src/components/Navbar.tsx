@@ -61,13 +61,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <button
                   key={item.id}
                   onClick={() => setActiveTab(item.id)}
-                  className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 border ${
+                  className={`flex items-center space-x-1.5 px-3 py-2 rounded-lg text-xs lg:text-sm font-medium transition-all duration-200 border ${
                     isActive
                       ? 'bg-brand-cyan/10 text-brand-cyan border-brand-cyan/35 shadow-sm shadow-brand-cyan/5'
                       : 'text-brand-gray border-transparent hover:text-white hover:bg-brand-hover'
                   }`}
                 >
-                  <Icon className={`w-4 h-4 ${isActive ? 'text-brand-cyan' : 'text-brand-gray'}`} />
+                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-brand-cyan' : 'text-brand-gray'}`} />
                   <span>{item.label}</span>
                 </button>
               );
@@ -75,7 +75,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           </nav>
 
           {/* Theme & User Status & Role Switcher */}
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3 ml-4 md:ml-6 lg:ml-8 pl-4 border-l border-brand-border">
             {/* Theme Toggle Button */}
             <button
               onClick={onToggleTheme}

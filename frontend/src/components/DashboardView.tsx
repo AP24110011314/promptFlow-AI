@@ -182,13 +182,24 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   data={analytics.by_category}
                   cx="50%"
                   cy="50%"
-                  innerRadius={50}
-                  outerRadius={80}
+                  innerRadius={42}
+                  outerRadius={68}
                   paddingAngle={4}
                   dataKey="count"
                   nameKey="category"
-                  label={({ name, percent }: any) => `${name?.split(' ')[0]} (${((percent || 0) * 100).toFixed(0)}%)`}
-                  labelLine={false}
+                  label={({ x, y, textAnchor, name, percent }: any) => (
+                    <text
+                      x={x}
+                      y={y}
+                      fill="#98989D"
+                      textAnchor={textAnchor}
+                      dominantBaseline="central"
+                      className="text-[9px] font-bold fill-brand-gray"
+                    >
+                      {`${name?.split(' ')[0]} (${((percent || 0) * 100).toFixed(0)}%)`}
+                    </text>
+                  )}
+                  labelLine={{ stroke: '#2C2C2E', strokeWidth: 1 }}
                 >
                   {analytics.by_category.map((_, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />

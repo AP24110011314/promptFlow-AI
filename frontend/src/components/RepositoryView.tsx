@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Search, FileSpreadsheet, FileText, Upload, BookOpen, Users, ExternalLink, Trash2, X, CheckCircle2, AlertCircle, Sparkles } from 'lucide-react';
 import type { ResearchPaper, Category, User } from '../types';
-import { paperService, exportService } from '../services/api';
+import { paperService, exportService, SERVER_BASE_URL } from '../services/api';
 
 interface RepositoryViewProps {
   papers: ResearchPaper[];
@@ -373,7 +373,7 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
                 </button>
                 {selectedPaper.pdf_url && (
                   <a
-                    href={`http://localhost:8000${selectedPaper.pdf_url}`}
+                    href={`${SERVER_BASE_URL}${selectedPaper.pdf_url}`}
                     target="_blank"
                     rel="noreferrer"
                     className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-500 text-white font-semibold text-xs shadow-lg hover:from-indigo-500 hover:to-cyan-400 transition-all flex items-center space-x-2"

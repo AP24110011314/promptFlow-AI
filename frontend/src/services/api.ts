@@ -1,7 +1,8 @@
 import axios from 'axios';
 import type { AuthResponse, ResearchPaper, Category, EmailLog, DashboardAnalytics, User } from '../types';
 
-const API_BASE_URL = 'http://localhost:8000/api/v1';
+export const SERVER_BASE_URL = import.meta.env.VITE_SERVER_URL || (import.meta.env.DEV ? 'http://localhost:8000' : '');
+const API_BASE_URL = import.meta.env.VITE_API_URL || `${SERVER_BASE_URL}/api/v1`;
 
 const api = axios.create({
   baseURL: API_BASE_URL,

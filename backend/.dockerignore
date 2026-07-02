@@ -1,0 +1,16 @@
+venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+storage/pdfs/*
+storage/exports/*
+!storage/pdfs/.gitkeep
+!storage/exports/.gitkeep
+.git
+.gitignore
+README.md
+GEMINI.md

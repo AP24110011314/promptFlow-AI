@@ -59,7 +59,21 @@ graph TD
 
 ---
 
-## 🚀 Getting Started (Local Development)
+## 🐳 Quick Start with Docker (Recommended for Easy Setup)
+
+You can launch the entire stack (FastAPI Backend + Scikit-Learn ML Engine + React Frontend + Nginx Reverse Proxy) using Docker Compose:
+
+```bash
+# Launch both backend and frontend containers in detached mode
+docker compose up --build -d
+```
+> * **Interactive Web Application:** **[http://localhost:3000](http://localhost:3000)** (or `http://localhost:5173`)
+> * **API Swagger Documentation:** **[http://localhost:8000/docs](http://localhost:8000/docs)**
+> * *To stop containers:* `docker compose down`
+
+---
+
+## 💻 Manual Setup (Without Docker)
 
 ### Prerequisites
 * Linux / macOS / Windows

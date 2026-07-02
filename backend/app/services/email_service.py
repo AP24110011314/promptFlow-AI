@@ -1,0 +1,92 @@
+import os
+from sqlalchemy.orm import Session
+from app.models.paper import ResearchPaper
+from app.models.email_log import EmailIngestionLog
+from app.ml_engine.classifier import ml_classifier
+from app.ml_engine.extractor import paper_extractor
+from app.ml_engine.summarizer import summarizer
+from app.schemas.email import SimulateEmailRequest
+
+class EmailIngestionService:
+    def process_simulated_email(self, db: Session, req: SimulateEmailRequest, pdf_path: str = None) -> EmailIngestionLog:
+        """Processes an incoming simulated or real email through the ML classification and PDF extraction pipeline."""
+        # 1. Classify email relevance using ML model
+        classification_res = ml_classifier.classify_email_relevance(f"{req.subject} {req.body}")
+        score = classification_res["confidence"]
+        pred_class = classification_res["predicted_class"]
+        is_research = classification_res["is_research"]
+
+        log_entry = EmailIngestionLog(
+            sender=req.sender,
+            subject=req.subject,
+            body_snippet=req.body[:300] if req.body else "",
+            ml_classification_score=score,
+            ml_predicted_class=pred_class,
+            status="pending"
+        )
+        db.add(log_entry)
+        db.commit()
+        db.refresh(log_entry)
+
+        if not is_research:
+            log_entry.status = "rejected_spam"
+            log_entry.error_message = "ML Classifier determined this email is general chatter/spam, not a research publication."
+            db.commit()
+            return log_entry
+
+        try:
+            # 2. Extract paper metadata
+            if pdf_path and os.path.exists(pdf_path):
+                meta = paper_extractor.extract_from_pdf(pdf_path)
+            else:
+                # Parse metadata directly from email subject and body text
+                meta = paper_extractor.parse_text_metadata(req.body, req.body[:2000])
+                if req.department_hint and req.department_hint != "General":
+                    meta["department"] = req.department_hint
+                if req.subject and len(req.subject) > 5:
+                    meta["title"] = req.subject
+
+            # 3. Generate AI summary
+            ai_sum = summarizer.summarize(meta["abstract"], max_sentences=3)
+            meta["ai_summary"] = ai_sum
+
+            # 4. Create ResearchPaper database entry
+            paper = ResearchPaper(
+                title=meta["title"],
+                abstract=meta["abstract"],
+                authors_raw=meta["authors_raw"],
+                authors_list=meta["authors_list"],
+                department=meta["department"],
+                journal_or_conference=meta["journal_or_conference"],
+                publication_date=meta["publication_date"],
+                publication_year=meta["publication_year"],
+                doi=meta["doi"],
+                keywords_list=meta["keywords_list"],
+                categories_list=meta["categories_list"],
+                ml_confidence=meta["ml_confidence"],
+                ml_predicted_dept=meta["ml_predicted_dept"],
+                ai_summary=ai_sum,
+                pdf_filename=os.path.basename(pdf_path) if pdf_path else None,
+                pdf_url=f"/static/pdfs/{os.path.basename(pdf_path)}" if pdf_path else None,
+                email_source_subject=req.subject,
+                citation_count=1
+            )
+            db.add(paper)
+            db.commit()
+            db.refresh(paper)
+
+            # 5. Link paper to email log
+            log_entry.extracted_paper_id = paper.id
+            log_entry.status = "processed"
+            db.commit()
+            db.refresh(log_entry)
+            return log_entry
+
+        except Exception as e:
+            log_entry.status = "error"
+            log_entry.error_message = f"Error during extraction pipeline: {str(e)}"
+            db.commit()
+            db.refresh(log_entry)
+            return log_entry
+
+email_service = EmailIngestionService()

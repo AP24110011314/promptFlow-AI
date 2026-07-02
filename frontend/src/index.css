@@ -1,32 +1,48 @@
 @import "tailwindcss";
 
+@theme {
+  --color-brand-cyan: #00E5FF;
+  --color-brand-green: #32D74B;
+  --color-brand-red: #FF453A;
+  --color-brand-gray: #98989D;
+  --color-brand-bg: #121212;
+  --color-brand-card: #1E1E1E;
+  --color-brand-border: #2C2C2E;
+  --color-brand-hover: #252525;
+  --color-brand-alert-bg: #3A1C1C;
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
 @layer base {
   body {
-    @apply bg-slate-950 text-slate-100 font-sans antialiased selection:bg-indigo-500 selection:text-white;
-    background-image: 
-      radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
-      radial-gradient(at 100% 0%, rgba(6, 182, 212, 0.12) 0px, transparent 50%),
-      radial-gradient(at 50% 100%, rgba(139, 92, 246, 0.15) 0px, transparent 50%);
-    background-attachment: fixed;
+    @apply bg-brand-bg text-white font-sans antialiased selection:bg-brand-cyan selection:text-brand-bg;
     min-height: 100vh;
   }
 }
 
 @layer utilities {
-  .glass-card {
-    @apply bg-slate-900/70 backdrop-blur-xl border border-slate-800/80 shadow-2xl transition-all duration-300 hover:border-slate-700/80;
+  .watt-card {
+    @apply bg-brand-card rounded-2xl p-5 border border-brand-border transition-all duration-300 hover:border-brand-cyan/40 shadow-xl;
   }
   
-  .glass-panel {
-    @apply bg-slate-900/50 backdrop-blur-md border border-slate-800/60 shadow-lg;
+  .watt-alert {
+    @apply bg-brand-alert-bg text-brand-red border-l-4 border-brand-red p-4 rounded-r-lg;
   }
   
-  .glow-indigo {
-    box-shadow: 0 0 25px -5px rgba(99, 102, 241, 0.4);
+  .watt-metric {
+    @apply font-mono text-3xl font-bold tracking-tight text-brand-cyan;
   }
   
   .glow-cyan {
-    box-shadow: 0 0 25px -5px rgba(6, 182, 212, 0.4);
+    box-shadow: 0 0 25px -5px rgba(0, 229, 255, 0.35);
+  }
+  
+  .glow-green {
+    box-shadow: 0 0 25px -5px rgba(50, 215, 75, 0.35);
+  }
+  
+  .glow-red {
+    box-shadow: 0 0 25px -5px rgba(255, 69, 58, 0.35);
   }
 }
 
@@ -37,14 +53,14 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #0a0f1d;
+  background: #121212;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: #2C2C2E;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+  background: #3a3a3c;
 }

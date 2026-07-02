@@ -19,3 +19,6 @@ build/
 *.log
 .env
 .DS_Store
+
+# AI / Local Docs
+GEMINI.md

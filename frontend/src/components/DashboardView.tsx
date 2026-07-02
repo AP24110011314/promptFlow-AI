@@ -194,7 +194,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                       fill="#98989D"
                       textAnchor={textAnchor}
                       dominantBaseline="central"
-                      className="text-[9px] font-bold fill-brand-gray"
+                      className="text-[11px] font-bold fill-brand-gray"
                     >
                       {`${name?.split(' ')[0]} (${((percent || 0) * 100).toFixed(0)}%)`}
                     </text>

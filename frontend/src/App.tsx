@@ -14,6 +14,7 @@ export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [showLoginModal, setShowLoginModal] = useState<boolean>(true);
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
 
   // Data state
   const [papers, setPapers] = useState<ResearchPaper[]>([]);
@@ -23,8 +24,29 @@ export default function App() {
   const [selectedPaper, setSelectedPaper] = useState<ResearchPaper | null>(null);
 
   useEffect(() => {
+    // Load theme setting
+    const savedTheme = localStorage.getItem('crd_theme') as 'dark' | 'light' | null;
+    if (savedTheme) {
+      setTheme(savedTheme);
+      if (savedTheme === 'light') {
+        document.documentElement.classList.add('light-theme');
+      } else {
+        document.documentElement.classList.remove('light-theme');
+      }
+    }
     initAuthAndData();
   }, []);
+
+  const handleToggleTheme = () => {
+    const nextTheme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(nextTheme);
+    localStorage.setItem('crd_theme', nextTheme);
+    if (nextTheme === 'light') {
+      document.documentElement.classList.add('light-theme');
+    } else {
+      document.documentElement.classList.remove('light-theme');
+    }
+  };
 
   const initAuthAndData = async () => {
     const token = localStorage.getItem('crd_token');
@@ -100,6 +122,8 @@ export default function App() {
         setActiveTab={setActiveTab}
         onLogout={handleLogout}
         onSwitchRole={handleSwitchRole}
+        theme={theme}
+        onToggleTheme={handleToggleTheme}
       />
 
       {/* Main Container */}

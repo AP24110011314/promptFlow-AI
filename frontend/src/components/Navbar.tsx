@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, BarChart3, Mail, ShieldAlert, Layers, LogOut, User as UserIcon, RefreshCw, Zap } from 'lucide-react';
+import { BookOpen, BarChart3, Mail, ShieldAlert, Layers, LogOut, User as UserIcon, RefreshCw, Zap, Sun, Moon } from 'lucide-react';
 import type { User } from '../types';
 
 interface NavbarProps {
@@ -8,6 +8,8 @@ interface NavbarProps {
   setActiveTab: (tab: string) => void;
   onLogout: () => void;
   onSwitchRole: () => void;
+  theme: 'dark' | 'light';
+  onToggleTheme: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -16,6 +18,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   setActiveTab,
   onLogout,
   onSwitchRole,
+  theme,
+  onToggleTheme,
 }) => {
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: Layers },
@@ -70,8 +74,21 @@ export const Navbar: React.FC<NavbarProps> = ({
             })}
           </nav>
 
-          {/* User Status & Role Switcher */}
-          <div className="flex items-center space-x-4">
+          {/* Theme & User Status & Role Switcher */}
+          <div className="flex items-center space-x-3">
+            {/* Theme Toggle Button */}
+            <button
+              onClick={onToggleTheme}
+              title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
+              className="p-2 rounded-lg bg-brand-hover text-brand-gray hover:text-white border border-brand-border transition-all duration-200 cursor-pointer flex items-center justify-center"
+            >
+              {theme === 'dark' ? (
+                <Sun className="w-4 h-4 text-brand-cyan" />
+              ) : (
+                <Moon className="w-4 h-4 text-brand-cyan" />
+              )}
+            </button>
+
             {user ? (
               <div className="flex items-center space-x-3">
                 <div className="hidden lg:block text-right">
@@ -93,7 +110,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <button
                   onClick={onSwitchRole}
                   title="Switch Role (Test RBAC Admin vs Faculty)"
-                  className="p-2 rounded-lg bg-brand-hover text-brand-gray hover:text-white hover:bg-brand-border border border-brand-border transition-all duration-200 flex items-center space-x-1 text-xs"
+                  className="p-2 rounded-lg bg-brand-hover text-brand-gray hover:text-white hover:bg-brand-border border border-brand-border transition-all duration-200 flex items-center space-x-1 text-xs cursor-pointer"
                 >
                   <RefreshCw className="w-3.5 h-3.5 text-brand-cyan" />
                   <span className="hidden sm:inline font-medium">Switch Role</span>
@@ -102,7 +119,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <button
                   onClick={onLogout}
                   title="Sign Out"
-                  className="p-2 rounded-lg bg-brand-red/10 text-brand-red hover:bg-brand-red/20 border border-brand-red/20 transition-all duration-200"
+                  className="p-2 rounded-lg bg-brand-red/10 text-brand-red hover:bg-brand-red/20 border border-brand-red/20 transition-all duration-200 cursor-pointer"
                 >
                   <LogOut className="w-4 h-4" />
                 </button>

@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.api.endpoints import auth, papers, categories, emails, analytics, export, admin
+from app.api.endpoints import auth, papers, categories, emails, analytics, export, admin, chat
 
 api_router = APIRouter()
 api_router.include_router(auth.router, prefix="/auth", tags=["Authentication & RBAC"])
@@ -9,3 +9,5 @@ api_router.include_router(emails.router, prefix="/emails", tags=["Email Ingestio
 api_router.include_router(analytics.router, prefix="/analytics", tags=["Dashboard Analytics"])
 api_router.include_router(export.router, prefix="/export", tags=["Data Export (.xlsx & .pdf)"])
 api_router.include_router(admin.router, prefix="/admin", tags=["Admin Control Panel"])
+api_router.include_router(chat.router, prefix="/chat", tags=["Research Chat Assistant"])
+

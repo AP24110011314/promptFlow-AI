@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, BarChart3, Mail, ShieldAlert, Layers, LogOut, User as UserIcon, RefreshCw, Zap, Sun, Moon } from 'lucide-react';
+import { BookOpen, BarChart3, Mail, ShieldAlert, Layers, LogOut, User as UserIcon, RefreshCw, Zap, Sun, Moon, MessageSquare } from 'lucide-react';
 import type { User } from '../types';
 
 interface NavbarProps {
@@ -24,6 +24,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: Layers },
     { id: 'repository', label: 'Research Repository', icon: BookOpen },
+    { id: 'chat', label: 'AI Assistant', icon: MessageSquare },
     { id: 'simulation', label: 'ML Email Ingestion', icon: Mail },
     { id: 'analytics', label: 'Analytics & Network', icon: BarChart3 },
   ];

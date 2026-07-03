@@ -108,3 +108,22 @@ export interface DashboardAnalytics {
   top_authors: AuthorStats[];
   collaboration_network: NetworkData;
 }
+
+export interface ChatFilters {
+  title_keywords: string[];
+  authors: string[];
+  departments: string[];
+  years: number[];
+  categories: string[];
+  general_query?: string;
+}
+
+
+export interface ChatResponse {
+  is_academic_query: boolean;
+  rejection_reason?: string;
+  filters?: ChatFilters;
+  papers: ResearchPaper[];
+  response_text: string;
+}
+

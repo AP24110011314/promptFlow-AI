@@ -10,6 +10,9 @@ services:
     environment:
       - DATABASE_URL=sqlite:///./storage/crd_database.db
       - SECRET_KEY=crd_super_secret_jwt_key_2026_advanced_research_digest
+      - GEMINI_API_KEY
+      - OPENROUTER_API_KEY
+      - OPENROUTER_MODEL
     volumes:
       - ./backend/storage:/app/storage
     networks:

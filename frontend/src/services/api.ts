@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { AuthResponse, ResearchPaper, Category, EmailLog, DashboardAnalytics, User } from '../types';
+import type { AuthResponse, ResearchPaper, Category, EmailLog, DashboardAnalytics, User, ChatResponse } from '../types';
 
 export const SERVER_BASE_URL = import.meta.env.VITE_SERVER_URL || (import.meta.env.DEV ? 'http://localhost:8000' : '');
 const API_BASE_URL = import.meta.env.VITE_API_URL || `${SERVER_BASE_URL}/api/v1`;
@@ -123,6 +123,13 @@ export const adminService = {
   },
   retrainMl: async (): Promise<any> => {
     const res = await api.post('/admin/retrain-ml');
+    return res.data;
+  }
+};
+
+export const chatService = {
+  query: async (message: string): Promise<ChatResponse> => {
+    const res = await api.post('/chat/query', { message });
     return res.data;
   }
 };

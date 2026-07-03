@@ -6,6 +6,8 @@ import { RepositoryView } from './components/RepositoryView';
 import { EmailSimulationView } from './components/EmailSimulationView';
 import { AnalyticsView } from './components/AnalyticsView';
 import { AdminPanelView } from './components/AdminPanelView';
+import { ChatView } from './components/ChatView';
+import { PaperDetailModal } from './components/PaperDetailModal';
 import { authService, paperService, categoryService, emailService, analyticsService } from './services/api';
 import type { User, ResearchPaper, Category, EmailLog, DashboardAnalytics } from './types';
 import { Zap, ShieldAlert } from 'lucide-react';
@@ -166,6 +168,13 @@ export default function App() {
           />
         )}
 
+        {activeTab === 'chat' && (
+          <ChatView
+            user={user}
+            onSelectPaper={(p) => setSelectedPaper(p)}
+          />
+        )}
+
         {activeTab === 'simulation' && (
           <EmailSimulationView
             logs={logs}
@@ -198,6 +207,16 @@ export default function App() {
               You are currently signed in as a Faculty member without administrative privileges. Click the "Switch Role" button in the top navbar to switch to the Admin account.
             </p>
           </div>
+        )}
+
+        {/* Global Paper Detail Modal */}
+        {selectedPaper && activeTab !== 'repository' && (
+          <PaperDetailModal
+            paper={selectedPaper}
+            user={user}
+            onClose={() => setSelectedPaper(null)}
+            onDeleteSuccess={fetchAllData}
+          />
         )}
 
       </main>

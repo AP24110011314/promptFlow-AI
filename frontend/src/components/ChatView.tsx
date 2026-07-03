@@ -139,7 +139,7 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper }) => {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 pb-12 h-[650px]">
+    <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-20 h-[580px]">
       
       {/* Left Column: Guardrail Policy & Quick Suggestions */}
       <div className="lg:col-span-1 flex flex-col justify-between space-y-4 h-full">

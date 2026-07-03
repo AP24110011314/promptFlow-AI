@@ -139,49 +139,51 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper }) => {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-20 h-[580px]">
+    <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-32 h-[460px]">
       
       {/* Left Column: Guardrail Policy & Quick Suggestions */}
-      <div className="lg:col-span-1 flex flex-col justify-between space-y-4 h-full">
+      <div className="lg:col-span-1 flex flex-col justify-between space-y-3 h-full">
         
         {/* Guardrail Policy Info Box */}
-        <div className="bg-brand-card border border-brand-border rounded-2xl p-5 shadow-xl flex-1 flex flex-col">
-          <div className="flex items-center space-x-2 text-brand-red font-semibold text-sm mb-3">
-            <AlertTriangle className="w-4 h-4" />
-            <span>Assistant Guardrails</span>
-          </div>
-          
-          <p className="text-xs text-brand-gray leading-relaxed mb-4">
-            This chat interface is explicitly designed to query the College Research Digest database. It operates under strict academic parameters:
-          </p>
+        <div className="bg-brand-card border border-brand-border rounded-2xl p-4 shadow-xl flex-1 flex flex-col justify-between overflow-y-auto custom-scrollbar">
+          <div>
+            <div className="flex items-center space-x-2 text-brand-red font-semibold text-xs mb-2">
+              <AlertTriangle className="w-3.5 h-3.5" />
+              <span>Assistant Guardrails</span>
+            </div>
+            
+            <p className="text-[11px] text-brand-gray leading-relaxed mb-2.5">
+              This chat interface is explicitly designed to query the College Research Digest database. It operates under strict academic parameters:
+            </p>
 
-          <div className="space-y-3 text-[11px] text-brand-gray flex-1">
-            <div className="p-3.5 rounded-xl bg-brand-bg/50 border border-brand-border/60">
-              <strong className="text-white block mb-0.5">✅ Supported Topics</strong>
-              Searching for faculty papers, looking up specific authors, summarizing papers, and filtering by department/year.
-            </div>
-            <div className="p-3.5 rounded-xl bg-brand-red/5 border border-brand-red/15 text-brand-red/90">
-              <strong className="text-brand-red block mb-0.5">❌ Restricted Topics</strong>
-              General chat, coding help, email administrative tasks, exam structures, and non-academic knowledge. Unrelated questions will trigger immediate rejection.
+            <div className="space-y-2 text-[10px] text-brand-gray">
+              <div className="p-2.5 rounded-xl bg-brand-bg/50 border border-brand-border/60">
+                <strong className="text-white block mb-0.5">✅ Supported Topics</strong>
+                Searching for faculty papers, looking up specific authors, summarizing papers, and filtering by department/year.
+              </div>
+              <div className="p-2.5 rounded-xl bg-brand-red/5 border border-brand-red/15 text-brand-red/90">
+                <strong className="text-brand-red block mb-0.5">❌ Restricted Topics</strong>
+                General chat, coding help, email administrative tasks, exam structures, and non-academic knowledge. Unrelated questions will trigger immediate rejection.
+              </div>
             </div>
           </div>
           
-          <div className="mt-4 pt-3 border-t border-brand-border text-[10px] text-brand-gray/80 text-center font-sans">
+          <div className="mt-2 pt-2 border-t border-brand-border text-[9px] text-brand-gray/80 text-center font-sans">
             AI Engine: Gemini 3.5 Flash
           </div>
         </div>
 
         {/* Suggestions Box */}
-        <div className="bg-brand-card border border-brand-border rounded-2xl p-5 shadow-xl">
-          <h3 className="text-xs font-bold text-white uppercase tracking-wider mb-3 flex items-center">
+        <div className="bg-brand-card border border-brand-border rounded-2xl p-4 shadow-xl overflow-y-auto custom-scrollbar">
+          <h3 className="text-[11px] font-bold text-white uppercase tracking-wider mb-2 flex items-center">
             <HelpCircle className="w-3.5 h-3.5 mr-1.5 text-brand-cyan" /> Suggested Queries
           </h3>
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             {suggestions.map((s, idx) => (
               <button
                 key={idx}
                 onClick={() => handleSuggestionClick(s)}
-                className="w-full text-left p-2.5 rounded-xl bg-brand-bg hover:bg-brand-hover border border-brand-border text-[11px] text-brand-gray hover:text-brand-cyan transition-all flex items-start space-x-1.5 cursor-pointer group"
+                className="w-full text-left p-2 rounded-xl bg-brand-bg hover:bg-brand-hover border border-brand-border text-[10px] text-brand-gray hover:text-brand-cyan transition-all flex items-start space-x-1.5 cursor-pointer group"
               >
                 <ArrowRight className="w-3 h-3 text-brand-gray group-hover:text-brand-cyan shrink-0 mt-0.5" />
                 <span className="leading-snug">{s}</span>

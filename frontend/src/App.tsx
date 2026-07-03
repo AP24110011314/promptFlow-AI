@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Navbar } from './components/Navbar';
+import { Sidebar } from './components/Sidebar';
+import { TopHeader } from './components/TopHeader';
 import { LoginModal } from './components/LoginModal';
 import { DashboardView } from './components/DashboardView';
 import { RepositoryView } from './components/RepositoryView';
@@ -10,13 +11,14 @@ import { ChatView } from './components/ChatView';
 import { PaperDetailModal } from './components/PaperDetailModal';
 import { authService, paperService, categoryService, emailService, analyticsService } from './services/api';
 import type { User, ResearchPaper, Category, EmailLog, DashboardAnalytics } from './types';
-import { Zap, ShieldAlert } from 'lucide-react';
+import { ShieldAlert } from 'lucide-react';
 
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [showLoginModal, setShowLoginModal] = useState<boolean>(true);
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   // Data state
   const [papers, setPapers] = useState<ResearchPaper[]>([]);
@@ -26,7 +28,6 @@ export default function App() {
   const [selectedPaper, setSelectedPaper] = useState<ResearchPaper | null>(null);
 
   useEffect(() => {
-    // Load theme setting
     const savedTheme = localStorage.getItem('crd_theme') as 'dark' | 'light' | null;
     if (savedTheme) {
       setTheme(savedTheme);
@@ -97,14 +98,13 @@ export default function App() {
   };
 
   const handleSwitchRole = async () => {
-    // Quick toggle between Admin and Faculty accounts for testing RBAC
     const targetEmail = user?.role === 'admin' ? 'faculty@college.edu' : 'admin@college.edu';
     const targetPass = user?.role === 'admin' ? 'faculty123' : 'admin123';
     try {
       const res = await authService.login(targetEmail, targetPass);
       localStorage.setItem('crd_token', res.access_token);
       setUser(res.user);
-      if (res.user.role !== 'admin' && activeTab === 'admin') {
+      if (res.user.role !== 'admin' && (activeTab === 'admin' || activeTab === 'simulation')) {
         setActiveTab('dashboard');
       }
       fetchAllData();
@@ -114,130 +114,140 @@ export default function App() {
     }
   };
 
+  // Filter papers if searchQuery is entered
+  const filteredPapers = searchQuery.trim()
+    ? papers.filter((p) =>
+        p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (p.authors_raw && p.authors_raw.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (p.department && p.department.toLowerCase().includes(searchQuery.toLowerCase()))
+      )
+    : papers;
+
   return (
-    <div className="min-h-screen flex flex-col bg-brand-bg text-white selection:bg-brand-cyan selection:text-brand-bg">
+    <div className="min-h-screen flex bg-brand-bg text-white selection:bg-brand-cyan selection:text-white font-sans">
       
-      {/* Navigation */}
-      <Navbar
+      {/* Persistent Left Sidebar Navigation */}
+      <Sidebar
         user={user}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         onLogout={handleLogout}
         onSwitchRole={handleSwitchRole}
-        theme={theme}
-        onToggleTheme={handleToggleTheme}
+        onUserUpdate={(u) => setUser(u)}
       />
 
-      {/* Main Container */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+      {/* Main App Container (Center + Right Columns) */}
+      <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
         
-        {/* Quick System Status Bar */}
-        <div className="mb-6 py-2.5 px-4 rounded-xl bg-brand-card border border-brand-border flex flex-wrap items-center justify-between gap-2 text-xs text-brand-gray">
-          <div className="flex items-center space-x-2">
-            <span className="w-2 h-2 rounded-full bg-brand-green animate-ping inline-block" />
-            <span className="font-semibold text-white">Live ML Ingestion Pipeline Active</span>
-            <span>•</span>
-            <span>FastAPI Backend Connected</span>
-          </div>
-          <div className="flex items-center space-x-3">
-            <span className="text-brand-cyan font-semibold flex items-center">
-              <Zap className="w-3.5 h-3.5 mr-1 fill-brand-cyan" /> Scikit-Learn TF-IDF + Naive Bayes / Random Forest
-            </span>
-          </div>
-        </div>
+        {/* Top Header with Search & User Badge */}
+        <TopHeader
+          user={user}
+          theme={theme}
+          onToggleTheme={handleToggleTheme}
+          onSwitchRole={handleSwitchRole}
+          onSearch={(q) => setSearchQuery(q)}
+          onLogout={handleLogout}
+          onUserUpdate={(u) => setUser(u)}
+        />
 
-        {/* Dynamic Views */}
-        {activeTab === 'dashboard' && (
-          <DashboardView
-            analytics={analytics}
-            recentPapers={papers}
-            onSelectPaper={(p) => setSelectedPaper(p)}
-            onNavigateToRepo={() => setActiveTab('repository')}
-          />
-        )}
+        {/* Scrollable Content Area */}
+        <main className="flex-1 overflow-y-auto">
+          
+          {/* Dashboard View (3-column layout inside!) */}
+          {activeTab === 'dashboard' && (
+            <DashboardView
+              analytics={analytics}
+              recentPapers={filteredPapers}
+              onSelectPaper={(p) => setSelectedPaper(p)}
+              onNavigateToRepo={() => setActiveTab('repository')}
+              user={user}
+            />
+          )}
 
-        {activeTab === 'repository' && (
-          <RepositoryView
-            papers={papers}
-            categories={categories}
-            user={user}
-            onRefresh={fetchAllData}
-            onSelectPaper={(p) => setSelectedPaper(p)}
-            selectedPaper={selectedPaper}
-            onCloseModal={() => setSelectedPaper(null)}
-          />
-        )}
-
-        {activeTab === 'chat' && (
-          <ChatView
-            user={user}
-            onSelectPaper={(p) => setSelectedPaper(p)}
-          />
-        )}
-
-        {activeTab === 'simulation' && (
-          <EmailSimulationView
-            logs={logs}
-            onRefreshLogs={async () => {
-              const l = await emailService.getLogs(20);
-              setLogs(l);
-            }}
-            onPaperIngested={fetchAllData}
-          />
-        )}
-
-        {activeTab === 'analytics' && (
-          <AnalyticsView analytics={analytics} />
-        )}
-
-        {activeTab === 'admin' && user?.role === 'admin' && (
-          <AdminPanelView
-            categories={categories}
-            onRefreshCategories={fetchAllData}
-          />
-        )}
-
-        {activeTab === 'admin' && user?.role !== 'admin' && (
-          <div className="bg-brand-card rounded-2xl p-12 text-center border border-brand-red/30 max-w-lg mx-auto my-12">
-            <div className="w-12 h-12 rounded-xl bg-brand-red/10 text-brand-red flex items-center justify-center mx-auto mb-3">
-              <ShieldAlert className="w-6 h-6 animate-pulse" />
+          {/* Repository View */}
+          {activeTab === 'repository' && (
+            <div className="p-6 sm:p-8 max-w-7xl mx-auto">
+              <RepositoryView
+                papers={filteredPapers}
+                categories={categories}
+                user={user}
+                onRefresh={fetchAllData}
+                onSelectPaper={(p) => setSelectedPaper(p)}
+                selectedPaper={selectedPaper}
+                onCloseModal={() => setSelectedPaper(null)}
+              />
             </div>
-            <h3 className="text-lg font-bold text-white">Access Denied (RBAC Protected)</h3>
-            <p className="text-xs text-brand-gray mt-2 leading-relaxed">
-              You are currently signed in as a Faculty member without administrative privileges. Click the "Switch Role" button in the top navbar to switch to the Admin account.
-            </p>
-          </div>
-        )}
+          )}
 
-        {/* Global Paper Detail Modal */}
-        {selectedPaper && activeTab !== 'repository' && (
-          <PaperDetailModal
-            paper={selectedPaper}
-            user={user}
-            onClose={() => setSelectedPaper(null)}
-            onDeleteSuccess={fetchAllData}
-          />
-        )}
+          {/* AI Assistant Chat View */}
+          {activeTab === 'chat' && (
+            <div className="p-6 sm:p-8 max-w-5xl mx-auto">
+              <ChatView
+                user={user}
+                onSelectPaper={(p) => setSelectedPaper(p)}
+              />
+            </div>
+          )}
 
-      </main>
+          {/* Email Simulation View (Admin Only) */}
+          {activeTab === 'simulation' && user?.role === 'admin' && (
+            <div className="p-6 sm:p-8 max-w-7xl mx-auto">
+              <EmailSimulationView
+                logs={logs}
+                onRefreshLogs={async () => {
+                  const l = await emailService.getLogs(20);
+                  setLogs(l);
+                }}
+                onPaperIngested={fetchAllData}
+              />
+            </div>
+          )}
 
-      {/* Footer */}
-      <footer className="border-t border-brand-border bg-brand-card/50 py-6 mt-12 text-center text-xs text-brand-gray">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div>
-            <strong className="text-white font-semibold">CRD System</strong> — Automated Research Publication Tracking and Management System
-          </div>
-          <div className="flex items-center space-x-4">
-            <span>FastAPI + Scikit-Learn</span>
-            <span>•</span>
-            <span>Vite + React 19 + Tailwind v4</span>
-            <span>•</span>
-            <span>PyMuPDF + Extractive NLP</span>
-          </div>
-        </div>
-      </footer>
+          {/* Analytics View */}
+          {activeTab === 'analytics' && (
+            <div className="p-6 sm:p-8 max-w-7xl mx-auto">
+              <AnalyticsView analytics={analytics} />
+            </div>
+          )}
 
-      {/* Login / Role Selection Modal */}
+          {/* Admin Panel View */}
+          {activeTab === 'admin' && user?.role === 'admin' && (
+            <div className="p-6 sm:p-8 max-w-7xl mx-auto">
+              <AdminPanelView
+                categories={categories}
+                onRefreshCategories={fetchAllData}
+              />
+            </div>
+          )}
+
+          {activeTab === 'admin' && user?.role !== 'admin' && (
+            <div className="p-6 sm:p-8 max-w-xl mx-auto my-12">
+              <div className="bg-brand-card rounded-2xl p-8 text-center border border-brand-red/30 shadow-sm">
+                <div className="w-12 h-12 rounded-xl bg-brand-red/10 text-brand-red flex items-center justify-center mx-auto mb-4">
+                  <ShieldAlert className="w-6 h-6 animate-pulse" />
+                </div>
+                <h3 className="text-lg font-bold text-white">Access Denied (RBAC Protected)</h3>
+                <p className="text-xs text-brand-gray mt-2 leading-relaxed">
+                  You are currently signed in as a Faculty member without administrative privileges. Use the "Switch Role" button in the top header to switch to the Admin account.
+                </p>
+              </div>
+            </div>
+          )}
+
+        </main>
+      </div>
+
+      {/* Global Paper Detail Modal */}
+      {selectedPaper && activeTab !== 'repository' && (
+        <PaperDetailModal
+          paper={selectedPaper}
+          user={user}
+          onClose={() => setSelectedPaper(null)}
+          onDeleteSuccess={fetchAllData}
+        />
+      )}
+
+      {/* Login Modal */}
       {showLoginModal && (
         <LoginModal onLoginSuccess={handleLoginSuccess} />
       )}

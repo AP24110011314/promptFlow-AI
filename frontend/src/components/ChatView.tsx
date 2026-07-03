@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageSquare, Send, Sparkles, AlertTriangle, Tag, FileText, ChevronRight, ChevronDown, HelpCircle, ArrowRight, CornerDownLeft } from 'lucide-react';
+import { MessageSquare, Send, Sparkles, AlertTriangle, Tag, FileText, ChevronRight, ChevronDown, HelpCircle, ArrowRight, CornerDownLeft, Trash2 } from 'lucide-react';
 import type { ResearchPaper, ChatResponse, User as UserType } from '../types';
 import { chatService, SERVER_BASE_URL } from '../services/api';
 
@@ -18,19 +18,62 @@ interface ChatViewProps {
 }
 
 export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper }) => {
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    {
-      id: 'welcome',
-      role: 'assistant',
-      text: `Hello ${user?.full_name || 'Professor'}. I am the CRD AI Research Assistant. You can ask me queries about research papers, authors, departments, or publication categories in natural language. How can I help you today?`,
-      timestamp: new Date()
+  const [messages, setMessages] = useState<ChatMessage[]>(() => {
+    const saved = sessionStorage.getItem('crd_chat_messages');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        return parsed.map((m: any) => ({
+          ...m,
+          timestamp: new Date(m.timestamp)
+        }));
+      } catch (e) {
+        console.error("Failed to parse saved chat messages", e);
+      }
     }
-  ]);
-  const [input, setInput] = useState('');
+    return [
+      {
+        id: 'welcome',
+        role: 'assistant',
+        text: `Hello ${user?.full_name || 'Professor'}. I am the CRD AI Research Assistant. You can ask me queries about research papers, authors, departments, or publication categories in natural language. How can I help you today?`,
+        timestamp: new Date()
+      }
+    ];
+  });
+  
+  const [input, setInput] = useState(() => {
+    return sessionStorage.getItem('crd_chat_input') || '';
+  });
+  
   const [loading, setLoading] = useState(false);
   const [expandedPaperId, setExpandedPaperId] = useState<number | null>(null);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Persist messages to sessionStorage
+  useEffect(() => {
+    sessionStorage.setItem('crd_chat_messages', JSON.stringify(messages));
+  }, [messages]);
+
+  // Persist draft input to sessionStorage
+  useEffect(() => {
+    sessionStorage.setItem('crd_chat_input', input);
+  }, [input]);
+
+  const handleClearChat = () => {
+    if (!window.confirm("Are you sure you want to clear your chat history?")) return;
+    const initialWelcome: ChatMessage = {
+      id: 'welcome',
+      role: 'assistant',
+      text: `Hello ${user?.full_name || 'Professor'}. I am the CRD AI Research Assistant. You can ask me queries about research papers, authors, departments, or publication categories in natural language. How can I help you today?`,
+      timestamp: new Date()
+    };
+    setMessages([initialWelcome]);
+    setInput('');
+    sessionStorage.removeItem('crd_chat_messages');
+    sessionStorage.removeItem('crd_chat_input');
+    setExpandedPaperId(null);
+  };
 
   const suggestions = [
     "What research has Dr. Eleanor Vance published?",
@@ -96,7 +139,7 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper }) => {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 pb-12 h-[calc(100vh-12rem)] min-h-[500px]">
+    <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 pb-12 h-[650px]">
       
       {/* Left Column: Guardrail Policy & Quick Suggestions */}
       <div className="lg:col-span-1 flex flex-col justify-between space-y-4 h-full">
@@ -166,6 +209,13 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper }) => {
               </p>
             </div>
           </div>
+          <button
+            onClick={handleClearChat}
+            className="px-3 py-1.5 rounded-lg bg-brand-red/10 text-brand-red hover:bg-brand-red/20 border border-brand-red/25 text-xs font-semibold transition-all cursor-pointer flex items-center space-x-1"
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Clear Chat</span>
+          </button>
         </div>
 
         {/* Chat Logs scrollable container */}

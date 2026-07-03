@@ -270,11 +270,11 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
 
       {/* Upload PDF Modal */}
       {showUploadModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-bg/85 backdrop-blur-md">
-          <div className="w-full max-w-lg bg-brand-card border border-brand-border rounded-2xl p-6 sm:p-8 relative shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60">
+          <div className="w-full max-w-lg bg-brand-card border border-brand-border rounded-3xl p-6 sm:p-8 relative shadow-2xl">
             <button
               onClick={() => setShowUploadModal(false)}
-              className="absolute right-5 top-5 p-2 rounded-xl bg-brand-bg text-brand-gray hover:text-white border border-brand-border cursor-pointer"
+              className="absolute right-6 top-6 p-2 rounded-xl bg-brand-bg text-brand-gray hover:text-white border border-brand-border cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>

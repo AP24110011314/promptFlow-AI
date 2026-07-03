@@ -1,50 +1,52 @@
 @import "tailwindcss";
 
 :root {
-  /* Dark Mode variables (default) */
-  --bg-primary: #121212;
-  --card-bg: #1E1E1E;
+  /* Dark Mode variables (default Apple Dark) */
+  --bg-primary: #0E0E10;
+  --card-bg: #1C1C1E;
   --card-border: #2C2C2E;
-  --text-primary: #FFFFFF;
-  --text-secondary: #98989D;
-  --accent-cyan: #00E5FF;
-  --accent-green: #32D74B;
-  --accent-red: #FF453A;
-  --alert-bg: #3A1C1C;
-  --hover-bg: #252525;
+  --text-primary: #F5F5F7;
+  --text-secondary: #86868B;
+  --accent-primary: #0A84FF;
+  --accent-secondary: #5E5CE6;
+  --accent-success: #30D158;
+  --accent-warning: #FF9F0A;
+  --alert-bg: #2C1D11;
+  --hover-bg: #28282B;
 }
 
 .light-theme {
-  /* Light Mode variables */
-  --bg-primary: #F4F5F7;
+  /* Light Mode variables (Apple System Light) */
+  --bg-primary: #F5F5F7;
   --card-bg: #FFFFFF;
   --card-border: #E5E7EB;
-  --text-primary: #0F172A;
-  --text-secondary: #64748B;
-  --accent-cyan: #0284C7;
-  --accent-green: #16A34A;
-  --accent-red: #DC2626;
-  --alert-bg: #FEE2E2;
-  --hover-bg: #F3F4F6;
+  --text-primary: #1D1D1F;
+  --text-secondary: #6E6E73;
+  --accent-primary: #0071E3;
+  --accent-secondary: #5856D6;
+  --accent-success: #34C759;
+  --accent-warning: #FF9500;
+  --alert-bg: #FFF3DC;
+  --hover-bg: #F0F0F2;
 }
 
 @theme {
   --color-white: var(--text-primary);
-  --color-brand-cyan: var(--accent-cyan);
-  --color-brand-green: var(--accent-green);
-  --color-brand-red: var(--accent-red);
+  --color-brand-cyan: var(--accent-primary);
+  --color-brand-green: var(--accent-success);
+  --color-brand-red: var(--accent-warning);
   --color-brand-gray: var(--text-secondary);
   --color-brand-bg: var(--bg-primary);
   --color-brand-card: var(--card-bg);
   --color-brand-border: var(--card-border);
   --color-brand-hover: var(--hover-bg);
   --color-brand-alert-bg: var(--alert-bg);
-  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 @layer base {
   body {
-    @apply bg-brand-bg text-white font-sans antialiased selection:bg-brand-cyan selection:text-brand-bg;
+    @apply bg-brand-bg text-white font-sans antialiased selection:bg-brand-cyan selection:text-white;
     min-height: 100vh;
     transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
   }
@@ -52,34 +54,30 @@
 
 @layer utilities {
   .watt-card {
-    @apply bg-brand-card rounded-2xl p-5 border border-brand-border transition-all duration-300 hover:border-brand-cyan/40 shadow-xl;
+    @apply bg-brand-card rounded-2xl p-6 border border-brand-border transition-all duration-200 hover:border-brand-gray/40 shadow-sm hover:shadow-md;
   }
   
   .watt-alert {
-    @apply bg-brand-alert-bg text-brand-red border-l-4 border-brand-red p-4 rounded-r-lg;
+    @apply bg-brand-alert-bg text-brand-red border-l-4 border-brand-red p-4 rounded-r-xl;
   }
   
   .watt-metric {
-    @apply font-mono text-3xl font-bold tracking-tight text-brand-cyan;
+    @apply font-sans text-3xl font-extrabold tracking-tight text-white;
   }
   
-  .glow-cyan {
-    box-shadow: 0 0 25px -5px rgba(0, 229, 255, 0.35);
+  .apple-shadow {
+    box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.08);
   }
   
-  .glow-green {
-    box-shadow: 0 0 25px -5px rgba(50, 215, 75, 0.35);
-  }
-  
-  .glow-red {
-    box-shadow: 0 0 25px -5px rgba(255, 69, 58, 0.35);
+  .apple-shadow-dark {
+    box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.4);
   }
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -88,9 +86,10 @@
 
 ::-webkit-scrollbar-thumb {
   background: var(--card-border);
-  border-radius: 4px;
+  border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--hover-bg);
+  background: var(--text-secondary);
 }
+

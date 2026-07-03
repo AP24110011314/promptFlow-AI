@@ -33,6 +33,10 @@ export const authService = {
   getMe: async (): Promise<User> => {
     const res = await api.get('/auth/me');
     return res.data;
+  },
+  updateMe: async (data: { full_name?: string; department?: string }): Promise<User> => {
+    const res = await api.put('/auth/me', data);
+    return res.data;
   }
 };
 

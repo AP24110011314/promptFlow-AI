@@ -4,7 +4,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.user import User
-from app.schemas.user import UserCreate, UserResponse, Token
+from app.schemas.user import UserCreate, UserUpdate, UserResponse, Token
 from app.core.security import verify_password, get_password_hash, create_access_token, get_current_user
 from app.config import settings
 
@@ -50,4 +50,14 @@ def login_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Ses
 
 @router.get("/me", response_model=UserResponse)
 def get_user_me(current_user: User = Depends(get_current_user)):
+    return current_user
+
+@router.put("/me", response_model=UserResponse)
+def update_user_me(user_in: UserUpdate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    if user_in.full_name is not None:
+        current_user.full_name = user_in.full_name
+    if user_in.department is not None:
+        current_user.department = user_in.department
+    db.commit()
+    db.refresh(current_user)
     return current_user

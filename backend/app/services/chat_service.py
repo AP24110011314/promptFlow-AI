@@ -154,18 +154,23 @@ class ChatAgentService:
             "Your sole job is to analyze the user's natural language query and convert it into structured search filters "
             "to query the SQL database. "
             "Apply strict guardrails: You ONLY handle queries related to academic research papers, publications, authors, departments, and categories. "
-            "If the query is administrative chatter, general chat (like 'how are you'), programming help, general knowledge, or unrelated, "
+            "If the query is administrative chatter, general chat, programming help, general knowledge, or unrelated, "
             "set is_academic_query to false and provide a polite rejection reason explaining what you can do. "
-            "Respond ONLY with a JSON object matching this schema: "
+            "CRITICAL Exclusivity Rules:\n"
+            "- Author names (like 'Robert Langdon') must go ONLY into 'authors'. NEVER place author names in 'categories', 'departments', 'title_keywords', or 'general_query'.\n"
+            "- 'categories' should ONLY contain valid category names (e.g. 'Artificial Intelligence', 'Quantum Computing', 'Nanotechnology & Materials', 'Genomics & CRISPR', 'Renewable Energy & Evs', 'Cybersecurity & Cloud', '6G & Wireless Tech', 'Financial Econometrics'). Never place authors or years here.\n"
+            "- 'departments' should ONLY contain valid academic departments (e.g. 'Computer Science', 'Physics', 'Chemistry', 'Biotechnology', 'Mechanical Engineering', 'Electrical Engineering', 'Mathematics', 'Economics & Finance').\n"
+            "- Years must go ONLY into 'years'.\n"
+            "Respond ONLY with a JSON object matching this schema:\n"
             "{\n"
             "  \"is_academic_query\": bool,\n"
             "  \"rejection_reason\": str (empty if academic),\n"
             "  \"filters\": {\n"
             "    \"title_keywords\": [str] (keywords from query to search in title/abstract),\n"
             "    \"authors\": [str] (author names mentioned),\n"
-            "    \"departments\": [str] (departments mentioned, e.g., 'Computer Science', 'Physics', 'Chemistry', 'Biotechnology', 'Mechanical Engineering', 'Electrical Engineering', 'Mathematics', 'Economics & Finance'),\n"
-            "    \"years\": [int] (years mentioned, e.g. 2025, 2026),\n"
-            "    \"categories\": [str] (categories/keywords mentioned, e.g. 'Artificial Intelligence', 'Quantum Computing', 'Nanotechnology & Materials', 'Genomics & CRISPR', 'Renewable Energy & Evs', 'Cybersecurity & Cloud', '6G & Wireless Tech', 'Financial Econometrics'),\n"
+            "    \"departments\": [str] (departments mentioned),\n"
+            "    \"years\": [int] (years mentioned),\n"
+            "    \"categories\": [str] (categories/keywords mentioned),\n"
             "    \"general_query\": str (broad query if it is a general descriptive question)\n"
             "  }\n"
             "}"
@@ -251,8 +256,10 @@ class ChatAgentService:
             prompt = (
                 f"The user asked: '{user_query}'\n"
                 f"We searched the database with filters: {json.dumps(filters)} and found 0 matching research papers.\n"
-                "Please write a polite, professional response explaining that no papers were found matching their search. "
-                "Suggest that they try broader keywords, check different authors, or browse the repository tabs."
+                "Write a short, concise, direct response stating that no publications were found matching their search. "
+                "Suggest that they try different keywords, browse the repository, or verify the author's spelling. "
+                "CRITICAL: Do NOT use email headers, subject lines, greetings ('Dear Professor', 'Dear User'), or sign-offs ('Best regards', 'Sincerely'). "
+                "Keep the response direct and under 2-3 sentences."
             )
             return self._call_llm(prompt)
             
@@ -263,22 +270,21 @@ class ChatAgentService:
                 "authors": p.authors_raw,
                 "department": p.department,
                 "year": p.publication_year,
-                "doi": p.doi,
-                "summary": p.ai_summary or p.abstract[:200] + "..."
+                "summary": p.ai_summary or p.abstract[:150] + "..."
             })
             
         system_instruction = (
             "You are the CRD (College Research Digest) AI Assistant. "
-            "Your task is to summarize the database search results for the professor in a polite, scholarly, and structured manner. "
-            "Present a brief overview of the papers found. Do not write extremely long paragraphs. Use clear bullet points if helpful."
+            "Your task is to write a short, concise, and direct natural language response summarizing the search result. "
+            "CRITICAL: Do NOT write an email. Do NOT use email formatting, headers, subject lines, greetings (e.g. 'Dear Professor', 'Hello Dr.'), or sign-offs (e.g. 'Best regards', 'Sincerely'). "
+            "Describe what publications were found directly and briefly. Keep it under 3-4 sentences total."
         )
         
         prompt = (
             f"The user query: '{user_query}'\n"
             f"Database search returned the following {len(papers)} papers:\n"
             f"{json.dumps(papers_context, indent=2)}\n\n"
-            "Please provide a natural, professional response summarizing these findings for the professor. "
-            "Be clear, precise, and refer to authors and papers by name."
+            "Please provide a direct, short, and concise response summarizing these findings. Do not include email structure."
         )
         
         return self._call_llm(prompt, system_instruction=system_instruction)

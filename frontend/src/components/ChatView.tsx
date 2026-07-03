@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageSquare, Send, Sparkles, AlertTriangle, Tag, FileText, ChevronRight, HelpCircle, ArrowRight, CornerDownLeft } from 'lucide-react';
+import { MessageSquare, Send, Sparkles, AlertTriangle, Tag, FileText, ChevronRight, ChevronDown, HelpCircle, ArrowRight, CornerDownLeft } from 'lucide-react';
 import type { ResearchPaper, ChatResponse, User as UserType } from '../types';
-import { chatService } from '../services/api';
+import { chatService, SERVER_BASE_URL } from '../services/api';
 
 interface ChatMessage {
   id: string;
@@ -28,6 +28,7 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper }) => {
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [expandedPaperId, setExpandedPaperId] = useState<number | null>(null);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -269,27 +270,100 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper }) => {
                         <FileText className="w-3.5 h-3.5 mr-1 text-brand-cyan" /> Structured Database Matches ({msg.response.papers.length}):
                       </div>
                       <div className="space-y-2">
-                        {msg.response.papers.map((paper) => (
-                          <div 
-                            key={paper.id}
-                            onClick={() => onSelectPaper(paper)}
-                            className="p-3 rounded-xl bg-brand-bg hover:bg-brand-hover border border-brand-border hover:border-brand-cyan/40 transition-all cursor-pointer flex items-center justify-between group"
-                          >
-                            <div className="text-left max-w-[88%] space-y-1">
-                              <span className="text-[11px] font-bold text-white group-hover:text-brand-cyan line-clamp-1 leading-normal transition-colors">
-                                {paper.title}
-                              </span>
-                              <div className="flex items-center space-x-2 text-[9px] text-brand-gray">
-                                <span className="font-medium text-white/80">{paper.authors_raw || paper.authors_list.join(", ")}</span>
-                                <span>•</span>
-                                <span>{paper.department}</span>
-                                <span>•</span>
-                                <span className="font-mono">{paper.publication_year}</span>
-                              </div>
+                        {msg.response.papers.map((paper) => {
+                          const isExpanded = expandedPaperId === paper.id;
+                          return (
+                            <div 
+                              key={paper.id}
+                              className="border border-brand-border rounded-xl overflow-hidden bg-brand-bg/40 hover:bg-brand-bg/60 transition-all"
+                            >
+                              {/* Accordion Header */}
+                              <button
+                                onClick={() => setExpandedPaperId(isExpanded ? null : paper.id)}
+                                className="w-full p-3 text-left flex items-center justify-between hover:text-brand-cyan transition-colors cursor-pointer group"
+                              >
+                                <div className="max-w-[88%] space-y-1">
+                                  <span className="text-[11px] font-bold text-white block group-hover:text-brand-cyan line-clamp-1 leading-normal transition-colors">
+                                    {paper.title}
+                                  </span>
+                                  <div className="flex items-center space-x-2 text-[9px] text-brand-gray">
+                                    <span className="font-medium text-white/80">{paper.authors_raw || paper.authors_list.join(", ")}</span>
+                                    <span>•</span>
+                                    <span>{paper.department}</span>
+                                    <span>•</span>
+                                    <span className="font-mono">{paper.publication_year}</span>
+                                  </div>
+                                </div>
+                                {isExpanded ? (
+                                  <ChevronDown className="w-4 h-4 text-brand-cyan transform rotate-180 transition-all shrink-0" />
+                                ) : (
+                                  <ChevronRight className="w-4 h-4 text-brand-gray group-hover:text-brand-cyan transition-all shrink-0" />
+                                )}
+                              </button>
+                              
+                              {/* Accordion Body */}
+                              {isExpanded && (
+                                <div className="px-4 pb-4 pt-2 border-t border-brand-border/40 space-y-3 bg-brand-card/30 text-xs">
+                                  {/* AI Summary Card */}
+                                  <div className="p-3 rounded-xl bg-brand-bg/60 border-l-3 border-brand-cyan text-[11px] leading-relaxed italic text-white/95 font-sans">
+                                    <span className="text-brand-cyan font-bold block not-italic text-[10px] uppercase tracking-wider mb-1 flex items-center">
+                                      <Sparkles className="w-3.5 h-3.5 mr-1" /> AI Summary
+                                    </span>
+                                    “{paper.ai_summary || paper.abstract}”
+                                  </div>
+                                  
+                                  {/* Key Metadata Table */}
+                                  <div className="grid grid-cols-2 gap-2 text-[10px]">
+                                    <div className="p-2 rounded bg-brand-bg/40 border border-brand-border/60">
+                                      <span className="text-brand-gray block text-[8px] uppercase font-bold">Journal / Conference</span>
+                                      <span className="text-white truncate block">{paper.journal_or_conference || 'N/A'}</span>
+                                    </div>
+                                    <div className="p-2 rounded bg-brand-bg/40 border border-brand-border/60">
+                                      <span className="text-brand-gray block text-[8px] uppercase font-bold">DOI</span>
+                                      <span className="text-white font-mono truncate block">{paper.doi || 'N/A'}</span>
+                                    </div>
+                                    <div className="p-2 rounded bg-brand-bg/40 border border-brand-border/60">
+                                      <span className="text-brand-gray block text-[8px] uppercase font-bold">Citations</span>
+                                      <span className="text-brand-green font-mono font-bold block">{paper.citation_count} citations</span>
+                                    </div>
+                                    <div className="p-2 rounded bg-brand-bg/40 border border-brand-border/60">
+                                      <span className="text-brand-gray block text-[8px] uppercase font-bold">ML Confidence</span>
+                                      <span className="text-brand-cyan font-mono font-bold block">{(paper.ml_confidence * 100).toFixed(1)}%</span>
+                                    </div>
+                                  </div>
+                                  
+                                  {/* Abstract */}
+                                  <div>
+                                    <span className="text-[9px] font-bold text-brand-gray uppercase tracking-wider block mb-1">Full Abstract:</span>
+                                    <p className="text-[10px] text-brand-gray leading-normal bg-brand-bg/30 p-2.5 rounded border border-brand-border/50 max-h-24 overflow-y-auto custom-scrollbar font-sans">
+                                      {paper.abstract || 'No abstract text available.'}
+                                    </p>
+                                  </div>
+                                  
+                                  {/* Action Buttons */}
+                                  <div className="flex items-center justify-end space-x-2 pt-2 border-t border-brand-border/20">
+                                    <button
+                                      onClick={() => onSelectPaper(paper)}
+                                      className="px-2.5 py-1 rounded bg-brand-bg hover:bg-brand-hover text-white border border-brand-border text-[9px] font-semibold transition-all cursor-pointer"
+                                    >
+                                      View Full Metadata
+                                    </button>
+                                    {paper.pdf_url && (
+                                      <a
+                                        href={`${SERVER_BASE_URL}${paper.pdf_url}`}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="px-2.5 py-1.5 rounded bg-brand-cyan/20 hover:bg-brand-cyan/35 border border-brand-cyan/30 text-brand-cyan text-[9px] font-bold transition-all flex items-center space-x-1 cursor-pointer"
+                                      >
+                                        <span>View PDF</span>
+                                      </a>
+                                    )}
+                                  </div>
+                                </div>
+                              )}
                             </div>
-                            <ChevronRight className="w-4 h-4 text-brand-gray group-hover:text-brand-cyan transition-all transform group-hover:translate-x-0.5" />
-                          </div>
-                        ))}
+                          );
+                        })}
                       </div>
                     </div>
                   )}

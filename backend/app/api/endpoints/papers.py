@@ -14,7 +14,7 @@ from app.config import settings
 
 router = APIRouter()
 
-@router.get("/", response_model=List[ResearchPaperResponse])
+@router.get("", response_model=List[ResearchPaperResponse])
 def list_papers(
     query: Optional[str] = None,
     department: Optional[str] = None,

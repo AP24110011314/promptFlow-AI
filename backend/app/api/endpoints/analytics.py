@@ -9,7 +9,7 @@ from app.schemas.analytics import DashboardAnalyticsResponse, DeptStats, YearSta
 
 router = APIRouter()
 
-@router.get("/", response_model=DashboardAnalyticsResponse)
+@router.get("", response_model=DashboardAnalyticsResponse)
 def get_dashboard_analytics(db: Session = Depends(get_db)):
     papers = db.query(ResearchPaper).all()
     total_papers = len(papers)

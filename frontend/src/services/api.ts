@@ -48,7 +48,7 @@ export const paperService = {
     if (filters?.author) params.author = filters.author;
     if (filters?.category && filters.category !== 'All') params.category = filters.category;
     if (filters?.year) params.year = filters.year;
-    const res = await api.get('/papers/', { params });
+    const res = await api.get('/papers', { params });
     return res.data;
   },
   getById: async (id: number): Promise<ResearchPaper> => {
@@ -72,11 +72,11 @@ export const paperService = {
 
 export const categoryService = {
   list: async (): Promise<Category[]> => {
-    const res = await api.get('/categories/');
+    const res = await api.get('/categories');
     return res.data;
   },
   createCustom: async (name: string, description?: string): Promise<Category> => {
-    const res = await api.post('/categories/', { name, description, is_custom: true });
+    const res = await api.post('/categories', { name, description, is_custom: true });
     return res.data;
   },
   delete: async (id: number): Promise<any> => {
@@ -98,7 +98,7 @@ export const emailService = {
 
 export const analyticsService = {
   getDashboardData: async (): Promise<DashboardAnalytics> => {
-    const res = await api.get('/analytics/');
+    const res = await api.get('/analytics');
     return res.data;
   }
 };

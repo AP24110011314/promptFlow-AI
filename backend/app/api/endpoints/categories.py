@@ -9,11 +9,11 @@ from app.models.user import User
 
 router = APIRouter()
 
-@router.get("/", response_model=List[CategoryResponse])
+@router.get("", response_model=List[CategoryResponse])
 def list_categories(db: Session = Depends(get_db)):
     return db.query(Category).order_by(Category.name.asc()).all()
 
-@router.post("/", response_model=CategoryResponse)
+@router.post("", response_model=CategoryResponse)
 def create_custom_category(
     cat_in: CategoryCreate,
     db: Session = Depends(get_db),

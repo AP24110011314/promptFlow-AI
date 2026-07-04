@@ -1,5 +1,28 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageSquare, Send, Sparkles, AlertTriangle, Tag, FileText, ChevronRight, ChevronDown, HelpCircle, ArrowRight, CornerDownLeft, Trash2 } from 'lucide-react';
+import { 
+  Send, 
+  Sparkles, 
+  AlertTriangle, 
+  Tag, 
+  FileText, 
+  ChevronRight, 
+  ChevronDown, 
+  HelpCircle, 
+  Trash2, 
+  Plus, 
+  MessageCircle, 
+  History, 
+  PanelLeftClose, 
+  PanelLeft, 
+  Bot, 
+  User, 
+  BookOpen, 
+  Compass, 
+  Info, 
+  X, 
+  Database,
+  ExternalLink
+} from 'lucide-react';
 import type { ResearchPaper, ChatResponse, User as UserType } from '../types';
 import { chatService, SERVER_BASE_URL } from '../services/api';
 
@@ -12,83 +35,201 @@ interface ChatMessage {
   isError?: boolean;
 }
 
+interface ChatSession {
+  id: string;
+  title: string;
+  messages: ChatMessage[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 interface ChatViewProps {
   user: UserType | null;
   onSelectPaper: (paper: ResearchPaper) => void;
 }
 
 export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper }) => {
-  const [messages, setMessages] = useState<ChatMessage[]>(() => {
-    const saved = sessionStorage.getItem('crd_chat_messages');
-    if (saved) {
+  // Load sessions from localStorage or migrate legacy sessionStorage
+  const [sessions, setSessions] = useState<ChatSession[]>(() => {
+    const savedSessions = localStorage.getItem('crd_chat_sessions');
+    if (savedSessions) {
       try {
-        const parsed = JSON.parse(saved);
-        return parsed.map((m: any) => ({
+        const parsed = JSON.parse(savedSessions);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed.map((s: any) => ({
+            ...s,
+            createdAt: new Date(s.createdAt),
+            updatedAt: new Date(s.updatedAt),
+            messages: s.messages.map((m: any) => ({
+              ...m,
+              timestamp: new Date(m.timestamp)
+            }))
+          }));
+        }
+      } catch (e) {
+        console.error("Failed to parse saved chat sessions", e);
+      }
+    }
+    
+    // Check for legacy messages in sessionStorage
+    const legacyMessages = sessionStorage.getItem('crd_chat_messages');
+    let initialMessages: ChatMessage[] = [];
+    if (legacyMessages) {
+      try {
+        const parsed = JSON.parse(legacyMessages);
+        initialMessages = parsed.map((m: any) => ({
           ...m,
           timestamp: new Date(m.timestamp)
         }));
       } catch (e) {
-        console.error("Failed to parse saved chat messages", e);
+        console.error("Failed to parse legacy messages", e);
       }
     }
+
+    if (initialMessages.length === 0) {
+      initialMessages = [
+        {
+          id: 'welcome_init',
+          role: 'assistant',
+          text: `Hello ${user?.full_name || 'Professor'}. I am your CRD AI Research Assistant. You can ask me queries about research papers, authors, departments, or publication categories in natural language. How can I help you today?`,
+          timestamp: new Date()
+        }
+      ];
+    }
+
     return [
       {
-        id: 'welcome',
-        role: 'assistant',
-        text: `Hello ${user?.full_name || 'Professor'}. I am the CRD AI Research Assistant. You can ask me queries about research papers, authors, departments, or publication categories in natural language. How can I help you today?`,
-        timestamp: new Date()
+        id: 'default-session',
+        title: initialMessages.some(m => m.role === 'user') 
+          ? (initialMessages.find(m => m.role === 'user')?.text.slice(0, 32) + '...') || 'Research Inquiry'
+          : 'New Conversation',
+        messages: initialMessages,
+        createdAt: new Date(),
+        updatedAt: new Date()
       }
     ];
   });
-  
-  const [input, setInput] = useState(() => {
-    return sessionStorage.getItem('crd_chat_input') || '';
+
+  const [activeSessionId, setActiveSessionId] = useState<string>(() => {
+    const savedActiveId = localStorage.getItem('crd_active_chat_id');
+    return savedActiveId || 'default-session';
   });
-  
+
+  const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [expandedPaperId, setExpandedPaperId] = useState<number | null>(null);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [showGuardrailModal, setShowGuardrailModal] = useState(false);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  // Persist messages to sessionStorage
-  useEffect(() => {
-    sessionStorage.setItem('crd_chat_messages', JSON.stringify(messages));
-  }, [messages]);
-
-  // Persist draft input to sessionStorage
-  useEffect(() => {
-    sessionStorage.setItem('crd_chat_input', input);
-  }, [input]);
-
-  const handleClearChat = () => {
-    if (!window.confirm("Are you sure you want to clear your chat history?")) return;
-    const initialWelcome: ChatMessage = {
-      id: 'welcome',
-      role: 'assistant',
-      text: `Hello ${user?.full_name || 'Professor'}. I am the CRD AI Research Assistant. You can ask me queries about research papers, authors, departments, or publication categories in natural language. How can I help you today?`,
-      timestamp: new Date()
-    };
-    setMessages([initialWelcome]);
-    setInput('');
-    sessionStorage.removeItem('crd_chat_messages');
-    sessionStorage.removeItem('crd_chat_input');
-    setExpandedPaperId(null);
+  // Derive active session
+  const activeSession = sessions.find(s => s.id === activeSessionId) || sessions[0] || {
+    id: 'fallback',
+    title: 'New Conversation',
+    messages: [],
+    createdAt: new Date(),
+    updatedAt: new Date()
   };
 
-  const suggestions = [
-    "What research has Dr. Eleanor Vance published?",
-    "List all Computer Science publications from 2026.",
-    "Show papers related to CRISPR genome editing.",
-    "Are there any publications on electric vehicle battery thermal management?"
-  ];
+  const hasUserMessages = activeSession.messages.some(m => m.role === 'user');
+
+  // Sync to localStorage
+  useEffect(() => {
+    localStorage.setItem('crd_chat_sessions', JSON.stringify(sessions));
+  }, [sessions]);
+
+  useEffect(() => {
+    localStorage.setItem('crd_active_chat_id', activeSessionId);
+  }, [activeSessionId]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   useEffect(() => {
-    scrollToBottom();
-  }, [messages, loading]);
+    if (hasUserMessages) {
+      scrollToBottom();
+    }
+  }, [activeSession.messages, loading, hasUserMessages, activeSessionId]);
+
+  // Focus input when session changes or on initial render
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, [activeSessionId, hasUserMessages]);
+
+  const handleNewChat = () => {
+    const newId = 'session_' + Math.random().toString(36).substring(2, 9);
+    const newSession: ChatSession = {
+      id: newId,
+      title: 'New Conversation',
+      messages: [
+        {
+          id: 'welcome_' + newId,
+          role: 'assistant',
+          text: `Hello ${user?.full_name || 'Professor'}. I am your CRD AI Research Assistant. You can ask me queries about research papers, authors, departments, or publication categories in natural language. How can I help you today?`,
+          timestamp: new Date()
+        }
+      ],
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    setSessions(prev => [newSession, ...prev]);
+    setActiveSessionId(newId);
+    setInput('');
+    setExpandedPaperId(null);
+  };
+
+  const handleDeleteSession = (idToDelete: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (sessions.length <= 1) {
+      // If deleting the only session, reset it
+      handleNewChat();
+      setSessions(prev => prev.filter(s => s.id !== idToDelete));
+      return;
+    }
+    
+    const remaining = sessions.filter(s => s.id !== idToDelete);
+    setSessions(remaining);
+    if (activeSessionId === idToDelete) {
+      setActiveSessionId(remaining[0].id);
+    }
+  };
+
+  const handleClearAllHistory = () => {
+    if (!window.confirm("Are you sure you want to clear all chat history and start fresh?")) return;
+    localStorage.removeItem('crd_chat_sessions');
+    localStorage.removeItem('crd_active_chat_id');
+    sessionStorage.removeItem('crd_chat_messages');
+    
+    const newId = 'default-session';
+    const freshSession: ChatSession = {
+      id: newId,
+      title: 'New Conversation',
+      messages: [
+        {
+          id: 'welcome_' + newId,
+          role: 'assistant',
+          text: `Hello ${user?.full_name || 'Professor'}. I am your CRD AI Research Assistant. You can ask me queries about research papers, authors, departments, or publication categories in natural language. How can I help you today?`,
+          timestamp: new Date()
+        }
+      ],
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    setSessions([freshSession]);
+    setActiveSessionId(newId);
+    setInput('');
+    setExpandedPaperId(null);
+  };
+
+  const suggestions = [
+    "What research has Dr. Eleanor Vance published?",
+    "List all Computer Science publications from 2026",
+    "Show papers related to CRISPR genome editing",
+    "Publications on electric vehicle battery thermal management"
+  ];
 
   const handleSend = async (textToSend: string) => {
     if (!textToSend.trim() || loading) return;
@@ -100,7 +241,26 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper }) => {
       timestamp: new Date()
     };
 
-    setMessages(prev => [...prev, userMessage]);
+    // Check if this is the first user message in this session to update the title
+    const currentMessages = activeSession.messages;
+    const isFirstUserMessage = !currentMessages.some(m => m.role === 'user');
+    const newTitle = isFirstUserMessage 
+      ? (textToSend.length > 32 ? textToSend.slice(0, 32) + '...' : textToSend)
+      : activeSession.title;
+
+    // Update session with user message
+    setSessions(prev => prev.map(s => {
+      if (s.id === activeSessionId) {
+        return {
+          ...s,
+          title: newTitle,
+          messages: [...s.messages, userMessage],
+          updatedAt: new Date()
+        };
+      }
+      return s;
+    }));
+
     setInput('');
     setLoading(true);
 
@@ -115,7 +275,16 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper }) => {
         response: response
       };
       
-      setMessages(prev => [...prev, assistantMessage]);
+      setSessions(prev => prev.map(s => {
+        if (s.id === activeSessionId) {
+          return {
+            ...s,
+            messages: [...s.messages, assistantMessage],
+            updatedAt: new Date()
+          };
+        }
+        return s;
+      }));
     } catch (err: any) {
       const errorMessage: ChatMessage = {
         id: Math.random().toString(36).substring(7),
@@ -124,366 +293,591 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper }) => {
         timestamp: new Date(),
         isError: true
       };
-      setMessages(prev => [...prev, errorMessage]);
+      setSessions(prev => prev.map(s => {
+        if (s.id === activeSessionId) {
+          return {
+            ...s,
+            messages: [...s.messages, errorMessage],
+            updatedAt: new Date()
+          };
+        }
+        return s;
+      }));
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleSuggestionClick = (suggestion: string) => {
-    handleSend(suggestion);
   };
 
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
 
-  return (
-    <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-32 h-[460px]">
-      
-      {/* Left Column: Guardrail Policy & Quick Suggestions */}
-      <div className="lg:col-span-1 flex flex-col justify-between space-y-3 h-full">
-        
-        {/* Guardrail Policy Info Box */}
-        <div className="bg-brand-card border border-brand-border rounded-2xl p-4 shadow-xl flex-1 flex flex-col justify-between overflow-y-auto custom-scrollbar">
-          <div>
-            <div className="flex items-center space-x-2 text-brand-red font-semibold text-xs mb-2">
-              <AlertTriangle className="w-3.5 h-3.5" />
-              <span>Assistant Guardrails</span>
-            </div>
-            
-            <p className="text-[11px] text-brand-gray leading-relaxed mb-2.5">
-              This chat interface is explicitly designed to query the College Research Digest database. It operates under strict academic parameters:
-            </p>
-
-            <div className="space-y-2 text-[10px] text-brand-gray">
-              <div className="p-2.5 rounded-xl bg-brand-bg/50 border border-brand-border/60">
-                <strong className="text-white block mb-0.5">✅ Supported Topics</strong>
-                Searching for faculty papers, looking up specific authors, summarizing papers, and filtering by department/year.
-              </div>
-              <div className="p-2.5 rounded-xl bg-brand-red/5 border border-brand-red/15 text-brand-red/90">
-                <strong className="text-brand-red block mb-0.5">❌ Restricted Topics</strong>
-                General chat, coding help, email administrative tasks, exam structures, and non-academic knowledge. Unrelated questions will trigger immediate rejection.
-              </div>
-            </div>
-          </div>
-          
-          <div className="mt-2 pt-2 border-t border-brand-border text-[9px] text-brand-gray/80 text-center font-sans">
-            AI Engine: Gemini 3.5 Flash
-          </div>
-        </div>
-
-        {/* Suggestions Box */}
-        <div className="bg-brand-card border border-brand-border rounded-2xl p-4 shadow-xl overflow-y-auto custom-scrollbar">
-          <h3 className="text-[11px] font-bold text-white uppercase tracking-wider mb-2 flex items-center">
-            <HelpCircle className="w-3.5 h-3.5 mr-1.5 text-brand-cyan" /> Suggested Queries
-          </h3>
-          <div className="space-y-1.5">
-            {suggestions.map((s, idx) => (
-              <button
-                key={idx}
-                onClick={() => handleSuggestionClick(s)}
-                className="w-full text-left p-2 rounded-xl bg-brand-bg hover:bg-brand-hover border border-brand-border text-[10px] text-brand-gray hover:text-brand-cyan transition-all flex items-start space-x-1.5 cursor-pointer group"
-              >
-                <ArrowRight className="w-3 h-3 text-brand-gray group-hover:text-brand-cyan shrink-0 mt-0.5" />
-                <span className="leading-snug">{s}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-
+  // Reusable Pilled Input Box Component
+  const renderPilledInputBox = (isCentered: boolean) => (
+    <form 
+      onSubmit={(e) => {
+        e.preventDefault();
+        handleSend(input);
+      }} 
+      className={`relative flex items-center w-full bg-brand-card border border-brand-border/80 hover:border-brand-gray/50 focus-within:border-brand-cyan focus-within:ring-4 focus-within:ring-brand-cyan/15 rounded-full shadow-2xl transition-all duration-300 ${
+        isCentered ? 'p-2 sm:p-2.5 max-w-3xl mx-auto' : 'p-1.5 sm:p-2 max-w-4xl mx-auto'
+      }`}
+    >
+      <div className="pl-3.5 sm:pl-4 text-brand-cyan flex items-center shrink-0">
+        <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 animate-pulse" />
       </div>
+      <input
+        ref={inputRef}
+        type="text"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        placeholder={isCentered ? "Ask about papers, authors, departments... (e.g. 'Show Computer Science papers from 2026')" : "Ask a follow-up query or search publications..."}
+        className="flex-1 bg-transparent border-none text-white text-xs sm:text-sm rounded-full px-3 py-2 sm:py-2.5 focus:outline-none placeholder:text-brand-gray/50 font-sans"
+        disabled={loading}
+      />
+      <button
+        type="submit"
+        disabled={!input.trim() || loading}
+        className={`rounded-full bg-gradient-to-r from-brand-cyan to-indigo-500 hover:brightness-115 text-brand-bg font-bold flex items-center justify-center transition-all disabled:opacity-30 disabled:hover:brightness-100 shadow-md shadow-brand-cyan/20 cursor-pointer shrink-0 ${
+          isCentered ? 'w-10 h-10 sm:w-11 sm:h-11' : 'w-9 h-9 sm:w-10 sm:h-10'
+        }`}
+      >
+        <Send className="w-4 h-4 text-brand-bg stroke-[2.5]" />
+      </button>
+    </form>
+  );
 
-      {/* Right Column: Main Chat Window */}
-      <div className="lg:col-span-3 flex flex-col bg-brand-card border border-brand-border rounded-2xl shadow-xl overflow-hidden h-full">
-        
-        {/* Chat Window Header */}
-        <div className="px-6 py-4 bg-brand-card border-b border-brand-border flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-9 h-9 rounded-xl bg-brand-cyan/15 flex items-center justify-center border border-brand-cyan/35 shadow-sm shadow-brand-cyan/10">
-              <MessageSquare className="w-4 h-4 text-brand-cyan" />
-            </div>
-            <div>
-              <h2 className="text-sm font-bold text-white leading-tight">AI Research Assistant</h2>
-              <p className="text-[10px] text-brand-cyan font-medium uppercase tracking-wider flex items-center mt-0.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-brand-green animate-ping mr-1.5 inline-block" />
-                Natural Language Query Engine
-              </p>
-            </div>
-          </div>
+  return (
+    <div className="flex-1 flex h-full w-full overflow-hidden bg-brand-bg relative font-sans">
+      
+      {/* LEFT SIDEBAR: Chat History & Sessions */}
+      <div 
+        className={`bg-brand-card/95 border-r border-brand-border flex flex-col justify-between shrink-0 transition-all duration-300 z-30 ${
+          sidebarOpen ? 'w-64 sm:w-72' : 'w-0 -ml-64 sm:-ml-72 overflow-hidden'
+        }`}
+      >
+        {/* Sidebar Header: New Chat & Collapse */}
+        <div className="p-4 border-b border-brand-border/60 flex items-center space-x-2">
           <button
-            onClick={handleClearChat}
-            className="px-3 py-1.5 rounded-lg bg-brand-red/10 text-brand-red hover:bg-brand-red/20 border border-brand-red/25 text-xs font-semibold transition-all cursor-pointer flex items-center space-x-1"
+            onClick={handleNewChat}
+            className="flex-1 px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-brand-cyan/15 to-indigo-500/15 hover:from-brand-cyan/25 hover:to-indigo-500/25 border border-brand-cyan/35 text-white font-semibold text-xs transition-all flex items-center justify-center space-x-2 shadow-sm cursor-pointer group"
           >
-            <Trash2 className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Clear Chat</span>
+            <Plus className="w-4 h-4 text-brand-cyan group-hover:rotate-90 transition-transform" />
+            <span>New Chat</span>
+          </button>
+          <button
+            onClick={() => setSidebarOpen(false)}
+            className="p-2.5 rounded-xl bg-brand-bg hover:bg-brand-hover border border-brand-border text-brand-gray hover:text-white transition-all cursor-pointer"
+            title="Close Sidebar"
+          >
+            <PanelLeftClose className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Chat Logs scrollable container */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar bg-brand-bg/20">
-          
-          {messages.map((msg) => {
-            const isUser = msg.role === 'user';
-            return (
-              <div key={msg.id} className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[85%] sm:max-w-[75%] rounded-2xl p-4 shadow-md ${
-                  isUser 
-                    ? 'bg-gradient-to-br from-brand-cyan/20 to-brand-cyan/5 text-white border border-brand-cyan/30 rounded-tr-none' 
-                    : msg.isError 
-                      ? 'bg-brand-red/10 border border-brand-red/25 text-white rounded-tl-none' 
-                      : msg.response && !msg.response.is_academic_query 
-                        ? 'bg-brand-red/5 border border-brand-red/20 text-white rounded-tl-none'
-                        : 'bg-brand-card border border-brand-border text-white rounded-tl-none'
-                }`}>
-                  
-                  {/* Message Sender Info */}
-                  <div className="flex items-center justify-between mb-1.5 text-[10px] text-brand-gray">
-                    <span className="font-semibold flex items-center">
-                      {!isUser && <Sparkles className="w-3 h-3 mr-1 text-brand-cyan fill-brand-cyan/20" />}
-                      {isUser ? 'You' : 'CRD Research Agent'}
-                    </span>
-                    <span>{formatTime(msg.timestamp)}</span>
-                  </div>
-
-                  {/* Main Message Text */}
-                  <div className="text-xs leading-relaxed whitespace-pre-line font-sans">
-                    {msg.text}
-                  </div>
-
-                  {/* Structured Search filters block */}
-                  {msg.response && msg.response.is_academic_query && msg.response.filters && (
-                    <div className="mt-3.5 pt-3 border-t border-brand-border/60">
-                      <div className="text-[10px] font-bold text-brand-gray uppercase tracking-wider mb-2 flex items-center">
-                        <Tag className="w-3.5 h-3.5 mr-1 text-brand-cyan" /> Detected Query Parameters:
-                      </div>
-                      <div className="flex flex-wrap gap-1.5">
-                        {msg.response.filters.departments.map((dept, i) => (
-                          <span key={`dept-${i}`} className="px-2 py-0.5 rounded bg-brand-cyan/15 border border-brand-cyan/35 text-brand-cyan text-[9px] font-semibold font-mono">
-                            Dept: {dept}
-                          </span>
-                        ))}
-                        {msg.response.filters.authors.map((auth, i) => (
-                          <span key={`auth-${i}`} className="px-2 py-0.5 rounded bg-brand-cyan/15 border border-brand-cyan/35 text-brand-cyan text-[9px] font-semibold font-mono">
-                            Author: {auth}
-                          </span>
-                        ))}
-                        {msg.response.filters.years.map((year, i) => (
-                          <span key={`year-${i}`} className="px-2 py-0.5 rounded bg-brand-cyan/15 border border-brand-cyan/35 text-brand-cyan text-[9px] font-semibold font-mono">
-                            Year: {year}
-                          </span>
-                        ))}
-                        {msg.response.filters.categories.map((cat, i) => (
-                          <span key={`cat-${i}`} className="px-2 py-0.5 rounded bg-brand-cyan/15 border border-brand-cyan/35 text-brand-cyan text-[9px] font-semibold font-mono">
-                            Category: {cat}
-                          </span>
-                        ))}
-                        {msg.response.filters.title_keywords.map((kw, i) => (
-                          <span key={`kw-${i}`} className="px-2 py-0.5 rounded bg-brand-cyan/10 border border-brand-cyan/20 text-brand-cyan text-[9px] font-semibold font-mono">
-                            Keyword: {kw}
-                          </span>
-                        ))}
-                        {msg.response.filters.general_query && (
-                          <span className="px-2 py-0.5 rounded bg-brand-cyan/10 border border-brand-cyan/20 text-brand-cyan text-[9px] font-semibold font-mono">
-                            Search: {msg.response.filters.general_query}
-                          </span>
-                        )}
-                        {!msg.response.filters.departments.length && 
-                         !msg.response.filters.authors.length && 
-                         !msg.response.filters.years.length && 
-                         !msg.response.filters.categories.length && 
-                         !msg.response.filters.title_keywords.length && 
-                         !msg.response.filters.general_query && (
-                          <span className="px-2 py-0.5 rounded bg-brand-border text-brand-gray text-[9px] font-mono">
-                            Broad Search
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Guardrail warnings box */}
-                  {msg.response && !msg.response.is_academic_query && (
-                    <div className="mt-3 p-2.5 rounded-xl bg-brand-red/10 border border-brand-red/25 flex items-start space-x-2 text-[10px] text-brand-red">
-                      <AlertTriangle className="w-4 h-4 shrink-0" />
-                      <div>
-                        <strong>Guardrail Violation</strong>
-                        <p className="mt-0.5 text-[9px] text-brand-red/90 leading-normal">
-                          This query falls outside research papers, authors, departments, or categories. Please try phrasing a query related directly to college publications.
-                        </p>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Structured Search Results List */}
-                  {msg.response && msg.response.is_academic_query && msg.response.papers && msg.response.papers.length > 0 && (
-                    <div className="mt-4 pt-3 border-t border-brand-border/60 space-y-2">
-                      <div className="text-[10px] font-bold text-brand-gray uppercase tracking-wider mb-2 flex items-center">
-                        <FileText className="w-3.5 h-3.5 mr-1 text-brand-cyan" /> Structured Database Matches ({msg.response.papers.length}):
-                      </div>
-                      <div className="space-y-2">
-                        {msg.response.papers.map((paper) => {
-                          const isExpanded = expandedPaperId === paper.id;
-                          return (
-                            <div 
-                              key={paper.id}
-                              className="border border-brand-border rounded-xl overflow-hidden bg-brand-bg/40 hover:bg-brand-bg/60 transition-all"
-                            >
-                              {/* Accordion Header */}
-                              <button
-                                onClick={() => setExpandedPaperId(isExpanded ? null : paper.id)}
-                                className="w-full p-3 text-left flex items-center justify-between hover:text-brand-cyan transition-colors cursor-pointer group"
-                              >
-                                <div className="max-w-[88%] space-y-1">
-                                  <span className="text-[11px] font-bold text-white block group-hover:text-brand-cyan line-clamp-1 leading-normal transition-colors">
-                                    {paper.title}
-                                  </span>
-                                  <div className="flex items-center space-x-2 text-[9px] text-brand-gray">
-                                    <span className="font-medium text-white/80">{paper.authors_raw || paper.authors_list.join(", ")}</span>
-                                    <span>•</span>
-                                    <span>{paper.department}</span>
-                                    <span>•</span>
-                                    <span className="font-mono">{paper.publication_year}</span>
-                                  </div>
-                                </div>
-                                {isExpanded ? (
-                                  <ChevronDown className="w-4 h-4 text-brand-cyan transform rotate-180 transition-all shrink-0" />
-                                ) : (
-                                  <ChevronRight className="w-4 h-4 text-brand-gray group-hover:text-brand-cyan transition-all shrink-0" />
-                                )}
-                              </button>
-                              
-                              {/* Accordion Body */}
-                              {isExpanded && (
-                                <div className="px-4 pb-4 pt-2 border-t border-brand-border/40 space-y-3 bg-brand-card/30 text-xs">
-                                  {/* AI Summary Card */}
-                                  <div className="p-3 rounded-xl bg-brand-bg/60 border-l-3 border-brand-cyan text-[11px] leading-relaxed italic text-white/95 font-sans">
-                                    <span className="text-brand-cyan font-bold block not-italic text-[10px] uppercase tracking-wider mb-1 flex items-center">
-                                      <Sparkles className="w-3.5 h-3.5 mr-1" /> AI Summary
-                                    </span>
-                                    “{paper.ai_summary || paper.abstract}”
-                                  </div>
-                                  
-                                  {/* Key Metadata Table */}
-                                  <div className="grid grid-cols-2 gap-2 text-[10px]">
-                                    <div className="p-2 rounded bg-brand-bg/40 border border-brand-border/60">
-                                      <span className="text-brand-gray block text-[8px] uppercase font-bold">Journal / Conference</span>
-                                      <span className="text-white truncate block">{paper.journal_or_conference || 'N/A'}</span>
-                                    </div>
-                                    <div className="p-2 rounded bg-brand-bg/40 border border-brand-border/60">
-                                      <span className="text-brand-gray block text-[8px] uppercase font-bold">DOI</span>
-                                      <span className="text-white font-mono truncate block">{paper.doi || 'N/A'}</span>
-                                    </div>
-                                    <div className="p-2 rounded bg-brand-bg/40 border border-brand-border/60">
-                                      <span className="text-brand-gray block text-[8px] uppercase font-bold">Citations</span>
-                                      <span className="text-brand-green font-mono font-bold block">{paper.citation_count} citations</span>
-                                    </div>
-                                    <div className="p-2 rounded bg-brand-bg/40 border border-brand-border/60">
-                                      <span className="text-brand-gray block text-[8px] uppercase font-bold">ML Confidence</span>
-                                      <span className="text-brand-cyan font-mono font-bold block">{(paper.ml_confidence * 100).toFixed(1)}%</span>
-                                    </div>
-                                  </div>
-                                  
-                                  {/* Abstract */}
-                                  <div>
-                                    <span className="text-[9px] font-bold text-brand-gray uppercase tracking-wider block mb-1">Full Abstract:</span>
-                                    <p className="text-[10px] text-brand-gray leading-normal bg-brand-bg/30 p-2.5 rounded border border-brand-border/50 max-h-24 overflow-y-auto custom-scrollbar font-sans">
-                                      {paper.abstract || 'No abstract text available.'}
-                                    </p>
-                                  </div>
-                                  
-                                  {/* Action Buttons */}
-                                  <div className="flex items-center justify-end space-x-2 pt-2 border-t border-brand-border/20">
-                                    <button
-                                      onClick={() => onSelectPaper(paper)}
-                                      className="px-2.5 py-1 rounded bg-brand-bg hover:bg-brand-hover text-white border border-brand-border text-[9px] font-semibold transition-all cursor-pointer"
-                                    >
-                                      View Full Metadata
-                                    </button>
-                                    {paper.pdf_url && (
-                                      <a
-                                        href={`${SERVER_BASE_URL}${paper.pdf_url}`}
-                                        target="_blank"
-                                        rel="noreferrer"
-                                        className="px-2.5 py-1.5 rounded bg-brand-cyan/20 hover:bg-brand-cyan/35 border border-brand-cyan/30 text-brand-cyan text-[9px] font-bold transition-all flex items-center space-x-1 cursor-pointer"
-                                      >
-                                        <span>View PDF</span>
-                                      </a>
-                                    )}
-                                  </div>
-                                </div>
-                              )}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Empty state matches */}
-                  {msg.response && msg.response.is_academic_query && msg.response.papers && msg.response.papers.length === 0 && (
-                    <div className="mt-3.5 p-3 rounded-xl bg-brand-bg border border-brand-border text-center text-[10px] text-brand-gray">
-                      No research publications match these search parameters.
-                    </div>
-                  )}
-
-                </div>
-              </div>
-            );
-          })}
-
-          {/* Loading bubble */}
-          {loading && (
-            <div className="flex justify-start">
-              <div className="bg-brand-card border border-brand-border rounded-2xl rounded-tl-none p-4 max-w-[60%] flex items-center space-x-3">
-                <div className="flex space-x-1.5">
-                  <div className="w-1.5 h-1.5 rounded-full bg-brand-cyan animate-bounce" style={{ animationDelay: '0ms' }} />
-                  <div className="w-1.5 h-1.5 rounded-full bg-brand-cyan animate-bounce" style={{ animationDelay: '150ms' }} />
-                  <div className="w-1.5 h-1.5 rounded-full bg-brand-cyan animate-bounce" style={{ animationDelay: '300ms' }} />
-                </div>
-                <span className="text-[10px] text-brand-gray font-semibold">Agent is querying database...</span>
-              </div>
+        {/* Sidebar Middle: History List */}
+        <div className="flex-1 overflow-y-auto p-3 space-y-4 custom-scrollbar">
+          <div>
+            <div className="flex items-center justify-between px-2 mb-2 text-[10px] font-bold text-brand-gray uppercase tracking-wider">
+              <span className="flex items-center">
+                <History className="w-3 h-3 mr-1.5 text-brand-cyan" /> Chat History
+              </span>
+              <button 
+                onClick={handleClearAllHistory}
+                className="text-brand-gray/60 hover:text-brand-red transition-colors text-[9px]"
+                title="Clear all history"
+              >
+                Clear All
+              </button>
             </div>
-          )}
 
-        </div>
-
-        {/* Input box section */}
-        <div className="p-4 bg-brand-card border-t border-brand-border">
-          <form 
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleSend(input);
-            }} 
-            className="flex items-center space-x-2"
-          >
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask about publications, authors, or departments... (e.g. 'What did Robert Langdon publish in 2026?')"
-              className="flex-1 bg-brand-bg border border-brand-border text-white text-xs rounded-xl px-4 py-3 focus:outline-none focus:border-brand-cyan/60 transition-all font-sans placeholder:text-brand-gray/50"
-              disabled={loading}
-            />
-            <button
-              type="submit"
-              disabled={!input.trim() || loading}
-              className="px-4.5 py-3 rounded-xl bg-gradient-to-r from-brand-cyan to-brand-cyan/80 hover:brightness-115 text-brand-bg font-bold text-xs transition-all disabled:opacity-40 flex items-center space-x-1.5 shadow-lg shadow-brand-cyan/10 cursor-pointer shrink-0"
-            >
-              <Send className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Send</span>
-            </button>
-          </form>
-          
-          <div className="mt-2.5 px-1.5 flex items-center justify-between text-[9px] text-brand-gray/60 font-sans">
-            <span className="flex items-center">
-              <CornerDownLeft className="w-3 h-3 mr-1" /> Press Enter to query
-            </span>
-            <span>Queries are parsed locally before DB search</span>
+            <div className="space-y-1">
+              {sessions.map((session) => {
+                const isActive = activeSessionId === session.id;
+                return (
+                  <div
+                    key={session.id}
+                    onClick={() => {
+                      setActiveSessionId(session.id);
+                      setExpandedPaperId(null);
+                    }}
+                    className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-xs cursor-pointer group transition-all ${
+                      isActive
+                        ? 'bg-brand-cyan/15 text-white font-semibold border border-brand-cyan/40 shadow-sm shadow-brand-cyan/5'
+                        : 'text-brand-gray hover:bg-brand-bg hover:text-white border border-transparent'
+                    }`}
+                  >
+                    <div className="flex items-center space-x-2.5 min-w-0 flex-1">
+                      <MessageCircle className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-brand-cyan' : 'text-brand-gray group-hover:text-brand-cyan'}`} />
+                      <span className="truncate leading-normal">{session.title}</span>
+                    </div>
+                    
+                    <button
+                      onClick={(e) => handleDeleteSession(session.id, e)}
+                      className={`p-1 rounded-md hover:bg-brand-red/20 hover:text-brand-red transition-all shrink-0 ${
+                        isActive ? 'text-brand-gray hover:text-brand-red' : 'opacity-0 group-hover:opacity-100 text-brand-gray'
+                      }`}
+                      title="Delete chat"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
 
+        {/* Sidebar Footer: Guardrails & Engine Info */}
+        <div className="p-3 border-t border-brand-border/60 bg-brand-bg/40">
+          <button
+            onClick={() => setShowGuardrailModal(true)}
+            className="w-full p-2.5 rounded-xl bg-brand-card border border-brand-border hover:border-brand-cyan/40 text-left transition-all flex items-center justify-between group cursor-pointer"
+          >
+            <div className="flex items-center space-x-2 min-w-0">
+              <div className="w-6 h-6 rounded-lg bg-brand-cyan/10 flex items-center justify-center border border-brand-cyan/25 text-brand-cyan shrink-0">
+                <AlertTriangle className="w-3.5 h-3.5" />
+              </div>
+              <div className="min-w-0">
+                <span className="text-[11px] font-bold text-white block truncate group-hover:text-brand-cyan transition-colors">
+                  Academic Guardrails
+                </span>
+                <span className="text-[9px] text-brand-gray block truncate">
+                  Gemini 3.5 Flash • Active
+                </span>
+              </div>
+            </div>
+            <Info className="w-3.5 h-3.5 text-brand-gray group-hover:text-brand-cyan shrink-0 ml-1" />
+          </button>
+        </div>
       </div>
+
+      {/* RIGHT MAIN AREA: ChatGPT Workspace */}
+      <div className="flex-1 flex flex-col h-full min-w-0 bg-brand-bg relative overflow-hidden">
+        
+        {/* Top Navbar */}
+        <div className="h-14 px-4 sm:px-6 bg-brand-card/70 backdrop-blur-md border-b border-brand-border/80 flex items-center justify-between shrink-0 z-20">
+          <div className="flex items-center space-x-3">
+            {!sidebarOpen && (
+              <button
+                onClick={() => setSidebarOpen(true)}
+                className="p-2 rounded-xl bg-brand-bg hover:bg-brand-hover border border-brand-border text-brand-gray hover:text-white transition-all cursor-pointer mr-1"
+                title="Open Sidebar"
+              >
+                <PanelLeft className="w-4 h-4" />
+              </button>
+            )}
+            <div className="flex items-center space-x-2.5">
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-brand-cyan/20 to-indigo-500/20 border border-brand-cyan/40 flex items-center justify-center shadow-sm">
+                <Bot className="w-4 h-4 text-brand-cyan" />
+              </div>
+              <div>
+                <h2 className="text-xs sm:text-sm font-bold text-white leading-tight flex items-center">
+                  CRD Research Assistant
+                  <span className="ml-2 px-1.5 py-0.5 rounded-full bg-brand-cyan/15 text-brand-cyan text-[9px] font-mono font-semibold border border-brand-cyan/30">
+                    v3.5
+                  </span>
+                </h2>
+                <div className="flex items-center space-x-1.5 text-[10px] text-brand-gray">
+                  <span className="w-1.5 h-1.5 rounded-full bg-brand-green animate-pulse inline-block" />
+                  <span>College Research Digest • Natural Language DB Engine</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={() => setShowGuardrailModal(true)}
+              className="px-2.5 py-1.5 rounded-lg bg-brand-bg hover:bg-brand-hover border border-brand-border text-brand-gray hover:text-white text-xs font-medium transition-all flex items-center space-x-1.5 cursor-pointer"
+            >
+              <HelpCircle className="w-3.5 h-3.5 text-brand-cyan" />
+              <span className="hidden sm:inline">Scope & Policy</span>
+            </button>
+          </div>
+        </div>
+
+        {/* WORKSPACE AREA: Conditional rendering based on hasUserMessages */}
+        {!hasUserMessages ? (
+          /* STATE A: Centered Empty/New Chat Screen (ChatGPT Style) */
+          <div className="flex-1 flex flex-col items-center justify-center p-6 sm:p-8 max-w-4xl mx-auto w-full overflow-y-auto custom-scrollbar">
+            
+            {/* Hero Header */}
+            <div className="text-center mb-8 sm:mb-10 space-y-3 animate-fadeIn">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-brand-cyan/20 via-indigo-500/20 to-brand-cyan/10 border border-brand-cyan/40 flex items-center justify-center mx-auto shadow-xl shadow-brand-cyan/10 mb-4">
+                <Sparkles className="w-8 h-8 text-brand-cyan animate-pulse" />
+              </div>
+              <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
+                How can I assist your research today, {user?.full_name?.split(' ')[0] || 'Professor'}?
+              </h1>
+              <p className="text-xs sm:text-sm text-brand-gray max-w-lg mx-auto leading-relaxed">
+                Query published literature, analyze faculty citation records, or filter departmental research archives using natural language.
+              </p>
+            </div>
+
+            {/* Centered Pilled Input Box */}
+            <div className="w-full mb-8">
+              {renderPilledInputBox(true)}
+            </div>
+
+            {/* Relevant Questions Grid Below Input */}
+            <div className="w-full max-w-3xl">
+              <div className="flex items-center justify-center space-x-2 text-[11px] font-bold text-brand-gray uppercase tracking-wider mb-3.5">
+                <Compass className="w-3.5 h-3.5 text-brand-cyan" />
+                <span>Suggested Research Queries</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {suggestions.map((s, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => handleSend(s)}
+                    className="p-4 rounded-2xl bg-brand-card/80 hover:bg-brand-card border border-brand-border/80 hover:border-brand-cyan/50 text-left text-xs text-brand-gray hover:text-white transition-all duration-200 flex items-start space-x-3 group cursor-pointer shadow-sm hover:shadow-md"
+                  >
+                    <div className="w-7 h-7 rounded-lg bg-brand-cyan/10 flex items-center justify-center text-brand-cyan shrink-0 mt-0.5 group-hover:scale-110 transition-transform border border-brand-cyan/20">
+                      <BookOpen className="w-3.5 h-3.5" />
+                    </div>
+                    <span className="leading-relaxed font-medium pt-0.5">{s}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+          </div>
+        ) : (
+          /* STATE B: Active Chat State with Messages & Fixed Bottom Bar */
+          <div className="flex-1 flex flex-col h-full min-h-0">
+            
+            {/* Scrollable Chat History Container */}
+            <div className="flex-1 overflow-y-auto px-4 sm:px-8 py-6 space-y-6 custom-scrollbar">
+              <div className="max-w-4xl mx-auto space-y-6">
+                
+                {activeSession.messages.map((msg) => {
+                  const isUser = msg.role === 'user';
+                  return (
+                    <div key={msg.id} className={`flex ${isUser ? 'justify-end' : 'justify-start space-x-3 sm:space-x-4'}`}>
+                      
+                      {/* Assistant Avatar */}
+                      {!isUser && (
+                        <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-brand-cyan/20 to-indigo-500/20 border border-brand-cyan/40 flex items-center justify-center shrink-0 mt-1 shadow-sm">
+                          <Sparkles className="w-4 h-4 text-brand-cyan" />
+                        </div>
+                      )}
+
+                      {/* Message Bubble Container */}
+                      <div className={`max-w-[88%] sm:max-w-[80%] ${
+                        isUser 
+                          ? 'bg-gradient-to-br from-brand-cyan/25 to-brand-cyan/10 text-white border border-brand-cyan/40 rounded-3xl rounded-tr-sm px-5 py-3.5 shadow-md' 
+                          : msg.isError 
+                            ? 'bg-brand-red/10 border border-brand-red/25 text-white rounded-3xl rounded-tl-sm px-5 py-4 shadow-sm' 
+                            : msg.response && !msg.response.is_academic_query 
+                              ? 'bg-brand-red/5 border border-brand-red/20 text-white rounded-3xl rounded-tl-sm px-5 py-4 shadow-sm'
+                              : 'bg-brand-card/90 border border-brand-border text-white rounded-3xl rounded-tl-sm px-5 py-4 shadow-md'
+                      }`}>
+                        
+                        {/* Sender Info & Timestamp */}
+                        <div className="flex items-center justify-between mb-1.5 text-[10px] text-brand-gray/80">
+                          <span className="font-bold uppercase tracking-wider flex items-center">
+                            {isUser ? 'You' : 'CRD Research Agent'}
+                          </span>
+                          <span>{formatTime(msg.timestamp)}</span>
+                        </div>
+
+                        {/* Message Text */}
+                        <div className="text-xs sm:text-sm leading-relaxed whitespace-pre-line font-sans">
+                          {msg.text}
+                        </div>
+
+                        {/* Detected Query Filters */}
+                        {msg.response && msg.response.is_academic_query && msg.response.filters && (
+                          <div className="mt-4 pt-3 border-t border-brand-border/60">
+                            <div className="text-[10px] font-bold text-brand-gray uppercase tracking-wider mb-2 flex items-center">
+                              <Tag className="w-3.5 h-3.5 mr-1 text-brand-cyan" /> Detected Search Parameters:
+                            </div>
+                            <div className="flex flex-wrap gap-1.5">
+                              {msg.response.filters.departments.map((dept, i) => (
+                                <span key={`dept-${i}`} className="px-2.5 py-1 rounded-full bg-brand-cyan/15 border border-brand-cyan/35 text-brand-cyan text-[10px] font-semibold font-mono">
+                                  Dept: {dept}
+                                </span>
+                              ))}
+                              {msg.response.filters.authors.map((auth, i) => (
+                                <span key={`auth-${i}`} className="px-2.5 py-1 rounded-full bg-brand-cyan/15 border border-brand-cyan/35 text-brand-cyan text-[10px] font-semibold font-mono">
+                                  Author: {auth}
+                                </span>
+                              ))}
+                              {msg.response.filters.years.map((year, i) => (
+                                <span key={`year-${i}`} className="px-2.5 py-1 rounded-full bg-brand-cyan/15 border border-brand-cyan/35 text-brand-cyan text-[10px] font-semibold font-mono">
+                                  Year: {year}
+                                </span>
+                              ))}
+                              {msg.response.filters.categories.map((cat, i) => (
+                                <span key={`cat-${i}`} className="px-2.5 py-1 rounded-full bg-brand-cyan/15 border border-brand-cyan/35 text-brand-cyan text-[10px] font-semibold font-mono">
+                                  Category: {cat}
+                                </span>
+                              ))}
+                              {msg.response.filters.title_keywords.map((kw, i) => (
+                                <span key={`kw-${i}`} className="px-2.5 py-1 rounded-full bg-brand-cyan/10 border border-brand-cyan/20 text-brand-cyan text-[10px] font-semibold font-mono">
+                                  Keyword: {kw}
+                                </span>
+                              ))}
+                              {msg.response.filters.general_query && (
+                                <span className="px-2.5 py-1 rounded-full bg-brand-cyan/10 border border-brand-cyan/20 text-brand-cyan text-[10px] font-semibold font-mono">
+                                  Search: {msg.response.filters.general_query}
+                                </span>
+                              )}
+                              {!msg.response.filters.departments.length && 
+                               !msg.response.filters.authors.length && 
+                               !msg.response.filters.years.length && 
+                               !msg.response.filters.categories.length && 
+                               !msg.response.filters.title_keywords.length && 
+                               !msg.response.filters.general_query && (
+                                <span className="px-2.5 py-1 rounded-full bg-brand-border text-brand-gray text-[10px] font-mono">
+                                  Broad Academic Search
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Guardrail Violation Box */}
+                        {msg.response && !msg.response.is_academic_query && (
+                          <div className="mt-3.5 p-3 rounded-2xl bg-brand-red/10 border border-brand-red/25 flex items-start space-x-2.5 text-xs text-brand-red">
+                            <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
+                            <div>
+                              <strong className="block mb-0.5 font-bold">Guardrail Policy Triggered</strong>
+                              <p className="text-[11px] text-brand-red/90 leading-normal">
+                                This query falls outside research papers, authors, departments, or categories. Please try phrasing a query related directly to college publications.
+                              </p>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Structured Database Matches Accordion List */}
+                        {msg.response && msg.response.is_academic_query && msg.response.papers && msg.response.papers.length > 0 && (
+                          <div className="mt-4 pt-3.5 border-t border-brand-border/60 space-y-2.5">
+                            <div className="text-[11px] font-bold text-brand-gray uppercase tracking-wider mb-2 flex items-center justify-between">
+                              <span className="flex items-center">
+                                <Database className="w-3.5 h-3.5 mr-1.5 text-brand-cyan" /> Structured Database Matches ({msg.response.papers.length}):
+                              </span>
+                              <span className="text-[10px] text-brand-cyan font-normal lowercase font-mono">click paper to expand</span>
+                            </div>
+                            <div className="space-y-2">
+                              {msg.response.papers.map((paper) => {
+                                const isExpanded = expandedPaperId === paper.id;
+                                return (
+                                  <div 
+                                    key={paper.id}
+                                    className="border border-brand-border/80 rounded-2xl overflow-hidden bg-brand-bg/60 hover:bg-brand-bg transition-all shadow-sm"
+                                  >
+                                    {/* Accordion Header */}
+                                    <button
+                                      onClick={() => setExpandedPaperId(isExpanded ? null : paper.id)}
+                                      className="w-full p-3.5 text-left flex items-center justify-between hover:text-brand-cyan transition-colors cursor-pointer group"
+                                    >
+                                      <div className="max-w-[88%] space-y-1">
+                                        <span className="text-xs font-bold text-white block group-hover:text-brand-cyan line-clamp-1 leading-normal transition-colors">
+                                          {paper.title}
+                                        </span>
+                                        <div className="flex items-center space-x-2 text-[10px] text-brand-gray">
+                                          <span className="font-medium text-white/85">{paper.authors_raw || paper.authors_list.join(", ")}</span>
+                                          <span>•</span>
+                                          <span className="text-brand-cyan/90 font-medium">{paper.department}</span>
+                                          <span>•</span>
+                                          <span className="font-mono bg-brand-border/60 px-1.5 py-0.2 rounded text-white/90">{paper.publication_year}</span>
+                                        </div>
+                                      </div>
+                                      <div className="w-7 h-7 rounded-full bg-brand-card border border-brand-border flex items-center justify-center shrink-0 ml-2 group-hover:border-brand-cyan/40">
+                                        {isExpanded ? (
+                                          <ChevronDown className="w-4 h-4 text-brand-cyan transform rotate-180 transition-all" />
+                                        ) : (
+                                          <ChevronRight className="w-4 h-4 text-brand-gray group-hover:text-brand-cyan transition-all" />
+                                        )}
+                                      </div>
+                                    </button>
+                                    
+                                    {/* Accordion Body */}
+                                    {isExpanded && (
+                                      <div className="px-4 pb-4 pt-2.5 border-t border-brand-border/60 space-y-3 bg-brand-card/40 text-xs">
+                                        {/* AI Summary Callout */}
+                                        <div className="p-3.5 rounded-xl bg-brand-bg/80 border-l-4 border-brand-cyan text-xs leading-relaxed italic text-white/95 font-sans shadow-inner">
+                                          <span className="text-brand-cyan font-bold block not-italic text-[10px] uppercase tracking-wider mb-1 flex items-center">
+                                            <Sparkles className="w-3.5 h-3.5 mr-1" /> Executive AI Summary
+                                          </span>
+                                          “{paper.ai_summary || paper.abstract}”
+                                        </div>
+                                        
+                                        {/* Metadata Metrics Table */}
+                                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[10px]">
+                                          <div className="p-2.5 rounded-xl bg-brand-bg/60 border border-brand-border/60">
+                                            <span className="text-brand-gray block text-[9px] uppercase font-bold mb-0.5">Journal / Conf</span>
+                                            <span className="text-white font-medium truncate block" title={paper.journal_or_conference || 'N/A'}>{paper.journal_or_conference || 'N/A'}</span>
+                                          </div>
+                                          <div className="p-2.5 rounded-xl bg-brand-bg/60 border border-brand-border/60">
+                                            <span className="text-brand-gray block text-[9px] uppercase font-bold mb-0.5">DOI Number</span>
+                                            <span className="text-white font-mono truncate block" title={paper.doi || 'N/A'}>{paper.doi || 'N/A'}</span>
+                                          </div>
+                                          <div className="p-2.5 rounded-xl bg-brand-bg/60 border border-brand-border/60">
+                                            <span className="text-brand-gray block text-[9px] uppercase font-bold mb-0.5">Citations</span>
+                                            <span className="text-brand-green font-mono font-bold block">{paper.citation_count} citations</span>
+                                          </div>
+                                          <div className="p-2.5 rounded-xl bg-brand-bg/60 border border-brand-border/60">
+                                            <span className="text-brand-gray block text-[9px] uppercase font-bold mb-0.5">ML Confidence</span>
+                                            <span className="text-brand-cyan font-mono font-bold block">{(paper.ml_confidence * 100).toFixed(1)}%</span>
+                                          </div>
+                                        </div>
+                                        
+                                        {/* Full Abstract */}
+                                        <div>
+                                          <span className="text-[10px] font-bold text-brand-gray uppercase tracking-wider block mb-1">Abstract Text:</span>
+                                          <p className="text-[11px] text-brand-gray leading-relaxed bg-brand-bg/50 p-3 rounded-xl border border-brand-border/60 max-h-32 overflow-y-auto custom-scrollbar font-sans">
+                                            {paper.abstract || 'No abstract text available.'}
+                                          </p>
+                                        </div>
+                                        
+                                        {/* Actions Footer */}
+                                        <div className="flex items-center justify-end space-x-2.5 pt-2.5 border-t border-brand-border/40">
+                                          <button
+                                            onClick={() => onSelectPaper(paper)}
+                                            className="px-3 py-1.5 rounded-xl bg-brand-bg hover:bg-brand-hover text-white border border-brand-border text-xs font-semibold transition-all cursor-pointer shadow-sm flex items-center space-x-1"
+                                          >
+                                            <FileText className="w-3.5 h-3.5 text-brand-cyan" />
+                                            <span>Full Metadata Modal</span>
+                                          </button>
+                                          {paper.pdf_url && (
+                                            <a
+                                              href={`${SERVER_BASE_URL}${paper.pdf_url}`}
+                                              target="_blank"
+                                              rel="noreferrer"
+                                              className="px-3 py-1.5 rounded-xl bg-brand-cyan/20 hover:bg-brand-cyan/35 border border-brand-cyan/40 text-brand-cyan text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer shadow-sm"
+                                            >
+                                              <ExternalLink className="w-3.5 h-3.5" />
+                                              <span>View PDF</span>
+                                            </a>
+                                          )}
+                                        </div>
+                                      </div>
+                                    )}
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Empty state matches */}
+                        {msg.response && msg.response.is_academic_query && msg.response.papers && msg.response.papers.length === 0 && (
+                          <div className="mt-4 p-3.5 rounded-2xl bg-brand-bg/80 border border-brand-border text-center text-xs text-brand-gray font-medium">
+                            No research publications in the DB match these exact search parameters.
+                          </div>
+                        )}
+
+                      </div>
+
+                      {/* User Avatar */}
+                      {isUser && (
+                        <div className="w-8 h-8 rounded-xl bg-brand-card border border-brand-border flex items-center justify-center shrink-0 mt-1 shadow-sm">
+                          <User className="w-4 h-4 text-white" />
+                        </div>
+                      )}
+
+                    </div>
+                  );
+                })}
+
+                {/* Loading Indicator Bubble */}
+                {loading && (
+                  <div className="flex justify-start space-x-3 sm:space-x-4">
+                    <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-brand-cyan/20 to-indigo-500/20 border border-brand-cyan/40 flex items-center justify-center shrink-0 mt-1 shadow-sm">
+                      <Sparkles className="w-4 h-4 text-brand-cyan animate-spin" />
+                    </div>
+                    <div className="bg-brand-card/90 border border-brand-border rounded-3xl rounded-tl-sm px-5 py-4 max-w-[60%] flex items-center space-x-3 shadow-md">
+                      <div className="flex space-x-1.5">
+                        <div className="w-2 h-2 rounded-full bg-brand-cyan animate-bounce" style={{ animationDelay: '0ms' }} />
+                        <div className="w-2 h-2 rounded-full bg-brand-cyan animate-bounce" style={{ animationDelay: '150ms' }} />
+                        <div className="w-2 h-2 rounded-full bg-brand-cyan animate-bounce" style={{ animationDelay: '300ms' }} />
+                      </div>
+                      <span className="text-xs text-brand-gray font-semibold">Agent is querying Scikit-Learn & DB corpus...</span>
+                    </div>
+                  </div>
+                )}
+
+                <div ref={messagesEndRef} />
+              </div>
+            </div>
+
+            {/* DOCKED BOTTOM BAR (Fixed ChatGPT Footer) */}
+            <div className="p-3 sm:p-4 bg-gradient-to-t from-brand-bg via-brand-bg/95 to-brand-bg/80 backdrop-blur-md border-t border-brand-border/60 shrink-0 z-10">
+              {renderPilledInputBox(false)}
+              <div className="mt-2 text-center text-[10px] text-brand-gray/70 font-sans flex items-center justify-center space-x-2">
+                <span>CRD Research Agent v3.5 can make mistakes. Verify important citations and DOI metadata against the primary repository.</span>
+              </div>
+            </div>
+
+          </div>
+        )}
+
+      </div>
+
+      {/* GUARDRAIL & SCOPE MODAL */}
+      {showGuardrailModal && (
+        <div className="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fadeIn">
+          <div className="bg-brand-card border border-brand-border rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-5">
+            
+            <div className="flex items-center justify-between pb-3 border-b border-brand-border/80">
+              <div className="flex items-center space-x-2.5">
+                <div className="w-9 h-9 rounded-xl bg-brand-red/15 border border-brand-red/35 flex items-center justify-center text-brand-red">
+                  <AlertTriangle className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-white leading-tight">Assistant Guardrails & Policy</h3>
+                  <p className="text-[11px] text-brand-gray">Strict academic filtering engine</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowGuardrailModal(false)}
+                className="p-1.5 rounded-xl bg-brand-bg hover:bg-brand-hover text-brand-gray hover:text-white transition-colors cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <p className="text-xs text-brand-gray leading-relaxed">
+              This chat interface is explicitly designed to query the College Research Digest database. It operates under strict academic and departmental parameters to maintain high signal-to-noise ratio:
+            </p>
+
+            <div className="space-y-3 text-xs">
+              <div className="p-3.5 rounded-2xl bg-brand-cyan/10 border border-brand-cyan/30 text-white space-y-1">
+                <strong className="text-brand-cyan font-bold flex items-center text-xs">
+                  ✅ Supported Topics & Scope
+                </strong>
+                <p className="text-[11px] text-brand-gray leading-normal">
+                  Searching for faculty papers, looking up specific author publication history, summarizing abstracts, filtering by academic department, year, or citation count.
+                </p>
+              </div>
+
+              <div className="p-3.5 rounded-2xl bg-brand-red/10 border border-brand-red/30 text-white space-y-1">
+                <strong className="text-brand-red font-bold flex items-center text-xs">
+                  ❌ Restricted & Rejected Topics
+                </strong>
+                <p className="text-[11px] text-brand-red/90 leading-normal">
+                  General conversational chatter, programming/coding assistance, email administration tasks, college exam structures, and non-academic knowledge. Unrelated queries trigger immediate rejection by the NLP classification guardrail.
+                </p>
+              </div>
+            </div>
+
+            <div className="p-3 rounded-xl bg-brand-bg border border-brand-border text-[11px] text-brand-gray flex items-center justify-between font-mono">
+              <span>Model Architecture:</span>
+              <span className="text-brand-cyan font-bold">Gemini 3.5 Flash + Scikit-Learn NLP</span>
+            </div>
+
+            <button
+              onClick={() => setShowGuardrailModal(false)}
+              className="w-full py-3 rounded-xl bg-gradient-to-r from-brand-cyan to-indigo-500 hover:brightness-115 text-brand-bg font-bold text-xs transition-all shadow-lg shadow-brand-cyan/15 cursor-pointer"
+            >
+              Got it, Continue Researching
+            </button>
+
+          </div>
+        </div>
+      )}
 
     </div>
   );

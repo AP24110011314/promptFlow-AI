@@ -151,7 +151,7 @@ export default function App() {
         />
 
         {/* Scrollable Content Area */}
-        <main className="flex-1 overflow-y-auto">
+        <main className={`flex-1 ${activeTab === 'chat' ? 'overflow-hidden flex flex-col' : 'overflow-y-auto'}`}>
           
           {/* Dashboard View (3-column layout inside!) */}
           {activeTab === 'dashboard' && (
@@ -181,12 +181,10 @@ export default function App() {
 
           {/* AI Assistant Chat View */}
           {activeTab === 'chat' && (
-            <div className="p-6 sm:p-8 max-w-5xl mx-auto">
-              <ChatView
-                user={user}
-                onSelectPaper={(p) => setSelectedPaper(p)}
-              />
-            </div>
+            <ChatView
+              user={user}
+              onSelectPaper={(p) => setSelectedPaper(p)}
+            />
           )}
 
           {/* Email Simulation View (Admin Only) */}

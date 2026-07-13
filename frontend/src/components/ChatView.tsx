@@ -49,71 +49,8 @@ interface ChatViewProps {
 }
 
 export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper }) => {
-  // Load sessions from localStorage or migrate legacy sessionStorage
-  const [sessions, setSessions] = useState<ChatSession[]>(() => {
-    const savedSessions = localStorage.getItem('crd_chat_sessions');
-    if (savedSessions) {
-      try {
-        const parsed = JSON.parse(savedSessions);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed.map((s: any) => ({
-            ...s,
-            createdAt: new Date(s.createdAt),
-            updatedAt: new Date(s.updatedAt),
-            messages: s.messages.map((m: any) => ({
-              ...m,
-              timestamp: new Date(m.timestamp)
-            }))
-          }));
-        }
-      } catch (e) {
-        console.error("Failed to parse saved chat sessions", e);
-      }
-    }
-    
-    // Check for legacy messages in sessionStorage
-    const legacyMessages = sessionStorage.getItem('crd_chat_messages');
-    let initialMessages: ChatMessage[] = [];
-    if (legacyMessages) {
-      try {
-        const parsed = JSON.parse(legacyMessages);
-        initialMessages = parsed.map((m: any) => ({
-          ...m,
-          timestamp: new Date(m.timestamp)
-        }));
-      } catch (e) {
-        console.error("Failed to parse legacy messages", e);
-      }
-    }
-
-    if (initialMessages.length === 0) {
-      initialMessages = [
-        {
-          id: 'welcome_init',
-          role: 'assistant',
-          text: `Hello ${user?.full_name || 'Professor'}. I am your CRD AI Research Assistant. You can ask me queries about research papers, authors, departments, or publication categories in natural language. How can I help you today?`,
-          timestamp: new Date()
-        }
-      ];
-    }
-
-    return [
-      {
-        id: 'default-session',
-        title: initialMessages.some(m => m.role === 'user') 
-          ? (initialMessages.find(m => m.role === 'user')?.text.slice(0, 32) + '...') || 'Research Inquiry'
-          : 'New Conversation',
-        messages: initialMessages,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      }
-    ];
-  });
-
-  const [activeSessionId, setActiveSessionId] = useState<string>(() => {
-    const savedActiveId = localStorage.getItem('crd_active_chat_id');
-    return savedActiveId || 'default-session';
-  });
+  const [sessions, setSessions] = useState<ChatSession[]>([]);
+  const [activeSessionId, setActiveSessionId] = useState<string>('default-session');
 
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -135,14 +72,76 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper }) => {
 
   const hasUserMessages = activeSession.messages.some(m => m.role === 'user');
 
-  // Sync to localStorage
+  // Load user-specific sessions and activeSessionId when user changes
   useEffect(() => {
-    localStorage.setItem('crd_chat_sessions', JSON.stringify(sessions));
-  }, [sessions]);
+    const userEmail = user?.email || 'default';
+    const storageKey = `crd_chat_sessions_${userEmail}`;
+    const activeKey = `crd_active_chat_id_${userEmail}`;
+    
+    const savedSessions = localStorage.getItem(storageKey);
+    let loadedSessions: ChatSession[] = [];
+    
+    if (savedSessions) {
+      try {
+        const parsed = JSON.parse(savedSessions);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          loadedSessions = parsed.map((s: any) => ({
+            ...s,
+            createdAt: new Date(s.createdAt),
+            updatedAt: new Date(s.updatedAt),
+            messages: s.messages.map((m: any) => ({
+              ...m,
+              timestamp: new Date(m.timestamp)
+            }))
+          }));
+        }
+      } catch (e) {
+        console.error("Failed to parse saved chat sessions", e);
+      }
+    }
+    
+    if (loadedSessions.length === 0) {
+      loadedSessions = [
+        {
+          id: 'default-session',
+          title: 'New Conversation',
+          messages: [
+            {
+              id: 'welcome_init',
+              role: 'assistant',
+              text: `Hello ${user?.full_name || 'Professor'}. I am your CRD AI Research Assistant. You can ask me queries about research papers, authors, departments, or publication categories in natural language. How can I help you today?`,
+              timestamp: new Date()
+            }
+          ],
+          createdAt: new Date(),
+          updatedAt: new Date()
+        }
+      ];
+    }
+    
+    setSessions(loadedSessions);
+    
+    const savedActiveId = localStorage.getItem(activeKey);
+    if (savedActiveId && loadedSessions.some(s => s.id === savedActiveId)) {
+      setActiveSessionId(savedActiveId);
+    } else {
+      setActiveSessionId(loadedSessions[0].id);
+    }
+  }, [user?.email, user?.full_name]);
 
+  // Sync to user-specific localStorage when sessions change
   useEffect(() => {
-    localStorage.setItem('crd_active_chat_id', activeSessionId);
-  }, [activeSessionId]);
+    if (user?.email && sessions.length > 0) {
+      localStorage.setItem(`crd_chat_sessions_${user.email}`, JSON.stringify(sessions));
+    }
+  }, [sessions, user?.email]);
+
+  // Sync activeSessionId when it changes
+  useEffect(() => {
+    if (user?.email) {
+      localStorage.setItem(`crd_active_chat_id_${user.email}`, activeSessionId);
+    }
+  }, [activeSessionId, user?.email]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });

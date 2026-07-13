@@ -111,7 +111,7 @@ class ResearchMLClassifier:
 
         self.dept_pipeline = Pipeline([
             ('tfidf', TfidfVectorizer(stop_words='english', max_features=5000, ngram_range=(1, 2))),
-            ('clf', RandomForestClassifier(n_estimators=100, random_state=42))
+            ('clf', MultinomialNB(alpha=0.1))
         ])
         self.dept_pipeline.fit(research_texts, research_depts)
 

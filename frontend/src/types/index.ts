@@ -22,6 +22,7 @@ export interface ResearchPaper {
   authors_list: string[];
   department: string;
   journal_or_conference?: string;
+  publication_type?: string;
   publication_date?: string;
   publication_year: number;
   doi?: string;

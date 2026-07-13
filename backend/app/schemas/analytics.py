@@ -43,3 +43,4 @@ class DashboardAnalyticsResponse(BaseModel):
     by_category: List[CategoryStats]
     top_authors: List[AuthorStats]
     collaboration_network: NetworkData
+    citation_network: NetworkData

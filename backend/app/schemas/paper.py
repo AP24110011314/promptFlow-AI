@@ -9,6 +9,7 @@ class ResearchPaperBase(BaseModel):
     authors_list: Optional[List[str]] = []
     department: Optional[str] = "General"
     journal_or_conference: Optional[str] = None
+    publication_type: Optional[str] = "Journal"
     publication_date: Optional[str] = None
     publication_year: Optional[int] = None
     doi: Optional[str] = None

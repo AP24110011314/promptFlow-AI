@@ -22,7 +22,7 @@ class ChatAgentService:
         """
         # Try Gemini API first
         if self.gemini_key:
-            gemini_models = ["gemini-3.1-flash-lite", "gemini-3.5-flash"]
+            gemini_models = ["gemini-2.5-flash-lite", "gemini-2.5-flash", "gemini-3.1-flash-lite", "gemini-3.5-flash"]
             for model in gemini_models:
                 try:
                     url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={self.gemini_key}"

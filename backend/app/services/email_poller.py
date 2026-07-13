@@ -62,36 +62,52 @@ class EmailPoller:
 
         try:
             # Connect to IMAP server
+            print(f"Email Poller: Connecting to {settings.EMAIL_IMAP_SERVER}...", flush=True)
             mail = imaplib.IMAP4_SSL(settings.EMAIL_IMAP_SERVER, settings.EMAIL_IMAP_PORT)
             mail.login(settings.EMAIL_USERNAME, settings.EMAIL_PASSWORD)
             mail.select("inbox")
+            print("Email Poller: Connected and authenticated successfully.", flush=True)
 
-            # Search for all unseen messages
-            status, messages = mail.search(None, "UNSEEN")
+            # Search for messages with subject containing "published"
+            status, messages = mail.search(None, 'SUBJECT', 'published')
             if status != "OK":
+                print("Email Poller: IMAP search failed.", flush=True)
                 mail.logout()
                 return
 
             mail_ids = messages[0].split()
+            print(f"Email Poller: Found {len(mail_ids)} matching emails in inbox.", flush=True)
             if not mail_ids:
                 mail.logout()
                 return
 
-            print(f"Email Poller: Found {len(mail_ids)} unread emails.", flush=True)
-
             db: Session = SessionLocal()
             try:
-                for mail_id in mail_ids:
+                # Process newest emails first
+                for mail_id in reversed(mail_ids):
+                    # Fetch only the header first to check the subject quickly
+                    status, data = mail.fetch(mail_id, "(RFC822.HEADER)")
+                    if status != "OK":
+                        continue
+
+                    raw_header = data[0][1]
+                    msg_hdr = email.message_from_bytes(raw_header)
+                    subject = self.decode_header_value(msg_hdr.get("Subject"))
+                    sender = self.decode_header_value(msg_hdr.get("From"))
+
+                    print(f"Email Poller: Found target email - Subject: '{subject}' | From: '{sender}'", flush=True)
+
+                    if "paper" not in subject.lower() or "published" not in subject.lower():
+                        # Skip if it doesn't match our target keywords
+                        continue
+
+                    # Fetch the full email content
                     status, data = mail.fetch(mail_id, "(RFC822)")
                     if status != "OK":
                         continue
 
                     raw_email = data[0][1]
                     msg = email.message_from_bytes(raw_email)
-
-                    # Extract basic headers
-                    subject = self.decode_header_value(msg.get("Subject"))
-                    sender = self.decode_header_value(msg.get("From"))
 
                     # Extract body and attachments
                     body = ""

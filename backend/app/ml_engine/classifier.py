@@ -111,6 +111,19 @@ class ResearchMLClassifier:
         if not self.email_pipeline:
             self._initialize_models()
         
+        text_lower = text.lower()
+        # Heuristic check for direct publication announcements in text
+        if any(phrase in text_lower for phrase in [
+            "paper published", "papers published", "article published", 
+            "title of the paper", "title of paper",
+            "doi:", "doi :", "accepted for publication"
+        ]):
+            return {
+                "predicted_class": "research_paper",
+                "confidence": 1.0,
+                "is_research": True
+            }
+        
         prob = self.email_pipeline.predict_proba([text])[0]
         classes = self.email_pipeline.classes_
         res_idx = list(classes).index("research_paper") if "research_paper" in classes else 0

@@ -43,8 +43,22 @@ class EmailIngestionService:
                 meta = paper_extractor.parse_text_metadata(req.body, req.body[:2000])
                 if req.department_hint and req.department_hint != "General":
                     meta["department"] = req.department_hint
-                if req.subject and len(req.subject) > 5:
+                if req.subject and len(req.subject) > 5 and meta.get("title", "Untitled Research Publication") == "Untitled Research Publication":
                     meta["title"] = req.subject
+
+            # Check for duplicates before creating a new entry
+            existing_paper = None
+            if meta.get("doi"):
+                existing_paper = db.query(ResearchPaper).filter(ResearchPaper.doi == meta["doi"]).first()
+            if not existing_paper and meta.get("title"):
+                existing_paper = db.query(ResearchPaper).filter(ResearchPaper.title == meta["title"]).first()
+
+            if existing_paper:
+                log_entry.extracted_paper_id = existing_paper.id
+                log_entry.status = "processed"
+                log_entry.error_message = "Paper already exists in repository."
+                db.commit()
+                return log_entry
 
             # 3. Generate AI summary
             ai_sum = summarizer.summarize(meta["abstract"], max_sentences=3)

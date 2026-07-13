@@ -28,6 +28,24 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
   const [selectedCat, setSelectedCat] = useState('All');
   const [selectedYear, setSelectedYear] = useState<string>('All');
   
+  // Advanced filters state
+  const [selectedType, setSelectedType] = useState('All');
+  const [authorQuery, setAuthorQuery] = useState('');
+  const [startYear, setStartYear] = useState('All');
+  const [endYear, setEndYear] = useState('All');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
+
+  // Helpers to update filter and reset page
+  const handleSetSearchQuery = (val: string) => { setSearchQuery(val); setCurrentPage(1); };
+  const handleSetSelectedDept = (val: string) => { setSelectedDept(val); setCurrentPage(1); };
+  const handleSetSelectedCat = (val: string) => { setSelectedCat(val); setCurrentPage(1); };
+  const handleSetSelectedYear = (val: string) => { setSelectedYear(val); setCurrentPage(1); };
+  const handleSetSelectedType = (val: string) => { setSelectedType(val); setCurrentPage(1); };
+  const handleSetAuthorQuery = (val: string) => { setAuthorQuery(val); setCurrentPage(1); };
+  const handleSetStartYear = (val: string) => { setStartYear(val); setCurrentPage(1); };
+  const handleSetEndYear = (val: string) => { setEndYear(val); setCurrentPage(1); };
+
   // Upload modal state
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploadFile, setUploadFile] = useState<File | null>(null);
@@ -37,6 +55,7 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
 
   const departments = ['All', 'Computer Science', 'Physics', 'Chemistry', 'Biotechnology', 'Mechanical Engineering', 'Electrical Engineering', 'Mathematics', 'Economics & Finance'];
   const years = ['All', '2026', '2025', '2024', '2023'];
+  const pubTypes = ['All', 'Journal', 'Conference', 'Patent', 'Preprint'];
 
   // Filter logic
   const filteredPapers = papers.filter((p) => {
@@ -47,9 +66,26 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
     
     const matchesDept = selectedDept === 'All' || p.department === selectedDept;
     const matchesCat = selectedCat === 'All' || (p.categories_list && p.categories_list.includes(selectedCat));
-    const matchesYear = selectedYear === 'All' || p.publication_year.toString() === selectedYear;
+    
+    // Type filter
+    const paperType = p.publication_type || 'Journal';
+    const matchesType = selectedType === 'All' || paperType.toLowerCase() === selectedType.toLowerCase();
+    
+    // Author search
+    const matchesAuthor = !authorQuery || (p.authors_raw && p.authors_raw.toLowerCase().includes(authorQuery.toLowerCase()));
+    
+    // Time period filter
+    let matchesTimePeriod = true;
+    if (selectedYear !== 'All') {
+      matchesTimePeriod = p.publication_year.toString() === selectedYear;
+    } else {
+      const yearVal = p.publication_year;
+      const startVal = startYear !== 'All' ? parseInt(startYear) : -Infinity;
+      const endVal = endYear !== 'All' ? parseInt(endYear) : Infinity;
+      matchesTimePeriod = yearVal >= startVal && yearVal <= endVal;
+    }
 
-    return matchesQuery && matchesDept && matchesCat && matchesYear;
+    return matchesQuery && matchesDept && matchesCat && matchesType && matchesAuthor && matchesTimePeriod;
   });
 
   const handleExportExcel = () => {
@@ -132,16 +168,17 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
 
       {/* Filter Toolbar */}
       <div className="watt-card space-y-4">
+        {/* Row 1: Core Search and Department / Category / Type */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           
           {/* Search Bar */}
-          <div className="md:col-span-1 relative">
+          <div className="relative">
             <Search className="absolute left-3.5 top-3 w-4 h-4 text-brand-gray" />
             <input
               type="text"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search title, author, abstract..."
+              onChange={(e) => handleSetSearchQuery(e.target.value)}
+              placeholder="Search title, abstract..."
               className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-brand-bg border border-brand-border text-white placeholder-brand-gray text-xs focus:outline-none focus:border-brand-cyan transition-all"
             />
           </div>
@@ -150,7 +187,7 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
           <div>
             <select
               value={selectedDept}
-              onChange={(e) => setSelectedDept(e.target.value)}
+              onChange={(e) => handleSetSelectedDept(e.target.value)}
               className="w-full px-3.5 py-2.5 rounded-xl bg-brand-bg border border-brand-border text-white text-xs focus:outline-none focus:border-brand-cyan transition-all cursor-pointer"
             >
               {departments.map((dept) => (
@@ -163,7 +200,7 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
           <div>
             <select
               value={selectedCat}
-              onChange={(e) => setSelectedCat(e.target.value)}
+              onChange={(e) => handleSetSelectedCat(e.target.value)}
               className="w-full px-3.5 py-2.5 rounded-xl bg-brand-bg border border-brand-border text-white text-xs focus:outline-none focus:border-brand-cyan transition-all cursor-pointer"
             >
               <option value="All">Category: All Topics</option>
@@ -173,26 +210,96 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
             </select>
           </div>
 
-          {/* Year Filter */}
+          {/* Publication Type Filter */}
           <div>
             <select
-              value={selectedYear}
-              onChange={(e) => setSelectedYear(e.target.value)}
+              value={selectedType}
+              onChange={(e) => handleSetSelectedType(e.target.value)}
               className="w-full px-3.5 py-2.5 rounded-xl bg-brand-bg border border-brand-border text-white text-xs focus:outline-none focus:border-brand-cyan transition-all cursor-pointer"
             >
-              {years.map((year) => (
-                <option key={year} value={year}>Year: {year}</option>
+              {pubTypes.map((type) => (
+                <option key={type} value={type}>Type: {type}</option>
               ))}
             </select>
           </div>
 
         </div>
 
+        {/* Row 2: Advanced Author & Year Range (Time Period) */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 pt-2 border-t border-brand-border/40">
+          {/* Author Specific Search */}
+          <div className="relative">
+            <Users className="absolute left-3.5 top-3 w-4 h-4 text-brand-gray" />
+            <input
+              type="text"
+              value={authorQuery}
+              onChange={(e) => handleSetAuthorQuery(e.target.value)}
+              placeholder="Search by Author Name..."
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-brand-bg border border-brand-border text-white placeholder-brand-gray text-xs focus:outline-none focus:border-brand-cyan transition-all"
+            />
+          </div>
+
+          {/* Single Year (Specific Year Override) */}
+          <div>
+            <select
+              value={selectedYear}
+              onChange={(e) => handleSetSelectedYear(e.target.value)}
+              className="w-full px-3.5 py-2.5 rounded-xl bg-brand-bg border border-brand-border text-white text-xs focus:outline-none focus:border-brand-cyan transition-all cursor-pointer"
+            >
+              <option value="All">Specific Year: All</option>
+              {years.filter(y => y !== 'All').map((year) => (
+                <option key={year} value={year}>{year}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* Start Year */}
+          <div>
+            <select
+              disabled={selectedYear !== 'All'}
+              value={startYear}
+              onChange={(e) => handleSetStartYear(e.target.value)}
+              className="w-full px-3.5 py-2.5 rounded-xl bg-brand-bg border border-brand-border text-white text-xs focus:outline-none focus:border-brand-cyan transition-all cursor-pointer disabled:opacity-40"
+            >
+              <option value="All">Start Year: All</option>
+              {years.filter(y => y !== 'All').slice().reverse().map((year) => (
+                <option key={year} value={year}>{year}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* End Year */}
+          <div>
+            <select
+              disabled={selectedYear !== 'All'}
+              value={endYear}
+              onChange={(e) => handleSetEndYear(e.target.value)}
+              className="w-full px-3.5 py-2.5 rounded-xl bg-brand-bg border border-brand-border text-white text-xs focus:outline-none focus:border-brand-cyan transition-all cursor-pointer disabled:opacity-40"
+            >
+              <option value="All">End Year: All</option>
+              {years.filter(y => y !== 'All').map((year) => (
+                <option key={year} value={year}>{year}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {/* Clear / Showing stats */}
         <div className="flex items-center justify-between text-xs text-brand-gray pt-2 border-t border-brand-border">
           <span>Showing <strong className="text-white font-mono">{filteredPapers.length}</strong> research publications</span>
-          {(searchQuery || selectedDept !== 'All' || selectedCat !== 'All' || selectedYear !== 'All') && (
+          {(searchQuery || authorQuery || selectedDept !== 'All' || selectedCat !== 'All' || selectedYear !== 'All' || selectedType !== 'All' || startYear !== 'All' || endYear !== 'All') && (
             <button
-              onClick={() => { setSearchQuery(''); setSelectedDept('All'); setSelectedCat('All'); setSelectedYear('All'); }}
+              onClick={() => {
+                setSearchQuery('');
+                setSelectedDept('All');
+                setSelectedCat('All');
+                setSelectedYear('All');
+                setSelectedType('All');
+                setAuthorQuery('');
+                setStartYear('All');
+                setEndYear('All');
+                setCurrentPage(1);
+              }}
               className="text-brand-cyan hover:brightness-110 font-semibold underline cursor-pointer"
             >
               Reset All Filters
@@ -209,53 +316,83 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
           <p className="text-xs text-brand-gray mt-1">Try adjusting your filters or search terms.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {filteredPapers.map((paper) => (
-            <div
-              key={paper.id}
-              onClick={() => onSelectPaper(paper)}
-              className="watt-card hover:border-brand-cyan cursor-pointer transition-all flex flex-col justify-between group"
-            >
-              <div>
-                <div className="flex items-center justify-between gap-2">
-                  <span className="px-2.5 py-1 rounded-lg bg-brand-cyan/10 text-brand-cyan border border-brand-cyan/20 text-[11px] font-semibold truncate">
-                    {paper.department || 'General'}
-                  </span>
-                  <span className="text-[11px] font-mono font-medium text-brand-gray bg-brand-bg px-2 py-0.5 rounded border border-brand-border">
-                    {paper.publication_year}
-                  </span>
-                </div>
-
-                <h3 className="text-sm font-bold text-white mt-3 group-hover:text-brand-cyan transition-colors line-clamp-2">
-                  {paper.title}
-                </h3>
-
-                <p className="text-xs text-brand-gray mt-2 line-clamp-3 italic bg-brand-bg p-2.5 rounded-xl border border-brand-border">
-                  {paper.ai_summary || paper.abstract || 'No summary available.'}
-                </p>
-
-                {/* Category Tags */}
-                <div className="flex flex-wrap gap-1.5 mt-3">
-                  {(paper.categories_list || []).slice(0, 3).map((tag, idx) => (
-                    <span key={idx} className="px-2 py-0.5 rounded-md bg-brand-cyan/10 text-brand-cyan text-[10px] font-medium border border-brand-cyan/20 font-mono">
-                      #{tag}
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {filteredPapers.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((paper) => (
+              <div
+                key={paper.id}
+                onClick={() => onSelectPaper(paper)}
+                className="watt-card hover:border-brand-cyan cursor-pointer transition-all flex flex-col justify-between group"
+              >
+                <div>
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center space-x-1.5 truncate max-w-[75%]">
+                      <span className="px-2.5 py-1 rounded-lg bg-brand-cyan/10 text-brand-cyan border border-brand-cyan/20 text-[11px] font-semibold truncate">
+                        {paper.department || 'General'}
+                      </span>
+                      <span className="px-2 py-0.5 rounded-md bg-brand-green/10 text-brand-green border border-brand-green/20 text-[10px] font-bold truncate font-mono">
+                        {paper.publication_type || 'Journal'}
+                      </span>
+                    </div>
+                    <span className="text-[11px] font-mono font-medium text-brand-gray bg-brand-bg px-2 py-0.5 rounded border border-brand-border shrink-0">
+                      {paper.publication_year}
                     </span>
-                  ))}
-                </div>
-              </div>
+                  </div>
 
-              <div className="mt-4 pt-3 border-t border-brand-border flex items-center justify-between text-xs text-brand-gray">
-                <div className="flex items-center space-x-1.5 truncate max-w-[65%]">
-                  <Users className="w-3.5 h-3.5 text-brand-gray shrink-0" />
-                  <span className="truncate">{paper.authors_raw || 'College Faculty'}</span>
+                  <h3 className="text-sm font-bold text-white mt-3 group-hover:text-brand-cyan transition-colors line-clamp-2">
+                    {paper.title}
+                  </h3>
+
+                  <p className="text-xs text-brand-gray mt-2 line-clamp-3 italic bg-brand-bg p-2.5 rounded-xl border border-brand-border">
+                    {paper.ai_summary || paper.abstract || 'No summary available.'}
+                  </p>
+
+                  {/* Category Tags */}
+                  <div className="flex flex-wrap gap-1.5 mt-3">
+                    {(paper.categories_list || []).slice(0, 3).map((tag, idx) => (
+                      <span key={idx} className="px-2 py-0.5 rounded-md bg-brand-cyan/10 text-brand-cyan text-[10px] font-medium border border-brand-cyan/20 font-mono">
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-                <div className="flex items-center space-x-1 text-brand-cyan font-bold shrink-0">
-                  <span>View Details</span>
+
+                <div className="mt-4 pt-3 border-t border-brand-border flex items-center justify-between text-xs text-brand-gray">
+                  <div className="flex items-center space-x-1.5 truncate max-w-[65%]">
+                    <Users className="w-3.5 h-3.5 text-brand-gray shrink-0" />
+                    <span className="truncate">{paper.authors_raw || 'College Faculty'}</span>
+                  </div>
+                  <div className="flex items-center space-x-1 text-brand-cyan font-bold shrink-0">
+                    <span>View Details</span>
+                  </div>
                 </div>
               </div>
+            ))}
+          </div>
+
+          {/* Pagination Controls */}
+          {filteredPapers.length > itemsPerPage && (
+            <div className="flex items-center justify-between mt-8 p-4 bg-brand-card rounded-2xl border border-brand-border shadow-md">
+              <button
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                className="px-4 py-2 rounded-xl bg-brand-bg text-white hover:bg-brand-hover hover:border-brand-cyan border border-brand-border text-xs font-bold transition-all disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
+              >
+                Previous
+              </button>
+              <span className="text-xs text-brand-gray font-medium">
+                Page <strong className="text-white font-mono">{currentPage}</strong> of <strong className="text-white font-mono">{Math.ceil(filteredPapers.length / itemsPerPage)}</strong>
+              </span>
+              <button
+                disabled={currentPage === Math.ceil(filteredPapers.length / itemsPerPage)}
+                onClick={() => setCurrentPage(prev => Math.min(prev + 1, Math.ceil(filteredPapers.length / itemsPerPage)))}
+                className="px-4 py-2 rounded-xl bg-brand-bg text-white hover:bg-brand-hover hover:border-brand-cyan border border-brand-border text-xs font-bold transition-all disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
+              >
+                Next
+              </button>
             </div>
-          ))}
-        </div>
+          )}
+        </>
       )}
 
       {/* Detailed Paper Modal */}

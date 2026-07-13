@@ -66,101 +66,78 @@ def seed_initial_data():
                 db.add(Category(name=name, description=desc, is_custom=False))
             db.commit()
 
-        # 3. Seed Research Papers
+        # Seed Research Papers
         if db.query(ResearchPaper).count() == 0:
             sample_papers = [
                 {
-                    "title": "Deep Learning Transformer Neural Networks for Multimodal Academic Document Extraction",
-                    "abstract": "We present an automated document understanding framework leveraging vision-language transformer models to parse complex academic layouts. Our experimental results demonstrate a 94.2% precision in bibliographic footprint extraction across 50,000 multi-column PDF publications, significantly outperforming traditional regex-based scraping methods.",
-                    "authors_list": ["Dr. Eleanor Vance", "Prof. Robert Langdon", "Dr. Aravind Patel"],
+                    "title": "SEF-QIM: Scale-based Embedding Factor Quantization Index Modulation Image Watermarking for Tamper Detection and Localization",
+                    "abstract": "Watermarking algorithms must resist malicious tampering while maintaining high fidelity. We propose a scale-based embedding factor quantization index modulation (SEF-QIM) scheme tailored for secure image authentication, providing localization and tamper detection capacity.",
+                    "authors_list": ["Dr. Aditya Kumar Sahu", "Dr. Aravind Patel"],
                     "department": "Computer Science",
-                    "journal": "IEEE Transactions on Neural Networks and Learning Systems",
+                    "journal": "Analog Integrated Circuits and Signal Processing",
                     "year": 2026,
-                    "doi": "10.1109/TNNLS.2026.1049283",
-                    "cats": ["Artificial Intelligence", "Cybersecurity & Cloud"],
-                    "conf": 0.98
+                    "doi": "10.1007/s00034-026-03670-8",
+                    "cats": ["Artificial Intelligence", "Cybersecurity & Cloud"]
+                },
+                {
+                    "title": "Augmented Jet Impingement Cooling System for High-Heat Flux Electronics Through Mitigating Radial Jet-to-Jet Interaction by Employing Rectilinear and Curvilinear Separators",
+                    "abstract": "Jet impingement systems suffer from radial jet interaction which degrades thermal dissipation efficiency. We introduce rectilinear and curvilinear separators to minimize crossflow interference, improving peak heat transfer rates in electronic thermal management setups.",
+                    "authors_list": ["Dr. Lakshmi Sirisha Maganti", "Prof. Nikola Tesla"],
+                    "department": "Mechanical Engineering",
+                    "journal": "Applied Thermal Engineering",
+                    "year": 2026,
+                    "doi": "10.1016/j.applthermaleng.2025.121049",
+                    "cats": ["Renewable Energy & Evs", "Nanotechnology & Materials"]
+                },
+                {
+                    "title": "Synergistic Molecular Design-Triggered Hybridized Local and Charge-Transfer Emission for Efficient (> 6%) Deep-Blue Electroluminescence",
+                    "abstract": "Deep-blue organic light-emitting diodes (OLEDs) require optimal charge-transfer structures. We report a hybridized local and charge-transfer (HLCT) state emission design that achieves external quantum efficiencies exceeding 6% with narrow color purity.",
+                    "authors_list": ["Dr. Venkatramaiah Nutalapati", "Prof. Marie Curie"],
+                    "department": "Chemistry",
+                    "journal": "Journal of the American Chemical Society",
+                    "year": 2026,
+                    "doi": "10.1039/D6TC00512H",
+                    "cats": ["Nanotechnology & Materials", "Renewable Energy & Evs"]
                 },
                 {
                     "title": "Superconducting Qubit Decoherence Time Extension in Ultra-Low Temperature Cryogenic Circuits",
-                    "abstract": "Decoherence remains the primary bottleneck in scaling noisy intermediate-scale quantum (NISQ) computers. In this paper, we report a 4x extension in T2 coherence times for planar superconducting qubits by applying surface passivation treatments and shielding against ambient electromagnetic fluctuations.",
-                    "authors_list": ["Dr. Richard Feynman", "Dr. Aravind Patel", "Dr. Elena Rostova"],
+                    "abstract": "We investigate decoherence limits in superconducting planar qubits. By applying surface chemical treatment and reducing ambient thermal radiation via cryogenic filtration, we extend coherence times significantly, verifying properties below 10 milli-Kelvin.",
+                    "authors_list": ["Dr. Richard Feynman", "Dr. Elena Rostova"],
                     "department": "Physics",
                     "journal": "Physical Review Letters",
                     "year": 2026,
                     "doi": "10.1103/PhysRevLett.136.080402",
-                    "cats": ["Quantum Computing", "Nanotechnology & Materials"],
-                    "conf": 0.96
-                },
-                {
-                    "title": "Synthesis and Catalytic Performance of Metal-Organic Frameworks for Direct Atmospheric Carbon Capture",
-                    "abstract": "Addressing global climate shifts necessitates high-throughput carbon dioxide sequestration. We synthesized novel porous metal-organic frameworks (MOFs) functionalized with amine ligands, exhibiting unprecedented CO2 adsorption selectivity over N2 and H2O at ambient temperatures.",
-                    "authors_list": ["Dr. Elena Rostova", "Prof. Marie Curie"],
-                    "department": "Chemistry",
-                    "journal": "Journal of the American Chemical Society",
-                    "year": 2025,
-                    "doi": "10.1021/jacs.5b10394",
-                    "cats": ["Nanotechnology & Materials", "Renewable Energy & Evs"],
-                    "conf": 0.94
+                    "cats": ["Quantum Computing", "Nanotechnology & Materials"]
                 },
                 {
                     "title": "CRISPR-Cas9 Precision Genome Editing Efficiency and Off-Target Profiling in Pluripotent Stem Cells",
-                    "abstract": "Therapeutic genome modification requires absolute target specificity. Utilizing whole-genome sequencing and high-fidelity Cas9 variants, we mapped off-target cleavage anomalies in human embryonic pluripotent stem cells, establishing a robust protocol for safe clinical translation.",
-                    "authors_list": ["Dr. Sarah Jenkins", "Dr. David Baltimore", "Prof. Robert Langdon"],
+                    "abstract": "To map genomic cleavage precision, we perform deep sequence profiling on high-fidelity Cas9 editors. Our analysis quantifies off-target events, validating high-efficiency targeted knock-in protocols for safe therapeutic applications.",
+                    "authors_list": ["Dr. Sarah Jenkins", "Prof. Robert Langdon"],
                     "department": "Biotechnology",
                     "journal": "Nature Biotechnology",
                     "year": 2026,
                     "doi": "10.1038/s41587-026-02938-x",
-                    "cats": ["Genomics & CRISPR", "Artificial Intelligence"],
-                    "conf": 0.97
-                },
-                {
-                    "title": "Thermal Management and Battery Heat Dissipation Optimization for Next-Generation Electric Vehicles",
-                    "abstract": "High-rate charging of lithium-ion battery packs generates intense localized thermal gradients. We propose an integrated phase-change material (PCM) liquid cooling architecture that restricts maximum cell temperature rise to under 4 degrees Celsius during fast DC charging cycles.",
-                    "authors_list": ["Prof. Nikola Tesla", "Dr. Eleanor Vance"],
-                    "department": "Mechanical Engineering",
-                    "journal": "Applied Thermal Engineering",
-                    "year": 2025,
-                    "doi": "10.1016/j.applthermaleng.2025.121049",
-                    "cats": ["Renewable Energy & Evs", "Nanotechnology & Materials"],
-                    "conf": 0.93
-                },
-                {
-                    "title": "Design of Ultra-Low Power CMOS Millimeter-Wave Transceivers for 6G Mobile Communication Networks",
-                    "abstract": "As 5G networks mature, research shifts toward 6G terahertz and millimeter-wave frequencies. We present a 140 GHz CMOS transceiver architecture achieving a data rate of 50 Gbps while consuming only 65 mW of DC power, paving the way for ubiquitous wireless sensing.",
-                    "authors_list": ["Dr. Aravind Patel", "Prof. Nikola Tesla"],
-                    "department": "Electrical Engineering",
-                    "journal": "IEEE Journal of Solid-State Circuits",
-                    "year": 2026,
-                    "doi": "10.1109/JSSC.2026.3094821",
-                    "cats": ["6G & Wireless Tech", "Renewable Energy & Evs"],
-                    "conf": 0.95
+                    "cats": ["Genomics & CRISPR", "Artificial Intelligence"]
                 },
                 {
                     "title": "Stochastic Differential Equations and Martingale Convergence in High-Frequency Derivative Pricing",
-                    "abstract": "Financial markets exhibit jump-diffusion dynamics that defy standard Black-Scholes assumptions. We formulate a generalized stochastic volatility model with jump intensity parameters, proving martingale convergence theorems and deriving closed-form pricing equations for exotic options.",
+                    "abstract": "This study analyzes martingale properties in jump-diffusion pricing models. By applying stochastic integrals and proving stability theorems, we formulate robust analytical approximations for pricing financial derivatives.",
                     "authors_list": ["Prof. John Nash", "Dr. Sarah Jenkins"],
                     "department": "Mathematics",
                     "journal": "Journal of Financial Econometrics",
                     "year": 2025,
                     "doi": "10.1093/jjfinec/nbz034",
-                    "cats": ["Financial Econometrics", "Artificial Intelligence"],
-                    "conf": 0.91
-                },
-                {
-                    "title": "Automated Static Code Analysis and Zero-Day Vulnerability Detection via Graph Neural Networks",
-                    "abstract": "Traditional static application security testing (SAST) tools generate overwhelming false positive rates. We model software source code as abstract syntax trees and code property graphs, applying deep graph neural networks to pinpoint zero-day memory corruption vulnerabilities with 91% accuracy.",
-                    "authors_list": ["Prof. Robert Langdon", "Dr. Eleanor Vance", "Dr. Aravind Patel"],
-                    "department": "Computer Science",
-                    "journal": "ACM Transactions on Information and System Security",
-                    "year": 2026,
-                    "doi": "10.1145/3589201.3589215",
-                    "cats": ["Cybersecurity & Cloud", "Artificial Intelligence"],
-                    "conf": 0.99
+                    "cats": ["Financial Econometrics", "Artificial Intelligence"]
                 }
             ]
 
             for sp in sample_papers:
                 ai_sum = summarizer.summarize(sp["abstract"], max_sentences=2)
+                
+                # Predict true department and confidence using the trained ML model
+                email_text_format = f"Fwd: Paper Published by {', '.join(sp['authors_list'])}. Title of the paper: {sp['title']}. Journal: {sp['journal']}."
+                pred = ml_classifier.predict_department(email_text_format)
+                
                 p = ResearchPaper(
                     title=sp["title"],
                     abstract=sp["abstract"],
@@ -173,10 +150,10 @@ def seed_initial_data():
                     doi=sp["doi"],
                     keywords_list=sp["cats"],
                     categories_list=sp["cats"],
-                    ml_confidence=sp["conf"],
-                    ml_predicted_dept=sp["department"],
+                    ml_confidence=pred["confidence"],
+                    ml_predicted_dept=pred["department"],
                     ai_summary=ai_sum,
-                    email_source_subject=f"Submission: {sp['title'][:40]}...",
+                    email_source_subject=f"FWD: papers published - {sp['title'][:30]}...",
                     citation_count=sp["year"] % 10 * 4 + 7
                 )
                 db.add(p)
@@ -188,9 +165,9 @@ def seed_initial_data():
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup: create tables and seed initial data
-    seed_initial_data()
+    # Startup: retrain/initialize models, then seed initial data
     ml_classifier.retrain_models() # ensure ML models are initialized
+    seed_initial_data()
     
     # Start Real Email Poller background worker
     from app.services.email_poller import email_poller

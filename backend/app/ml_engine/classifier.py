@@ -16,41 +16,44 @@ class ResearchMLClassifier:
         self._initialize_models()
 
     def _get_seed_training_data(self):
-        # Rich academic training corpus for Department classification and Email classification
+        # Rich academic training corpus styled after real forwarded publication emails
         data = [
-            # Computer Science
-            ("Deep learning algorithms and transformer neural networks for natural language processing and computer vision.", "Computer Science", "research_paper"),
-            ("Optimizing distributed consensus protocols and blockchain architectures for scalable cloud computing.", "Computer Science", "research_paper"),
-            ("Automated vulnerability detection in web applications using static code analysis and machine learning.", "Computer Science", "research_paper"),
-            ("Reinforcement learning for autonomous robot navigation in dynamic environments with obstacle avoidance.", "Computer Science", "research_paper"),
-            ("Quantum computing algorithms for combinatorial optimization problems using NISQ hardware.", "Computer Science", "research_paper"),
+            # Computer Science & Engineering
+            ("Fwd: Paper Published by Dr. Aditya Kumar Sahu, Assistant Professor, Department of Computer Science and Engineering. Title of the paper: SEF-QIM: Scale-based Embedding Factor Quantization Index Modulation Image Watermarking for Tamper Detection and Localization. Journal: Analog Integrated Circuits and Signal Processing.", "Computer Science", "research_paper"),
+            ("Fwd: Paper Published by Prof. Robert Langdon, Department of Computer Science. Title of the paper: Deep Learning Transformer Neural Networks for Multimodal Academic Document Extraction. Journal: IEEE Transactions on Neural Networks.", "Computer Science", "research_paper"),
+            ("Fwd: Paper Published by CS Department. Title: Automated Static Code Analysis and Zero-Day Vulnerability Detection via Graph Neural Networks. Journal: ACM Transactions.", "Computer Science", "research_paper"),
+            ("Fwd: Paper Published: Design of CMOS Millimeter-Wave Transceivers for 6G Mobile Networks. Department: Computer Science.", "Computer Science", "research_paper"),
             
             # Physics
-            ("Experimental observation of Bose-Einstein condensation and superfluidity in ultra-cold atomic gases.", "Physics", "research_paper"),
-            ("Gravitational wave astronomy: binary black hole mergers and neutron star collision waveforms.", "Physics", "research_paper"),
-            ("Superconducting qubits and decoherence time extension in cryogenic quantum circuits.", "Physics", "research_paper"),
-            ("Thermodynamic properties and phase transitions in two-dimensional ferromagnetic lattices.", "Physics", "research_paper"),
+            ("Fwd: Paper Published: Superconducting Qubit Decoherence Time Extension in Ultra-Low Temperature Cryogenic Circuits. Department of Physics.", "Physics", "research_paper"),
+            ("Fwd: Paper Published: Experimental observation of Bose-Einstein condensation and superfluidity in ultra-cold atomic gases. Dept of Physics.", "Physics", "research_paper"),
+            ("Fwd: Paper Published by Physics Department. Title: Gravitational wave astronomy: binary black hole mergers and neutron star collision waveforms.", "Physics", "research_paper"),
             
-            # Chemistry & Nanotechnology
-            ("Synthesis and catalytic characterization of metal-organic frameworks (MOFs) for carbon dioxide capture.", "Chemistry", "research_paper"),
-            ("Spectroscopic analysis of photochemical oxidation pathways in atmospheric organic aerosols.", "Chemistry", "research_paper"),
-            ("Graphene oxide nanosheets functionalized with nanoparticles for targeted drug delivery applications.", "Chemistry", "research_paper"),
+            # Chemistry
+            ("Fwd: Paper Published by Dr. Venkatramaiah Nutalapati, Associate Professor, Centre for Interdisciplinary Research. Title of the paper: Synergistic Molecular Design-Triggered Hybridized Local and Charge-Transfer Emission for Efficient Deep-Blue Electroluminescence. Journal: Journal of Materials Chemistry.", "Chemistry", "research_paper"),
+            ("Fwd: Paper Published by Department of Chemistry. Title: Synthesis and Catalytic Performance of Metal-Organic Frameworks for Direct Atmospheric Carbon Capture.", "Chemistry", "research_paper"),
+            ("Fwd: Paper Published by Chemistry Dept. Title: Graphene oxide nanosheets functionalized with nanoparticles for targeted drug delivery.", "Chemistry", "research_paper"),
             
             # Biotechnology & Genomics
-            ("CRISPR-Cas9 gene editing efficiency and off-target analysis in human pluripotent stem cells.", "Biotechnology", "research_paper"),
-            ("Transcriptome profiling of microbiome diversity and metabolic pathways in gastrointestinal disorders.", "Biotechnology", "research_paper"),
-            ("Protein folding prediction and molecular dynamics simulation of enzyme inhibitor complexes.", "Biotechnology", "research_paper"),
+            ("Fwd: Paper Published by Dr. Sarah Jenkins, Dept of Biotech. Title: CRISPR-Cas9 Precision Genome Editing Efficiency and Off-Target Profiling in Pluripotent Stem Cells. Journal: Nature Biotechnology.", "Biotechnology", "research_paper"),
+            ("Fwd: Paper Published by Biotechnology Department. Title: Transcriptome profiling of microbiome diversity and metabolic pathways in gastrointestinal disorders.", "Biotechnology", "research_paper"),
+            ("Fwd: Paper Published by Bio-Tech Department. Title: Protein folding prediction and molecular dynamics simulation of enzyme inhibitor complexes.", "Biotechnology", "research_paper"),
             
-            # Mechanical & Electrical Engineering
-            ("Aerodynamic optimization of wind turbine blade profiles using computational fluid dynamics (CFD).", "Mechanical Engineering", "research_paper"),
-            ("Thermal management and heat dissipation in high-power lithium-ion battery packs for electric vehicles.", "Mechanical Engineering", "research_paper"),
-            ("Design of CMOS millimeter-wave transceivers for 6G wireless communication networks.", "Electrical Engineering", "research_paper"),
-            ("Smart grid voltage regulation and harmonic distortion suppression using active power filters.", "Electrical Engineering", "research_paper"),
+            # Mechanical Engineering
+            ("Fwd: Paper Published by Dr. Lakshmi Sirisha Maganti, Associate Professor, Department of Mechanical Engineering. Title of the paper: Augmented Jet Impingement Cooling System for High-Heat Flux Electronics Through Mitigating Radial Jet-to-Jet Interaction by Employing Rectilinear and Curvilinear Separators. Journal: Applied Thermal Engineering.", "Mechanical Engineering", "research_paper"),
+            ("Fwd: Paper Published by Department of Mechanical Engineering. Title: Thermal Management and Battery Heat Dissipation Optimization for Next-Generation Electric Vehicles.", "Mechanical Engineering", "research_paper"),
+            ("Fwd: Paper Published: Aerodynamic optimization of wind turbine blade profiles using computational fluid dynamics. Department: Mechanical Engineering.", "Mechanical Engineering", "research_paper"),
             
-            # Mathematics & Economics
-            ("Stochastic differential equations and martingale convergence theorems in financial derivative pricing.", "Mathematics", "research_paper"),
-            ("Topological data analysis and persistent homology applied to complex brain functional networks.", "Mathematics", "research_paper"),
-            ("Econometric modeling of inflation dynamics and central bank monetary policy shifts in emerging markets.", "Economics & Finance", "research_paper"),
+            # Electrical Engineering
+            ("Fwd: Paper Published: Design of CMOS Millimeter-Wave Transceivers for 6G Mobile Communication Networks. Department of Electrical Engineering.", "Electrical Engineering", "research_paper"),
+            ("Fwd: Paper Published by EE Dept. Title: Smart grid voltage regulation and harmonic distortion suppression using active power filters.", "Electrical Engineering", "research_paper"),
+            
+            # Mathematics
+            ("Fwd: Paper Published by Mathematics Department. Title: Stochastic Differential Equations and Martingale Convergence in High-Frequency Derivative Pricing. Journal: Journal of Financial Econometrics.", "Mathematics", "research_paper"),
+            ("Fwd: Paper Published: Topological data analysis and persistent homology applied to complex brain functional networks. Department of Mathematics.", "Mathematics", "research_paper"),
+            
+            # Economics & Finance
+            ("Fwd: Paper Published by Dr. Elena Rostova, Department of Economics. Title: Econometric modeling of inflation dynamics and central bank monetary policy shifts in emerging markets.", "Economics & Finance", "research_paper"),
             
             # General / Non-research emails (Spam / Admin / Routine)
             ("Reminder: Department faculty meeting scheduled for tomorrow at 3 PM in Conference Room A. Please attend.", "General", "general_email"),

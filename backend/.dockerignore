@@ -8,6 +8,7 @@ __pycache__/
 *.sqlite3
 storage/pdfs/*
 storage/exports/*
+storage/postgres_data
 !storage/pdfs/.gitkeep
 !storage/exports/.gitkeep
 .git

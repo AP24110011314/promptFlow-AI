@@ -14,7 +14,19 @@ from app.ml_engine.classifier import ml_classifier
 from app.ml_engine.summarizer import summarizer
 
 def seed_initial_data():
-    Base.metadata.create_all(bind=engine)
+    import time
+    from sqlalchemy.exc import OperationalError
+    
+    retries = 10
+    while retries > 0:
+        try:
+            Base.metadata.create_all(bind=engine)
+            break
+        except OperationalError as e:
+            retries -= 1
+            print(f"Database connection failed ({e}). Retrying in 3 seconds... ({retries} retries left)", flush=True)
+            time.sleep(3)
+
     db = SessionLocal()
     try:
         # 1. Seed Users
@@ -177,7 +189,6 @@ def seed_initial_data():
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup: create tables and seed initial data
-    Base.metadata.create_all(bind=engine)
     seed_initial_data()
     ml_classifier.retrain_models() # ensure ML models are initialized
     

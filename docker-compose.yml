@@ -1,4 +1,19 @@
 services:
+  db:
+    image: postgres:15-alpine
+    container_name: crd_db
+    restart: always
+    environment:
+      - POSTGRES_USER=crd_user
+      - POSTGRES_PASSWORD=crd_password
+      - POSTGRES_DB=crd_database
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./backend/storage/postgres_data:/var/lib/postgresql/data
+    networks:
+      - crd_network
+
   backend:
     build:
       context: ./backend
@@ -8,7 +23,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - DATABASE_URL=sqlite:///./storage/crd_database.db
+      - DATABASE_URL
       - SECRET_KEY=crd_super_secret_jwt_key_2026_advanced_research_digest
       - GEMINI_API_KEY
       - OPENROUTER_API_KEY
@@ -24,8 +39,11 @@ services:
       - USE_CELERY
       - CELERY_BROKER_URL
       - CELERY_RESULT_BACKEND
+      - PYTHONUNBUFFERED=1
     volumes:
       - ./backend/storage:/app/storage
+    depends_on:
+      - db
     networks:
       - crd_network
 
@@ -60,7 +78,7 @@ services:
     command: celery -A app.celery_app.celery_app worker --loglevel=info
     restart: always
     environment:
-      - DATABASE_URL=sqlite:///./storage/crd_database.db
+      - DATABASE_URL
       - SECRET_KEY=crd_super_secret_jwt_key_2026_advanced_research_digest
       - GEMINI_API_KEY
       - OPENROUTER_API_KEY
@@ -76,10 +94,12 @@ services:
       - USE_CELERY
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - PYTHONUNBUFFERED=1
     volumes:
       - ./backend/storage:/app/storage
     depends_on:
       - redis
+      - db
       - backend
     networks:
       - crd_network

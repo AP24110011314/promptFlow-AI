@@ -180,8 +180,14 @@ async def lifespan(app: FastAPI):
     Base.metadata.create_all(bind=engine)
     seed_initial_data()
     ml_classifier.retrain_models() # ensure ML models are initialized
+    
+    # Start Real Email Poller background worker
+    from app.services.email_poller import email_poller
+    email_poller.start()
+    
     yield
     # Shutdown
+    email_poller.stop()
 
 app = FastAPI(
     title=settings.PROJECT_NAME,

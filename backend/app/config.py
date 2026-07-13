@@ -16,6 +16,21 @@ class Settings(BaseSettings):
     EXPORTS_DIR: str = os.path.join(BASE_DIR, "storage", "exports")
     ML_MODEL_DIR: str = os.path.join(BASE_DIR, "storage", "ml_models")
     
+    # Email Polling Settings
+    EMAIL_INTEGRATION_ENABLED: bool = os.getenv("EMAIL_INTEGRATION_ENABLED", "false").lower() == "true"
+    EMAIL_IMAP_SERVER: str = os.getenv("EMAIL_IMAP_SERVER", "imap.gmail.com")
+    EMAIL_IMAP_PORT: int = int(os.getenv("EMAIL_IMAP_PORT", "993"))
+    EMAIL_USERNAME: str = os.getenv("EMAIL_USERNAME", "rajanJaiswal95064@gmail.com")
+    EMAIL_PASSWORD: str = os.getenv("EMAIL_PASSWORD", "")
+    EMAIL_POLL_INTERVAL: int = int(os.getenv("EMAIL_POLL_INTERVAL", "30"))
+    
+    # SMTP Alert Settings
+    EMAIL_SMTP_SERVER: str = os.getenv("EMAIL_SMTP_SERVER", "smtp.gmail.com")
+    EMAIL_SMTP_PORT: int = int(os.getenv("EMAIL_SMTP_PORT", "587"))
+    
+    # Celery settings
+    USE_CELERY: bool = os.getenv("USE_CELERY", "false").lower() == "true"
+
     class Config:
         case_sensitive = True
 

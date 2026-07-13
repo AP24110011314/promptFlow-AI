@@ -18,6 +18,7 @@ class Settings(BaseSettings):
     
     # Email Polling Settings
     EMAIL_INTEGRATION_ENABLED: bool = os.getenv("EMAIL_INTEGRATION_ENABLED", "false").lower() == "true"
+    EMAIL_POLLING_LIVE: bool = os.getenv("EMAIL_POLLING_LIVE", "false").lower() == "true"
     EMAIL_IMAP_SERVER: str = os.getenv("EMAIL_IMAP_SERVER", "imap.gmail.com")
     EMAIL_IMAP_PORT: int = int(os.getenv("EMAIL_IMAP_PORT", "993"))
     EMAIL_USERNAME: str = os.getenv("EMAIL_USERNAME", "rajanJaiswal95064@gmail.com")

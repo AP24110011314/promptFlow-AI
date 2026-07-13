@@ -77,12 +77,22 @@ class ResearchMLClassifier:
         
         self.retrain_models()
 
-    def retrain_models(self, extra_texts=None, extra_depts=None):
+    def retrain_models(self, extra_texts=None, extra_depts=None, extra_email_texts=None, extra_email_classes=None):
         texts, depts, email_classes = self._get_seed_training_data()
+        
+        # Add research papers to training corpus
         if extra_texts and extra_depts:
-            texts.extend(extra_texts)
-            depts.extend(extra_depts)
-            email_classes.extend(["research_paper"] * len(extra_texts))
+            for t, d in zip(extra_texts, extra_depts):
+                texts.append(t)
+                depts.append(d)
+                email_classes.append("research_paper")
+                
+        # Add audited spam/general emails for relevance model training
+        if extra_email_texts and extra_email_classes:
+            for t, c in zip(extra_email_texts, extra_email_classes):
+                texts.append(t)
+                depts.append("General")
+                email_classes.append(c)
 
         # Email relevance classifier (TF-IDF + Naive Bayes)
         self.email_pipeline = Pipeline([

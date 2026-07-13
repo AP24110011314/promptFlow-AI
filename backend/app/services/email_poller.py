@@ -16,14 +16,14 @@ class EmailPoller:
         self.thread = None
 
     def start(self):
-        if settings.EMAIL_INTEGRATION_ENABLED:
+        if settings.EMAIL_INTEGRATION_ENABLED and settings.EMAIL_POLLING_LIVE:
             if not self.running:
                 self.running = True
                 self.thread = threading.Thread(target=self._poll_loop, daemon=True)
                 self.thread.start()
-                print("Email Poller: Background worker thread started.", flush=True)
+                print("Email Poller: Background live polling thread started.", flush=True)
         else:
-            print("Email Poller: Email integration is disabled.", flush=True)
+            print("Email Poller: Background live polling is disabled via EMAIL_POLLING_LIVE.", flush=True)
 
     def stop(self):
         self.running = False
@@ -68,8 +68,8 @@ class EmailPoller:
             mail.select("inbox")
             print("Email Poller: Connected and authenticated successfully.", flush=True)
 
-            # Search for messages with subject containing "published"
-            status, messages = mail.search(None, 'SUBJECT', 'published')
+            # Search for messages with subject containing "published" that are UNSEEN
+            status, messages = mail.search(None, 'UNSEEN', 'SUBJECT', 'published')
             if status != "OK":
                 print("Email Poller: IMAP search failed.", flush=True)
                 mail.logout()

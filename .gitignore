@@ -22,3 +22,11 @@ build/
 
 # AI / Local Docs
 GEMINI.md
+
+# ML Models & Local Databases
+*.pkl
+backend/storage/ml_models/*
+!backend/storage/ml_models/.gitkeep
+backend/storage/crd_database.db
+backend/storage/pdfs/*
+backend/storage/exports/*

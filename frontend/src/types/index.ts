@@ -30,6 +30,7 @@ export interface ResearchPaper {
   categories_list: string[];
   pdf_filename?: string;
   pdf_url?: string;
+  paper_url?: string;
   ml_confidence: number;
   ml_predicted_dept?: string;
   ai_summary?: string;

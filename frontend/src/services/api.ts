@@ -67,6 +67,10 @@ export const paperService = {
   delete: async (id: number): Promise<any> => {
     const res = await api.delete(`/papers/${id}`);
     return res.data;
+  },
+  update: async (id: number, data: Partial<ResearchPaper>): Promise<ResearchPaper> => {
+    const res = await api.put(`/papers/${id}`, data);
+    return res.data;
   }
 };
 

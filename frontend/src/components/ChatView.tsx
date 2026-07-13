@@ -351,8 +351,8 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper }) => {
       
       {/* LEFT SIDEBAR: Chat History & Sessions */}
       <div 
-        className={`bg-brand-card/95 border-r border-brand-border flex flex-col justify-between shrink-0 transition-all duration-300 z-30 ${
-          sidebarOpen ? 'w-64 sm:w-72' : 'w-0 -ml-64 sm:-ml-72 overflow-hidden'
+        className={`bg-brand-card/95 flex flex-col justify-between shrink-0 transition-all duration-300 z-30 overflow-hidden ${
+          sidebarOpen ? 'w-64 sm:w-72 border-r border-brand-border' : 'w-0'
         }`}
       >
         {/* Sidebar Header: New Chat & Collapse */}

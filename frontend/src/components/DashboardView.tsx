@@ -4,7 +4,7 @@ import {
   CheckCircle2, Download, Activity, TrendingUp
 } from 'lucide-react';
 import { ResponsiveContainer, AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, PieChart, Pie, Cell } from 'recharts';
-import { exportService } from '../services/api';
+import { exportService, emailService } from '../services/api';
 import type { DashboardAnalytics, ResearchPaper, User } from '../types';
 
 interface DashboardViewProps {
@@ -13,6 +13,7 @@ interface DashboardViewProps {
   onSelectPaper: (paper: ResearchPaper) => void;
   onNavigateToRepo: () => void;
   user?: User | null;
+  onRefresh?: () => void;
 }
 
 export const DashboardView: React.FC<DashboardViewProps> = ({
@@ -21,8 +22,27 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   onSelectPaper,
   onNavigateToRepo,
   user,
+  onRefresh,
 }) => {
   const [dateRange, setDateRange] = useState('30d');
+  const [syncing, setSyncing] = useState(false);
+  const [syncMessage, setSyncMessage] = useState<string | null>(null);
+
+  const handleSyncEmails = async () => {
+    setSyncing(true);
+    setSyncMessage(null);
+    try {
+      const res = await emailService.sync();
+      setSyncMessage(res.message || "Email synchronization completed successfully.");
+      if (onRefresh) onRefresh();
+      setTimeout(() => setSyncMessage(null), 4000);
+    } catch (err: any) {
+      setSyncMessage(err.response?.data?.detail || "Failed to synchronize emails.");
+      setTimeout(() => setSyncMessage(null), 5000);
+    } finally {
+      setSyncing(false);
+    }
+  };
 
   if (!analytics) {
     return (
@@ -94,8 +114,26 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <Download className="w-3.5 h-3.5 stroke-[2.5]" />
               <span>Export PDF</span>
             </button>
+
+            {/* Sync Emails Button */}
+            <button
+              onClick={handleSyncEmails}
+              disabled={syncing}
+              className="px-3.5 py-2 rounded-xl border border-brand-cyan/30 text-brand-cyan hover:bg-brand-cyan/10 font-bold text-xs shadow-sm transition-all flex items-center space-x-1.5 cursor-pointer disabled:opacity-50"
+              title="Poll inbox for new unseen publication announcement emails"
+            >
+              <Activity className={`w-3.5 h-3.5 ${syncing ? 'animate-spin' : ''}`} />
+              <span>{syncing ? 'Syncing...' : 'Sync Emails'}</span>
+            </button>
           </div>
         </div>
+
+        {syncMessage && (
+          <div className="p-3.5 rounded-xl bg-brand-cyan/10 border border-brand-cyan/20 text-brand-cyan text-xs font-semibold flex items-center space-x-2">
+            <CheckCircle2 className="w-4 h-4 text-brand-cyan" />
+            <span>{syncMessage}</span>
+          </div>
+        )}
 
         {/* 4 KPI Metric Cards Row (Fixed bubble overlap with gap and shrink-0) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

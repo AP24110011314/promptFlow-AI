@@ -97,6 +97,10 @@ export const emailService = {
   getLogs: async (limit: number = 20): Promise<EmailLog[]> => {
     const res = await api.get('/emails/logs', { params: { limit } });
     return res.data;
+  },
+  sync: async (): Promise<any> => {
+    const res = await api.post('/emails/sync');
+    return res.data;
   }
 };
 

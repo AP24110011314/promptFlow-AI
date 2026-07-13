@@ -161,6 +161,7 @@ export default function App() {
               onSelectPaper={(p) => setSelectedPaper(p)}
               onNavigateToRepo={() => setActiveTab('repository')}
               user={user}
+              onRefresh={fetchAllData}
             />
           )}
 

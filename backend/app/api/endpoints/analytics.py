@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.paper import ResearchPaper
 from app.models.email_log import EmailIngestionLog
+from app.models.citation import PaperCitation
 from app.schemas.analytics import DashboardAnalyticsResponse, DeptStats, YearStats, CategoryStats, AuthorStats, NetworkData, CollaborationNode, CollaborationLink
 
 router = APIRouter()
@@ -58,6 +59,35 @@ def get_dashboard_analytics(db: Session = Depends(get_db)):
     for (src, tgt), w in link_weights.items():
         links_list.append(CollaborationLink(source=src, target=tgt, value=w))
 
+    # Build citation graph
+    citations_in_db = db.query(PaperCitation).filter(PaperCitation.cited_paper_id != None).all()
+    cit_nodes = {}
+    cit_links = []
+
+    for c in citations_in_db:
+        citing_title = c.citing_paper.title
+        cited_title = c.cited_paper.title
+        
+        if citing_title not in cit_nodes:
+            cit_nodes[citing_title] = CollaborationNode(
+                id=citing_title[:40] + "...", 
+                group=abs(hash(c.citing_paper.department or "General")) % 8 + 1,
+                val=1
+            )
+        else:
+            cit_nodes[citing_title].val += 1
+            
+        if cited_title not in cit_nodes:
+            cit_nodes[cited_title] = CollaborationNode(
+                id=cited_title[:40] + "...", 
+                group=abs(hash(c.cited_paper.department or "General")) % 8 + 1,
+                val=1
+            )
+        else:
+            cit_nodes[cited_title].val += 1
+            
+        cit_links.append(CollaborationLink(source=citing_title[:40] + "...", target=cited_title[:40] + "...", value=1))
+
     avg_conf = round(total_conf / total_papers, 4) if total_papers > 0 else 0.0
     total_authors = len(author_counts)
     total_depts = len(dept_counts)
@@ -72,6 +102,7 @@ def get_dashboard_analytics(db: Session = Depends(get_db)):
     ]
 
     network = NetworkData(nodes=list(nodes_map.values()), links=links_list)
+    citation_network = NetworkData(nodes=list(cit_nodes.values()), links=cit_links)
 
     return DashboardAnalyticsResponse(
         total_papers=total_papers,
@@ -83,5 +114,6 @@ def get_dashboard_analytics(db: Session = Depends(get_db)):
         by_year=by_year,
         by_category=by_cat,
         top_authors=top_authors,
-        collaboration_network=network
+        collaboration_network=network,
+        citation_network=citation_network
     )

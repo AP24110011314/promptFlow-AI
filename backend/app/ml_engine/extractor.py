@@ -101,6 +101,19 @@ class ResearchPaperExtractor:
         else:
             keywords_list = categories.copy()
 
+        # 9. Determine Publication Type Heuristic
+        pub_type = "Journal"
+        combined_text = f"{title} {abstract} {journal}".lower()
+        if "patent" in combined_text or "inventor" in combined_text or "assignee" in combined_text:
+            pub_type = "Patent"
+        elif any(c in combined_text for c in ["proceedings", "conference", "symposium", "workshop", "proc."]):
+            pub_type = "Conference"
+        elif any(p in combined_text for p in ["preprint", "arxiv", "biorxiv", "ssrn"]):
+            pub_type = "Preprint"
+
+        # 10. Extract references list
+        references = self.extract_references_list(full_text)
+
         return {
             "title": title,
             "abstract": abstract,
@@ -108,14 +121,32 @@ class ResearchPaperExtractor:
             "authors_list": authors_list,
             "department": predicted_dept,
             "journal_or_conference": journal,
+            "publication_type": pub_type,
             "publication_date": publication_date,
             "publication_year": publication_year,
             "doi": doi,
             "keywords_list": keywords_list,
             "categories_list": categories,
             "ml_confidence": ml_confidence,
-            "ml_predicted_dept": predicted_dept
+            "ml_predicted_dept": predicted_dept,
+            "references": references
         }
+
+    def extract_references_list(self, full_text: str) -> List[str]:
+        """Tries to find the references section and split it into individual citations."""
+        ref_section_match = re.search(r'(?i)(?:references|bibliography|works cited)\s*[\n\r]+([\s\S]+)', full_text)
+        if not ref_section_match:
+            return []
+        
+        section_text = ref_section_match.group(1).strip()
+        # Split references by standard numbering e.g. [1] or 1. or empty lines
+        ref_items = re.split(r'\[\d+\]|\b\d+\.\s', section_text)
+        cleaned_refs = []
+        for item in ref_items:
+            clean = re.sub(r'\s+', ' ', item).strip()
+            if len(clean) > 20: # skip very short fragments
+                cleaned_refs.append(clean)
+        return cleaned_refs
 
     def _empty_result(self) -> Dict[str, Any]:
         return {
@@ -125,13 +156,15 @@ class ResearchPaperExtractor:
             "authors_list": ["Unknown Author"],
             "department": "General",
             "journal_or_conference": "College Institutional Repository",
+            "publication_type": "Journal",
             "publication_date": "2026-01-01",
             "publication_year": 2026,
             "doi": None,
             "keywords_list": ["Research"],
             "categories_list": ["General Research"],
             "ml_confidence": 0.50,
-            "ml_predicted_dept": "General"
+            "ml_predicted_dept": "General",
+            "references": []
         }
 
 paper_extractor = ResearchPaperExtractor()

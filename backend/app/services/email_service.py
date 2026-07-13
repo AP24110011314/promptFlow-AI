@@ -58,6 +58,7 @@ class EmailIngestionService:
                 authors_list=meta["authors_list"],
                 department=meta["department"],
                 journal_or_conference=meta["journal_or_conference"],
+                publication_type=meta.get("publication_type", "Journal"),
                 publication_date=meta["publication_date"],
                 publication_year=meta["publication_year"],
                 doi=meta["doi"],
@@ -74,6 +75,20 @@ class EmailIngestionService:
             db.add(paper)
             db.commit()
             db.refresh(paper)
+
+            # Build citation graph links
+            try:
+                from app.services.citation_service import citation_service
+                citation_service.build_citations_for_paper(db, paper.id, meta.get("references", []))
+            except Exception as cit_err:
+                print(f"Error building citations during email processing: {cit_err}")
+
+            # Trigger immediate email alerts to department faculty
+            try:
+                from app.services.alert_service import alert_service
+                alert_service.send_immediate_alert(db, paper)
+            except Exception as alert_err:
+                print(f"Error sending immediate alert during email processing: {alert_err}")
 
             # 5. Link paper to email log
             log_entry.extracted_paper_id = paper.id

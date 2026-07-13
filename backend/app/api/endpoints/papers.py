@@ -1,7 +1,7 @@
 import os
 import shutil
 from typing import List, Optional
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, Query
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, Query, Response
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.paper import ResearchPaper
@@ -16,11 +16,17 @@ router = APIRouter()
 
 @router.get("", response_model=List[ResearchPaperResponse])
 def list_papers(
+    response: Response,
     query: Optional[str] = None,
     department: Optional[str] = None,
     author: Optional[str] = None,
     category: Optional[str] = None,
     year: Optional[int] = None,
+    publication_type: Optional[str] = None,
+    start_year: Optional[int] = None,
+    end_year: Optional[int] = None,
+    limit: Optional[int] = None,
+    offset: Optional[int] = None,
     db: Session = Depends(get_db)
 ):
     q = db.query(ResearchPaper)
@@ -38,12 +44,27 @@ def list_papers(
         q = q.filter(ResearchPaper.authors_raw.ilike(f"%{author}%"))
     if year:
         q = q.filter(ResearchPaper.publication_year == year)
+    if publication_type and publication_type != "All":
+        q = q.filter(ResearchPaper.publication_type.ilike(publication_type))
+    if start_year:
+        q = q.filter(ResearchPaper.publication_year >= start_year)
+    if end_year:
+        q = q.filter(ResearchPaper.publication_year <= end_year)
 
     results = q.order_by(ResearchPaper.id.desc()).all()
 
     # Filter by category tag in python if needed (since it's stored in JSON list)
     if category and category != "All":
         results = [p for p in results if category in (p.categories_list or [])]
+
+    total_count = len(results)
+    response.headers["X-Total-Count"] = str(total_count)
+    response.headers["Access-Control-Expose-Headers"] = "X-Total-Count"
+
+    if offset is not None:
+        results = results[offset:]
+    if limit is not None:
+        results = results[:limit]
 
     return results
 
@@ -82,6 +103,7 @@ def upload_and_parse_pdf(
         authors_list=meta["authors_list"],
         department=meta["department"],
         journal_or_conference=meta["journal_or_conference"],
+        publication_type=meta.get("publication_type", "Journal"),
         publication_date=meta["publication_date"],
         publication_year=meta["publication_year"],
         doi=meta["doi"],
@@ -98,6 +120,21 @@ def upload_and_parse_pdf(
     db.add(new_paper)
     db.commit()
     db.refresh(new_paper)
+
+    # Build citation graph links
+    try:
+        from app.services.citation_service import citation_service
+        citation_service.build_citations_for_paper(db, new_paper.id, meta.get("references", []))
+    except Exception as cit_err:
+        print(f"Error building citations during manual upload: {cit_err}")
+
+    # Trigger immediate email alerts to department faculty
+    try:
+        from app.services.alert_service import alert_service
+        alert_service.send_immediate_alert(db, new_paper)
+    except Exception as alert_err:
+        print(f"Error sending immediate alert during manual upload: {alert_err}")
+
     return new_paper
 
 @router.delete("/{paper_id}")

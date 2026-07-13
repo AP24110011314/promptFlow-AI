@@ -19,11 +19,22 @@ class ResearchPaperBase(BaseModel):
     ml_predicted_dept: Optional[str] = None
     ai_summary: Optional[str] = None
     citation_count: Optional[int] = 0
+    paper_url: Optional[str] = None
 
 class ResearchPaperCreate(ResearchPaperBase):
     pdf_filename: Optional[str] = None
     pdf_url: Optional[str] = None
     email_source_subject: Optional[str] = None
+
+class ResearchPaperUpdate(BaseModel):
+    title: Optional[str] = None
+    abstract: Optional[str] = None
+    authors_raw: Optional[str] = None
+    department: Optional[str] = None
+    journal_or_conference: Optional[str] = None
+    publication_type: Optional[str] = None
+    doi: Optional[str] = None
+    paper_url: Optional[str] = None
 
 class ResearchPaperResponse(ResearchPaperBase):
     id: int

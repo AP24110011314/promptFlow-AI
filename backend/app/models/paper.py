@@ -21,6 +21,7 @@ class ResearchPaper(Base):
     categories_list = Column(JSON, default=list)  # list of category names assigned
     pdf_filename = Column(String, nullable=True)
     pdf_url = Column(String, nullable=True)
+    paper_url = Column(String, nullable=True)
     
     # ML & AI Metadata
     ml_confidence = Column(Float, default=0.0)

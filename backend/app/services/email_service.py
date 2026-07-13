@@ -76,6 +76,7 @@ class EmailIngestionService:
                 publication_date=meta["publication_date"],
                 publication_year=meta["publication_year"],
                 doi=meta["doi"],
+                paper_url=meta.get("paper_url"),
                 keywords_list=meta["keywords_list"],
                 categories_list=meta["categories_list"],
                 ml_confidence=meta["ml_confidence"],

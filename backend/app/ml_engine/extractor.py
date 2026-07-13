@@ -101,6 +101,16 @@ class ResearchPaperExtractor:
 
             references = self.extract_references_list(full_text)
 
+            # Extract external paper URLs (filtering out Google Scholar, SRM domain, etc.)
+            urls = re.findall(r'https?://[^\s<>"]+|www\.[^\s<>"]+', full_text)
+            paper_url = ""
+            for url in urls:
+                url_clean = url.strip(").*_")
+                if any(skip in url_clean.lower() for skip in ["scholar.google", "srmap.edu.in", "mailto", "twitter.com", "linkedin.com"]):
+                    continue
+                paper_url = url_clean
+                break
+
             return {
                 "title": title,
                 "abstract": abstract,
@@ -112,6 +122,7 @@ class ResearchPaperExtractor:
                 "publication_date": publication_date,
                 "publication_year": publication_year,
                 "doi": doi,
+                "paper_url": paper_url or None,
                 "keywords_list": categories,
                 "categories_list": categories,
                 "ml_confidence": ml_confidence,
@@ -203,6 +214,16 @@ class ResearchPaperExtractor:
         # 10. Extract references list
         references = self.extract_references_list(full_text)
 
+        # Extract external paper URLs (filtering out Google Scholar, SRM domain, etc.)
+        urls = re.findall(r'https?://[^\s<>"]+|www\.[^\s<>"]+', full_text)
+        paper_url = ""
+        for url in urls:
+            url_clean = url.strip(").*_")
+            if any(skip in url_clean.lower() for skip in ["scholar.google", "srmap.edu.in", "mailto", "twitter.com", "linkedin.com"]):
+                continue
+            paper_url = url_clean
+            break
+
         return {
             "title": title,
             "abstract": abstract,
@@ -214,6 +235,7 @@ class ResearchPaperExtractor:
             "publication_date": publication_date,
             "publication_year": publication_year,
             "doi": doi,
+            "paper_url": paper_url or None,
             "keywords_list": keywords_list,
             "categories_list": categories,
             "ml_confidence": ml_confidence,
@@ -249,6 +271,7 @@ class ResearchPaperExtractor:
             "publication_date": "2026-01-01",
             "publication_year": 2026,
             "doi": None,
+            "paper_url": None,
             "keywords_list": ["Research"],
             "categories_list": ["General Research"],
             "ml_confidence": 0.50,

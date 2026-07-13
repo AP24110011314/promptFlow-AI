@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.paper import ResearchPaper
 from app.models.user import User
-from app.schemas.paper import ResearchPaperResponse, ResearchPaperCreate
+from app.schemas.paper import ResearchPaperResponse, ResearchPaperCreate, ResearchPaperUpdate
 from app.core.security import get_current_user, get_current_admin_user
 from app.ml_engine.extractor import paper_extractor
 from app.ml_engine.summarizer import summarizer
@@ -107,6 +107,7 @@ def upload_and_parse_pdf(
         publication_date=meta["publication_date"],
         publication_year=meta["publication_year"],
         doi=meta["doi"],
+        paper_url=meta.get("paper_url"),
         keywords_list=meta["keywords_list"],
         categories_list=meta["categories_list"],
         ml_confidence=meta["ml_confidence"],
@@ -145,3 +146,26 @@ def delete_paper(paper_id: int, db: Session = Depends(get_db), current_user: Use
     db.delete(paper)
     db.commit()
     return {"message": "Paper deleted successfully"}
+
+@router.put("/{paper_id}", response_model=ResearchPaperResponse)
+def update_paper(
+    paper_id: int,
+    paper_in: ResearchPaperUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    paper = db.query(ResearchPaper).filter(ResearchPaper.id == paper_id).first()
+    if not paper:
+        raise HTTPException(status_code=404, detail="Research paper not found")
+        
+    update_data = paper_in.model_dump(exclude_unset=True)
+    for field, value in update_data.items():
+        setattr(paper, field, value)
+        
+    # Re-calculate authors_list if authors_raw is updated
+    if "authors_raw" in update_data and update_data["authors_raw"] is not None:
+        paper.authors_list = [a.strip() for a in update_data["authors_raw"].split(",") if a.strip()]
+
+    db.commit()
+    db.refresh(paper)
+    return paper

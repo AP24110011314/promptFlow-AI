@@ -102,11 +102,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   onClick={() => setActiveTab(item.id)}
                   className={`w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all cursor-pointer ${
                     isActive
-                      ? 'bg-brand-cyan text-white shadow-sm font-bold'
+                      ? 'bg-brand-cyan text-real-white shadow-sm font-bold'
                       : 'text-brand-gray hover:bg-brand-hover hover:text-white'
                   }`}
                 >
-                  <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-brand-gray'}`} />
+                  <Icon className={`w-4 h-4 ${isActive ? 'text-real-white' : 'text-brand-gray'}`} />
                   <span>{item.label}</span>
                 </button>
               );
@@ -156,7 +156,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               className="flex items-center justify-between p-1.5 rounded-xl hover:bg-brand-hover transition-colors cursor-pointer group"
             >
               <div className="flex items-center space-x-2.5 truncate">
-                <div className="w-8 h-8 rounded-full bg-brand-cyan/15 text-brand-cyan border border-brand-cyan/20 flex items-center justify-center text-xs font-bold shrink-0 group-hover:bg-brand-cyan group-hover:text-white transition-all">
+                <div className="w-8 h-8 rounded-full bg-brand-cyan/15 text-brand-cyan border border-brand-cyan/20 flex items-center justify-center text-xs font-bold shrink-0 group-hover:bg-brand-cyan group-hover:text-real-white transition-all">
                   {user.full_name.charAt(0)}
                 </div>
                 <div className="truncate">
@@ -297,7 +297,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-5 py-2.5 rounded-xl bg-brand-cyan hover:brightness-110 text-white font-bold text-xs shadow-sm transition-all flex items-center space-x-1.5 cursor-pointer disabled:opacity-50"
+                  className="px-5 py-2.5 rounded-xl bg-brand-cyan hover:brightness-110 text-real-white font-bold text-xs shadow-sm transition-all flex items-center space-x-1.5 cursor-pointer disabled:opacity-50"
                 >
                   <Check className="w-4 h-4 stroke-[3]" />
                   <span>{saving ? 'Saving...' : 'Save Profile'}</span>

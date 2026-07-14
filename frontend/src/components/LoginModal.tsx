@@ -39,8 +39,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
       <div className="w-full max-w-md bg-brand-card rounded-3xl p-8 relative overflow-hidden border border-brand-border shadow-2xl">
         
         <div className="text-center mb-6">
-          <div className="w-12 h-12 mx-auto rounded-2xl bg-brand-cyan text-white flex items-center justify-center shadow-md mb-3 font-bold">
-            <Zap className="w-6 h-6 fill-white" />
+          <div className="w-12 h-12 mx-auto rounded-2xl bg-brand-cyan text-real-white flex items-center justify-center shadow-md mb-3 font-bold">
+            <Zap className="w-6 h-6 fill-real-white text-real-white" />
           </div>
           <h2 className="text-2xl font-bold text-white tracking-tight">Sign in to CRD System</h2>
           <p className="text-xs text-brand-gray mt-1 font-medium">
@@ -122,7 +122,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full mt-2 py-3 px-4 rounded-xl bg-brand-cyan hover:brightness-110 text-white font-bold text-xs sm:text-sm shadow-sm focus:outline-none transition-all flex items-center justify-center space-x-2 disabled:opacity-50 cursor-pointer"
+            className="w-full mt-2 py-3 px-4 rounded-xl bg-brand-cyan hover:brightness-110 text-real-white font-bold text-xs sm:text-sm shadow-sm focus:outline-none transition-all flex items-center justify-center space-x-2 disabled:opacity-50 cursor-pointer"
           >
             <span>{loading ? 'Authenticating...' : 'Sign In'}</span>
             {!loading && <ArrowRight className="w-4 h-4" />}

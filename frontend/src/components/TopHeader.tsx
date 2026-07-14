@@ -129,7 +129,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
                 <p className="text-xs font-bold text-white leading-tight group-hover:text-brand-cyan transition-colors">{user.full_name}</p>
                 <p className="text-[10px] text-brand-gray capitalize font-medium">{user.role}</p>
               </div>
-              <div className="w-9 h-9 rounded-full bg-brand-cyan text-white flex items-center justify-center font-bold text-xs shadow-sm group-hover:brightness-110 transition-all">
+              <div className="w-9 h-9 rounded-full bg-brand-cyan text-real-white flex items-center justify-center font-bold text-xs shadow-sm group-hover:brightness-110 transition-all">
                 {user.full_name.charAt(0)}
               </div>
             </div>
@@ -269,7 +269,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-5 py-2.5 rounded-xl bg-brand-cyan hover:brightness-110 text-white font-bold text-xs shadow-sm transition-all flex items-center space-x-1.5 cursor-pointer disabled:opacity-50"
+                  className="px-5 py-2.5 rounded-xl bg-brand-cyan hover:brightness-110 text-real-white font-bold text-xs shadow-sm transition-all flex items-center space-x-1.5 cursor-pointer disabled:opacity-50"
                 >
                   <Check className="w-4 h-4 stroke-[3]" />
                   <span>{saving ? 'Saving...' : 'Save Profile'}</span>

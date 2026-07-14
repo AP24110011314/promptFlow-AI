@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Sidebar } from './components/Sidebar';
-import { TopHeader } from './components/TopHeader';
+import { Navbar } from './components/Navbar';
 import { LoginModal } from './components/LoginModal';
 import { DashboardView } from './components/DashboardView';
 import { RepositoryView } from './components/RepositoryView';
@@ -18,9 +17,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [showLoginModal, setShowLoginModal] = useState<boolean>(true);
   const [theme, setTheme] = useState<'dark' | 'light'>('light');
-  const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(() => {
-    return localStorage.getItem('crd_sidebar_collapsed') === 'true';
-  });
+  // Sidebar collapsed state removed for horizontal navigation layout
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   // Data state
@@ -126,37 +123,25 @@ export default function App() {
     : papers;
 
   return (
-    <div className="min-h-screen flex bg-brand-bg text-white selection:bg-brand-cyan selection:text-white font-sans">
+    <div className="h-screen flex flex-col bg-brand-bg text-white selection:bg-brand-cyan selection:text-white font-sans overflow-hidden">
       
-      {/* Persistent Left Sidebar Navigation */}
-      <Sidebar
+      {/* Sleek Top Navigation Header */}
+      <Navbar
         user={user}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
-        onLogout={handleLogout}
+        theme={theme}
+        onToggleTheme={handleToggleTheme}
         onSwitchRole={handleSwitchRole}
+        onSearch={(q) => setSearchQuery(q)}
+        onLogout={handleLogout}
         onUserUpdate={(u) => setUser(u)}
-        collapsed={sidebarCollapsed}
       />
 
-      {/* Main App Container (Center + Right Columns) */}
-      <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
-        
-        {/* Top Header with Search & User Badge */}
-        <TopHeader
-          user={user}
-          theme={theme}
-          onToggleTheme={handleToggleTheme}
-          onSwitchRole={handleSwitchRole}
-          onSearch={(q) => setSearchQuery(q)}
-          onLogout={handleLogout}
-          onUserUpdate={(u) => setUser(u)}
-          sidebarCollapsed={sidebarCollapsed}
-          onToggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)}
-        />
-
+      {/* Main Content Area */}
+      <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
         {/* Scrollable Content Area */}
-        <main className={`flex-1 ${activeTab === 'chat' ? 'overflow-hidden flex flex-col' : 'overflow-y-auto'}`}>
+        <main className={`flex-1 min-h-0 ${activeTab === 'chat' ? 'overflow-hidden flex flex-col' : 'overflow-y-auto'}`}>
           
           {/* Dashboard View (3-column layout inside!) */}
           {activeTab === 'dashboard' && (

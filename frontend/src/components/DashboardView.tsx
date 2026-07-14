@@ -486,18 +486,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </div>
         </div>
 
-        {/* Bottom Ticker / Status Footer */}
-        <div className="pt-4 border-t border-brand-border">
-          <div className="p-3 rounded-2xl bg-brand-bg border border-brand-border text-center">
-            <p className="text-[10px] font-bold text-brand-gray tracking-wider uppercase">
-              PyMuPDF &amp; Scikit-Learn Engine
-            </p>
-            <p className="text-[11px] text-brand-green font-medium mt-0.5 flex items-center justify-center">
-              <span className="w-1.5 h-1.5 rounded-full bg-brand-green mr-1.5 animate-pulse" />
-              Ingestion Pipeline Active
-            </p>
-          </div>
-        </div>
+
 
       </aside>
 

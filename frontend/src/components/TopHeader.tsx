@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Bell, HelpCircle, Sun, Moon, RefreshCw, User as UserIcon, LogOut, UserCheck, X, Check } from 'lucide-react';
+import { Search, Bell, HelpCircle, Sun, Moon, RefreshCw, User as UserIcon, LogOut, UserCheck, X, Check, PanelLeft, PanelLeftClose } from 'lucide-react';
 import type { User } from '../types';
 import { authService } from '../services/api';
 
@@ -12,6 +12,8 @@ interface TopHeaderProps {
   searchPlaceholder?: string;
   onLogout?: () => void;
   onUserUpdate?: (updatedUser: User) => void;
+  sidebarCollapsed: boolean;
+  onToggleSidebar: () => void;
 }
 
 export const TopHeader: React.FC<TopHeaderProps> = ({
@@ -23,6 +25,8 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
   searchPlaceholder = 'Search research papers, authors, departments...',
   onLogout,
   onUserUpdate,
+  sidebarCollapsed,
+  onToggleSidebar,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
@@ -68,6 +72,19 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
   return (
     <header className="h-16 border-b border-brand-border bg-brand-bg px-6 flex items-center justify-between gap-4 sticky top-0 z-30">
       
+      {/* Sidebar Collapse Toggle Button */}
+      <button
+        onClick={onToggleSidebar}
+        title={sidebarCollapsed ? "Expand Navigation Sidebar" : "Collapse Navigation Sidebar"}
+        className="p-2.5 rounded-xl bg-brand-card hover:bg-brand-hover border border-brand-border text-brand-gray hover:text-white transition-colors cursor-pointer flex items-center justify-center shrink-0"
+      >
+        {sidebarCollapsed ? (
+          <PanelLeft className="w-4 h-4 text-brand-cyan" />
+        ) : (
+          <PanelLeftClose className="w-4 h-4 text-brand-cyan" />
+        )}
+      </button>
+
       {/* Search Input Bar */}
       <div className="flex-1 max-w-xl relative">
         <Search className="w-4 h-4 text-brand-gray absolute left-3.5 top-1/2 -translate-y-1/2" />

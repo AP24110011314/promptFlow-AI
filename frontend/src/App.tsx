@@ -18,6 +18,9 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [showLoginModal, setShowLoginModal] = useState<boolean>(true);
   const [theme, setTheme] = useState<'dark' | 'light'>('light');
+  const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(() => {
+    return localStorage.getItem('crd_sidebar_collapsed') === 'true';
+  });
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   // Data state
@@ -133,6 +136,7 @@ export default function App() {
         onLogout={handleLogout}
         onSwitchRole={handleSwitchRole}
         onUserUpdate={(u) => setUser(u)}
+        collapsed={sidebarCollapsed}
       />
 
       {/* Main App Container (Center + Right Columns) */}
@@ -147,6 +151,8 @@ export default function App() {
           onSearch={(q) => setSearchQuery(q)}
           onLogout={handleLogout}
           onUserUpdate={(u) => setUser(u)}
+          sidebarCollapsed={sidebarCollapsed}
+          onToggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)}
         />
 
         {/* Scrollable Content Area */}

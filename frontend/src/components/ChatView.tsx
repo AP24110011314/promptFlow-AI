@@ -18,7 +18,6 @@ import {
   User, 
   BookOpen, 
   Compass, 
-  Info, 
   X, 
   Database,
   ExternalLink
@@ -426,28 +425,7 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper }) => {
           </div>
         </div>
 
-        {/* Sidebar Footer: Guardrails & Engine Info */}
-        <div className="p-3 border-t border-brand-border/60 bg-brand-bg/40">
-          <button
-            onClick={() => setShowGuardrailModal(true)}
-            className="w-full p-2.5 rounded-xl bg-brand-card border border-brand-border hover:border-brand-cyan/40 text-left transition-all flex items-center justify-between group cursor-pointer"
-          >
-            <div className="flex items-center space-x-2 min-w-0">
-              <div className="w-6 h-6 rounded-lg bg-brand-cyan/10 flex items-center justify-center border border-brand-cyan/25 text-brand-cyan shrink-0">
-                <AlertTriangle className="w-3.5 h-3.5" />
-              </div>
-              <div className="min-w-0">
-                <span className="text-[11px] font-bold text-white block truncate group-hover:text-brand-cyan transition-colors">
-                  Academic Guardrails
-                </span>
-                <span className="text-[9px] text-brand-gray block truncate">
-                  Gemini 3.5 Flash • Active
-                </span>
-              </div>
-            </div>
-            <Info className="w-3.5 h-3.5 text-brand-gray group-hover:text-brand-cyan shrink-0 ml-1" />
-          </button>
-        </div>
+
       </div>
 
       {/* RIGHT MAIN AREA: ChatGPT Workspace */}
@@ -470,15 +448,11 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper }) => {
                 <Bot className="w-4 h-4 text-brand-cyan" />
               </div>
               <div>
-                <h2 className="text-xs sm:text-sm font-bold text-white leading-tight flex items-center">
+                <h2 className="text-xs sm:text-sm font-bold text-white leading-tight">
                   CRD Research Assistant
-                  <span className="ml-2 px-1.5 py-0.5 rounded-full bg-brand-cyan/15 text-brand-cyan text-[9px] font-mono font-semibold border border-brand-cyan/30">
-                    v3.5
-                  </span>
                 </h2>
                 <div className="flex items-center space-x-1.5 text-[10px] text-brand-gray">
-                  <span className="w-1.5 h-1.5 rounded-full bg-brand-green animate-pulse inline-block" />
-                  <span>College Research Digest • Natural Language DB Engine</span>
+                  <span>AI Research Assistant</span>
                 </div>
               </div>
             </div>

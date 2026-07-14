@@ -129,9 +129,6 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
           </button>
         </form>
 
-        <div className="mt-6 text-center text-[10px] text-brand-gray font-medium tracking-wider uppercase">
-          RBAC Protected • Scikit-Learn TF-IDF Intelligence
-        </div>
       </div>
     </div>
   );

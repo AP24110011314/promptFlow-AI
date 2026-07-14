@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ShieldAlert, Users, Tag, Plus, Trash2, RefreshCw, CheckCircle2, AlertCircle, Cpu } from 'lucide-react';
+import { Users, Tag, Plus, Trash2, RefreshCw, CheckCircle2, AlertCircle, Cpu } from 'lucide-react';
 import type { User, Category } from '../types';
 import { adminService, categoryService } from '../services/api';
 
@@ -88,15 +88,11 @@ export const AdminPanelView: React.FC<AdminPanelViewProps> = ({
       <div className="watt-card relative overflow-hidden">
         <div className="absolute right-0 top-0 w-64 h-64 bg-brand-cyan/5 blur-3xl pointer-events-none" />
         <div className="relative z-10">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-brand-red/10 border border-brand-red/20 text-brand-red text-xs font-semibold mb-3">
-            <ShieldAlert className="w-3.5 h-3.5" />
-            <span>Role-Based Access Control (RBAC) • Administrator Privileges</span>
-          </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-            System Administration & ML Control Panel
+            System Administration &amp; Control Panel
           </h1>
           <p className="text-sm text-brand-gray mt-1 max-w-2xl">
-            Manage system user accounts, dynamically introduce custom research categorization tags as academic domains evolve, and trigger retraining of scikit-learn classification models.
+            Manage system accounts, custom research categories, and model execution pipelines.
           </p>
         </div>
       </div>
@@ -199,29 +195,29 @@ export const AdminPanelView: React.FC<AdminPanelViewProps> = ({
             <div>
               <h2 className="text-base font-bold text-white flex items-center space-x-2">
                 <Cpu className="w-4 h-4 text-brand-cyan" />
-                <span>Scikit-Learn ML Model Diagnostics & Re-indexing</span>
+                <span>Classification Engine Control</span>
               </h2>
               <p className="text-xs text-brand-gray mt-0.5">
-                Retrain the Naive Bayes email relevance classifier and Random Forest department predictor on updated corpus data.
+                Retrain categorization and relevance predictors on current database publications.
               </p>
             </div>
 
             <div className="p-4 rounded-xl bg-brand-bg border border-brand-border space-y-2 text-xs">
               <div className="flex items-center justify-between">
-                <span className="text-brand-gray">Email Relevance Pipeline:</span>
+                <span className="text-brand-gray">Relevance Filter:</span>
                 <span className="text-brand-green font-bold flex items-center">
-                  <CheckCircle2 className="w-3.5 h-3.5 mr-1" /> Active (TF-IDF + Multinomial NB)
+                  <CheckCircle2 className="w-3.5 h-3.5 mr-1" /> Active
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-brand-gray">Department Predictor Pipeline:</span>
+                <span className="text-brand-gray">Department Predictor:</span>
                 <span className="text-brand-green font-bold flex items-center">
-                  <CheckCircle2 className="w-3.5 h-3.5 mr-1" /> Active (TF-IDF + Random Forest)
+                  <CheckCircle2 className="w-3.5 h-3.5 mr-1" /> Active
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-brand-gray">Extractive Summarization:</span>
-                <span className="text-brand-cyan font-bold">Active (TF-IDF Sentence Ranking)</span>
+                <span className="text-brand-gray">Text Summarizer:</span>
+                <span className="text-brand-cyan font-bold">Active</span>
               </div>
             </div>
 

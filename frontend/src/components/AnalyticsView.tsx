@@ -1,5 +1,5 @@
 import React from 'react';
-import { BarChart3, TrendingUp, Network, Award } from 'lucide-react';
+import { TrendingUp, Network, Award } from 'lucide-react';
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, BarChart, Bar, Cell } from 'recharts';
 import type { DashboardAnalytics } from '../types';
 
@@ -22,15 +22,11 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ analytics }) => {
       <div className="watt-card relative overflow-hidden">
         <div className="absolute right-0 bottom-0 w-72 h-72 bg-gradient-to-t from-brand-cyan/5 via-brand-green/5 to-transparent blur-3xl pointer-events-none" />
         <div className="relative z-10">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-brand-cyan/10 border border-brand-cyan/20 text-brand-cyan text-xs font-semibold mb-3">
-            <BarChart3 className="w-3.5 h-3.5" />
-            <span>Research Intelligence & Collaboration Metrics</span>
-          </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-            Deep Analytics & Co-Authorship Mapping
+            Publications &amp; Collaboration Analytics
           </h1>
           <p className="text-sm text-brand-gray mt-1 max-w-2xl">
-            Evaluate annual college research growth, identify prolific department researchers, and visualize inter-departmental co-authorship collaboration networks.
+            Track publication trends, top researchers, and department collaboration networks.
           </p>
         </div>
       </div>

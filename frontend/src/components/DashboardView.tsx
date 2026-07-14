@@ -89,7 +89,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <button
                 onClick={() => setDateRange('30d')}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center space-x-1.5 ${
-                  dateRange === '30d' ? 'bg-brand-cyan text-white shadow-2xs' : 'text-brand-gray hover:text-white'
+                  dateRange === '30d' ? 'bg-brand-cyan text-real-white shadow-2xs' : 'text-brand-gray hover:text-white'
                 }`}
               >
                 <Calendar className="w-3.5 h-3.5" />
@@ -98,7 +98,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <button
                 onClick={() => setDateRange('90d')}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                  dateRange === '90d' ? 'bg-brand-cyan text-white shadow-2xs' : 'text-brand-gray hover:text-white'
+                  dateRange === '90d' ? 'bg-brand-cyan text-real-white shadow-2xs' : 'text-brand-gray hover:text-white'
                 }`}
               >
                 <span>Quarter</span>
@@ -108,7 +108,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             {/* Export PDF Button */}
             <button
               onClick={() => exportService.downloadPdf()}
-              className="px-3.5 py-2 rounded-xl bg-brand-cyan hover:brightness-110 text-white font-bold text-xs shadow-sm transition-all flex items-center space-x-1.5 cursor-pointer"
+              className="px-3.5 py-2 rounded-xl bg-brand-cyan hover:brightness-110 text-real-white font-bold text-xs shadow-sm transition-all flex items-center space-x-1.5 cursor-pointer"
               title="Download Formatted PDF Report (.pdf)"
             >
               <Download className="w-3.5 h-3.5 stroke-[2.5]" />
@@ -469,7 +469,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               {recentPapers.slice(0, 3).map((paper) => (
                 <div key={paper.id} onClick={() => onSelectPaper(paper)} className="flex items-center justify-between p-2.5 rounded-2xl bg-brand-bg hover:bg-brand-hover transition-colors cursor-pointer group">
                   <div className="flex items-center space-x-2.5 min-w-0">
-                    <div className="w-7 h-7 rounded-full bg-brand-cyan/10 text-brand-cyan font-bold text-[11px] flex items-center justify-center shrink-0 group-hover:bg-brand-cyan group-hover:text-white transition-all">
+                    <div className="w-7 h-7 rounded-full bg-brand-cyan/10 text-brand-cyan font-bold text-[11px] flex items-center justify-center shrink-0 group-hover:bg-brand-cyan group-hover:text-real-white transition-all">
                       {paper.title ? paper.title.charAt(0) : 'P'}
                     </div>
                     <div className="min-w-0 flex-1">
@@ -486,18 +486,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </div>
         </div>
 
-        {/* Bottom Ticker / Status Footer */}
-        <div className="pt-4 border-t border-brand-border">
-          <div className="p-3 rounded-2xl bg-brand-bg border border-brand-border text-center">
-            <p className="text-[10px] font-bold text-brand-gray tracking-wider uppercase">
-              PyMuPDF &amp; Scikit-Learn Engine
-            </p>
-            <p className="text-[11px] text-brand-green font-medium mt-0.5 flex items-center justify-center">
-              <span className="w-1.5 h-1.5 rounded-full bg-brand-green mr-1.5 animate-pulse" />
-              Ingestion Pipeline Active
-            </p>
-          </div>
-        </div>
+
 
       </aside>
 

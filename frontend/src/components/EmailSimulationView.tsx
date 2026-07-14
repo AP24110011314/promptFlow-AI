@@ -80,15 +80,11 @@ export const EmailSimulationView: React.FC<EmailSimulationViewProps> = ({
       <div className="watt-card relative overflow-hidden">
         <div className="absolute right-0 top-0 w-80 h-80 bg-gradient-to-l from-brand-cyan/5 via-brand-green/5 to-transparent blur-3xl pointer-events-none" />
         <div className="relative z-10 max-w-3xl">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-brand-cyan/10 border border-brand-cyan/20 text-brand-cyan text-xs font-semibold mb-3">
-            <Mail className="w-3.5 h-3.5" />
-            <span>Intelligent Email Monitoring & Parsing Engine</span>
-          </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-            Live ML Ingestion & Classification Demo
+            Ingestion &amp; Classification Simulation
           </h1>
           <p className="text-sm text-brand-gray mt-2 leading-relaxed">
-            Professors receive hundreds of daily emails. Our system integrates with incoming mailboxes, running every message through a **Scikit-Learn TF-IDF + Naive Bayes Classifier** to distinguish research publications from routine administrative spam, before executing NLP metadata extraction!
+            Test and simulate the ingestion pipeline for incoming research papers. This runs relevance classification to filter out non-academic emails before indexing publication metadata.
           </p>
         </div>
       </div>
@@ -237,7 +233,7 @@ export const EmailSimulationView: React.FC<EmailSimulationViewProps> = ({
                   {/* Score Breakdown Card */}
                   <div className="p-4 rounded-xl bg-brand-bg border border-brand-border space-y-3 text-xs">
                     <div className="flex items-center justify-between">
-                      <span className="text-brand-gray font-medium">Predicted ML Class:</span>
+                      <span className="text-brand-gray font-medium">Predicted Class:</span>
                       <span className={`px-2 py-0.5 rounded font-bold uppercase ${
                         lastResult.ml_predicted_class === 'research_paper' ? 'bg-brand-cyan/20 text-brand-cyan' : 'bg-brand-border text-brand-gray'
                       }`}>
@@ -246,7 +242,7 @@ export const EmailSimulationView: React.FC<EmailSimulationViewProps> = ({
                     </div>
 
                     <div className="flex items-center justify-between">
-                      <span className="text-brand-gray font-medium">Scikit-Learn Confidence Score:</span>
+                      <span className="text-brand-gray font-medium">Confidence Score:</span>
                       <span className="text-brand-green font-mono font-bold text-base">
                         {(lastResult.ml_classification_score * 100).toFixed(1)}%
                       </span>
@@ -264,9 +260,7 @@ export const EmailSimulationView: React.FC<EmailSimulationViewProps> = ({
               )}
             </div>
 
-            <div className="pt-4 border-t border-brand-border text-[11px] text-brand-gray text-center font-mono">
-              Model: TF-IDF n-gram (1,2) + Multinomial Naive Bayes / Random Forest
-            </div>
+
           </div>
         </div>
 
@@ -299,7 +293,7 @@ export const EmailSimulationView: React.FC<EmailSimulationViewProps> = ({
               <tr className="border-b border-brand-border text-brand-gray uppercase font-semibold text-[10px]">
                 <th className="py-3 px-3">Sender</th>
                 <th className="py-3 px-3">Subject Line</th>
-                <th className="py-3 px-3">ML Prediction</th>
+                <th className="py-3 px-3">Prediction</th>
                 <th className="py-3 px-3">Confidence</th>
                 <th className="py-3 px-3">Status</th>
                 <th className="py-3 px-3">Received At</th>

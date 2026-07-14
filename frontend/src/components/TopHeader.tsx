@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Bell, HelpCircle, Sun, Moon, RefreshCw, User as UserIcon, LogOut, UserCheck, X, Check } from 'lucide-react';
+import { Search, Bell, HelpCircle, Sun, Moon, RefreshCw, User as UserIcon, LogOut, UserCheck, X, Check, PanelLeft, PanelLeftClose } from 'lucide-react';
 import type { User } from '../types';
 import { authService } from '../services/api';
 
@@ -12,6 +12,8 @@ interface TopHeaderProps {
   searchPlaceholder?: string;
   onLogout?: () => void;
   onUserUpdate?: (updatedUser: User) => void;
+  sidebarCollapsed: boolean;
+  onToggleSidebar: () => void;
 }
 
 export const TopHeader: React.FC<TopHeaderProps> = ({
@@ -23,6 +25,8 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
   searchPlaceholder = 'Search research papers, authors, departments...',
   onLogout,
   onUserUpdate,
+  sidebarCollapsed,
+  onToggleSidebar,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
@@ -68,6 +72,19 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
   return (
     <header className="h-16 border-b border-brand-border bg-brand-bg px-6 flex items-center justify-between gap-4 sticky top-0 z-30">
       
+      {/* Sidebar Collapse Toggle Button */}
+      <button
+        onClick={onToggleSidebar}
+        title={sidebarCollapsed ? "Expand Navigation Sidebar" : "Collapse Navigation Sidebar"}
+        className="p-2.5 rounded-xl bg-brand-card hover:bg-brand-hover border border-brand-border text-brand-gray hover:text-white transition-colors cursor-pointer flex items-center justify-center shrink-0"
+      >
+        {sidebarCollapsed ? (
+          <PanelLeft className="w-4 h-4 text-brand-cyan" />
+        ) : (
+          <PanelLeftClose className="w-4 h-4 text-brand-cyan" />
+        )}
+      </button>
+
       {/* Search Input Bar */}
       <div className="flex-1 max-w-xl relative">
         <Search className="w-4 h-4 text-brand-gray absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -129,7 +146,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
                 <p className="text-xs font-bold text-white leading-tight group-hover:text-brand-cyan transition-colors">{user.full_name}</p>
                 <p className="text-[10px] text-brand-gray capitalize font-medium">{user.role}</p>
               </div>
-              <div className="w-9 h-9 rounded-full bg-brand-cyan text-white flex items-center justify-center font-bold text-xs shadow-sm group-hover:brightness-110 transition-all">
+              <div className="w-9 h-9 rounded-full bg-brand-cyan text-real-white flex items-center justify-center font-bold text-xs shadow-sm group-hover:brightness-110 transition-all">
                 {user.full_name.charAt(0)}
               </div>
             </div>
@@ -269,7 +286,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-5 py-2.5 rounded-xl bg-brand-cyan hover:brightness-110 text-white font-bold text-xs shadow-sm transition-all flex items-center space-x-1.5 cursor-pointer disabled:opacity-50"
+                  className="px-5 py-2.5 rounded-xl bg-brand-cyan hover:brightness-110 text-real-white font-bold text-xs shadow-sm transition-all flex items-center space-x-1.5 cursor-pointer disabled:opacity-50"
                 >
                   <Check className="w-4 h-4 stroke-[3]" />
                   <span>{saving ? 'Saving...' : 'Save Profile'}</span>

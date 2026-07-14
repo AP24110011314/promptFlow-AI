@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   Layers, BookOpen, MessageSquare, Mail, BarChart3, ShieldAlert, Zap, 
-  ArrowRight, LogOut, UserCheck, RefreshCw, X, Check 
+  LogOut, UserCheck, RefreshCw, X, Check 
 } from 'lucide-react';
 import type { User } from '../types';
 import { authService } from '../services/api';
@@ -13,6 +13,7 @@ interface SidebarProps {
   onLogout: () => void;
   onSwitchRole?: () => void;
   onUserUpdate?: (updatedUser: User) => void;
+  collapsed: boolean;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -22,6 +23,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onLogout,
   onSwitchRole,
   onUserUpdate,
+  collapsed,
 }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -69,28 +71,39 @@ export const Sidebar: React.FC<SidebarProps> = ({
   };
 
   return (
-    <aside className="w-64 shrink-0 bg-brand-card border-r border-brand-border flex flex-col justify-between h-screen sticky top-0 z-40 select-none">
+    <aside className={`shrink-0 bg-brand-card border-r border-brand-border flex flex-col justify-between h-screen sticky top-0 z-40 select-none transition-all duration-300 ${
+      collapsed ? 'w-20' : 'w-64'
+    }`}>
       
       {/* Top Branding */}
       <div>
-        <div className="p-6 pb-4 flex items-center space-x-3 cursor-pointer" onClick={() => setActiveTab('dashboard')}>
-          <div className="w-10 h-10 rounded-2xl bg-brand-cyan text-white flex items-center justify-center shadow-md font-bold text-xl tracking-tighter">
-            <Zap className="w-5 h-5 fill-white" />
+        <div 
+          className={`p-6 pb-4 flex items-center cursor-pointer ${
+            collapsed ? 'justify-center px-2 space-x-0' : 'space-x-3'
+          }`} 
+          onClick={() => setActiveTab('dashboard')}
+        >
+          <div className="w-10 h-10 rounded-2xl bg-brand-cyan text-real-white flex items-center justify-center shadow-md font-bold text-xl tracking-tighter shrink-0">
+            <Zap className="w-5 h-5 fill-real-white" />
           </div>
-          <div>
-            <h1 className="text-base font-bold text-white tracking-tight leading-tight">
-              CRD System
-            </h1>
-            <p className="text-[11px] text-brand-gray font-medium tracking-wider uppercase">
-              Research Digest
-            </p>
-          </div>
+          {!collapsed && (
+            <div className="animate-in fade-in slide-in-from-left-2 duration-200">
+              <h1 className="text-base font-bold text-white tracking-tight leading-tight">
+                CRD System
+              </h1>
+              <p className="text-[11px] text-brand-gray font-medium tracking-wider uppercase">
+                Research Digest
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Navigation Menu */}
         <div className="px-4 mt-6">
-          <p className="px-3 text-[10px] font-bold text-brand-gray tracking-wider uppercase mb-2">
-            Main Menu
+          <p className={`px-3 text-[10px] font-bold text-brand-gray tracking-wider uppercase mb-2 ${
+            collapsed ? 'text-center px-0' : ''
+          }`}>
+            {collapsed ? '•' : 'Main Menu'}
           </p>
           <nav className="space-y-1">
             {navItems.map((item) => {
@@ -100,14 +113,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <button
                   key={item.id}
                   onClick={() => setActiveTab(item.id)}
-                  className={`w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all cursor-pointer ${
+                  title={collapsed ? item.label : undefined}
+                  className={`w-full flex items-center px-3.5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all cursor-pointer ${
+                    collapsed ? 'justify-center space-x-0' : 'space-x-3'
+                  } ${
                     isActive
-                      ? 'bg-brand-cyan text-white shadow-sm font-bold'
+                      ? 'bg-brand-cyan text-real-white shadow-sm font-bold'
                       : 'text-brand-gray hover:bg-brand-hover hover:text-white'
                   }`}
                 >
-                  <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-brand-gray'}`} />
-                  <span>{item.label}</span>
+                  <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-real-white' : 'text-brand-gray'}`} />
+                  {!collapsed && <span className="truncate">{item.label}</span>}
                 </button>
               );
             })}
@@ -115,67 +131,45 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
       </div>
 
-      {/* Bottom Section: ML Engine Status & User Profile */}
-      <div className="p-4 space-y-4 border-t border-brand-border mt-auto">
+      {/* Bottom Section: User Profile */}
+      <div className="p-4 border-t border-brand-border mt-auto">
         
-        {/* ML Engine Status Card */}
-        <div className="p-4 rounded-2xl bg-brand-bg border border-brand-border space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold text-brand-cyan uppercase tracking-wider">
-              ML Engine Live
-            </span>
-            <span className="w-2 h-2 rounded-full bg-brand-green animate-pulse" />
-          </div>
-          <p className="text-xs text-white font-semibold leading-snug">
-            Scikit-Learn Classifier
-          </p>
-          <p className="text-[11px] text-brand-gray leading-relaxed">
-            Automated TF-IDF parsing with &gt;95% accuracy.
-          </p>
-          {user?.role === 'admin' ? (
-            <button
-              onClick={() => setActiveTab('simulation')}
-              className="w-full mt-2 py-2 px-3 rounded-xl bg-brand-card hover:bg-brand-hover border border-brand-border text-white text-xs font-semibold flex items-center justify-center space-x-1.5 transition-colors cursor-pointer shadow-2xs"
-            >
-              <span>Simulate Email</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-          ) : (
-            <div className="w-full mt-2 py-1.5 px-3 rounded-xl bg-brand-green/10 border border-brand-green/20 text-brand-green text-[11px] font-bold text-center flex items-center justify-center space-x-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-brand-green animate-pulse" />
-              <span>Live Ingestion Active</span>
-            </div>
-          )}
-        </div>
-
         {/* User Profile Footer with Interactive Dropdown */}
         {user && (
-          <div className="relative pt-2 border-t border-brand-border">
+          <div className="relative">
             <div
               onClick={() => setShowDropdown(!showDropdown)}
-              className="flex items-center justify-between p-1.5 rounded-xl hover:bg-brand-hover transition-colors cursor-pointer group"
+              className={`flex items-center justify-between p-1.5 rounded-xl hover:bg-brand-hover transition-colors cursor-pointer group ${
+                collapsed ? 'justify-center' : ''
+              }`}
             >
-              <div className="flex items-center space-x-2.5 truncate">
-                <div className="w-8 h-8 rounded-full bg-brand-cyan/15 text-brand-cyan border border-brand-cyan/20 flex items-center justify-center text-xs font-bold shrink-0 group-hover:bg-brand-cyan group-hover:text-white transition-all">
+              <div className={`flex items-center truncate ${collapsed ? 'space-x-0' : 'space-x-2.5'}`}>
+                <div className="w-8 h-8 rounded-full bg-brand-cyan/15 text-brand-cyan border border-brand-cyan/20 flex items-center justify-center text-xs font-bold shrink-0 group-hover:bg-brand-cyan group-hover:text-real-white transition-all">
                   {user.full_name.charAt(0)}
                 </div>
-                <div className="truncate">
-                  <p className="text-xs font-bold text-white truncate group-hover:text-brand-cyan transition-colors">{user.full_name}</p>
-                  <p className="text-[10px] text-brand-gray truncate capitalize">{user.role} • {user.department || 'General'}</p>
-                </div>
+                {!collapsed && (
+                  <div className="truncate">
+                    <p className="text-xs font-bold text-white truncate group-hover:text-brand-cyan transition-colors">{user.full_name}</p>
+                    <p className="text-[10px] text-brand-gray truncate capitalize">{user.role} • {user.department || 'General'}</p>
+                  </div>
+                )}
               </div>
-              <button
-                onClick={(e) => { e.stopPropagation(); onLogout(); }}
-                title="Sign Out"
-                className="p-1.5 rounded-lg text-brand-gray hover:text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer shrink-0"
-              >
-                <LogOut className="w-4 h-4" />
-              </button>
+              {!collapsed && (
+                <button
+                  onClick={(e) => { e.stopPropagation(); onLogout(); }}
+                  title="Sign Out"
+                  className="p-1.5 rounded-lg text-brand-gray hover:text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer shrink-0"
+                >
+                  <LogOut className="w-4 h-4" />
+                </button>
+              )}
             </div>
 
             {/* Profile Dropdown Menu */}
             {showDropdown && (
-              <div className="absolute bottom-16 left-0 w-full rounded-2xl bg-brand-card border border-brand-border shadow-2xl py-2 z-50 animate-in fade-in slide-in-from-bottom-2 duration-150">
+              <div className={`absolute rounded-2xl bg-brand-card border border-brand-border shadow-2xl py-2 z-50 animate-in fade-in slide-in-from-bottom-2 duration-150 ${
+                collapsed ? 'left-16 bottom-0 w-64 border border-brand-border shadow-2xl ml-2' : 'bottom-16 left-0 w-full'
+              }`}>
                 <div className="px-4 py-2.5 border-b border-brand-border">
                   <p className="text-xs font-bold text-white truncate">{user.full_name}</p>
                   <p className="text-[10px] text-brand-gray truncate mt-0.5">{user.email}</p>
@@ -297,7 +291,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-5 py-2.5 rounded-xl bg-brand-cyan hover:brightness-110 text-white font-bold text-xs shadow-sm transition-all flex items-center space-x-1.5 cursor-pointer disabled:opacity-50"
+                  className="px-5 py-2.5 rounded-xl bg-brand-cyan hover:brightness-110 text-real-white font-bold text-xs shadow-sm transition-all flex items-center space-x-1.5 cursor-pointer disabled:opacity-50"
                 >
                   <Check className="w-4 h-4 stroke-[3]" />
                   <span>{saving ? 'Saving...' : 'Save Profile'}</span>

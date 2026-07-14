@@ -17,7 +17,10 @@ export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [showLoginModal, setShowLoginModal] = useState<boolean>(true);
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+  const [theme, setTheme] = useState<'dark' | 'light'>('light');
+  const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(() => {
+    return localStorage.getItem('crd_sidebar_collapsed') === 'true';
+  });
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   // Data state
@@ -29,13 +32,12 @@ export default function App() {
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('crd_theme') as 'dark' | 'light' | null;
-    if (savedTheme) {
-      setTheme(savedTheme);
-      if (savedTheme === 'light') {
-        document.documentElement.classList.add('light-theme');
-      } else {
-        document.documentElement.classList.remove('light-theme');
-      }
+    const initialTheme = savedTheme || 'light';
+    setTheme(initialTheme);
+    if (initialTheme === 'dark') {
+      document.documentElement.classList.add('dark-theme');
+    } else {
+      document.documentElement.classList.remove('dark-theme');
     }
     initAuthAndData();
   }, []);
@@ -44,10 +46,10 @@ export default function App() {
     const nextTheme = theme === 'dark' ? 'light' : 'dark';
     setTheme(nextTheme);
     localStorage.setItem('crd_theme', nextTheme);
-    if (nextTheme === 'light') {
-      document.documentElement.classList.add('light-theme');
+    if (nextTheme === 'dark') {
+      document.documentElement.classList.add('dark-theme');
     } else {
-      document.documentElement.classList.remove('light-theme');
+      document.documentElement.classList.remove('dark-theme');
     }
   };
 
@@ -134,6 +136,7 @@ export default function App() {
         onLogout={handleLogout}
         onSwitchRole={handleSwitchRole}
         onUserUpdate={(u) => setUser(u)}
+        collapsed={sidebarCollapsed}
       />
 
       {/* Main App Container (Center + Right Columns) */}
@@ -148,6 +151,8 @@ export default function App() {
           onSearch={(q) => setSearchQuery(q)}
           onLogout={handleLogout}
           onUserUpdate={(u) => setUser(u)}
+          sidebarCollapsed={sidebarCollapsed}
+          onToggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)}
         />
 
         {/* Scrollable Content Area */}

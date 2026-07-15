@@ -158,10 +158,121 @@ def seed_initial_data():
                 )
                 db.add(p)
             db.commit()
+
+        # Seed real college emails into repository (runs unconditionally)
+        seed_real_emails(db)
+
     except Exception as e:
         print(f"Error seeding database: {e}")
     finally:
         db.close()
+
+
+def seed_real_emails(db):
+    import os
+    import glob
+    from email import message_from_file
+    from app.ml_engine.extractor import ResearchPaperExtractor
+    from app.ml_engine.classifier import ml_classifier
+    from app.config import settings
+    from app.ml_engine.summarizer import summarizer
+    
+    extractor = ResearchPaperExtractor()
+    
+    emails_dir = "/app/emails"
+    if not os.path.exists(emails_dir):
+        emails_dir = os.path.join(os.path.dirname(settings.BASE_DIR), "emails")
+        
+    if not os.path.exists(emails_dir):
+        print("Emails Seeder: Directory not found, skipping.", flush=True)
+        return
+        
+    eml_files = glob.glob(os.path.join(emails_dir, "*.eml"))
+    print(f"Emails Seeder: Scanning {len(eml_files)} eml files to seed into database...", flush=True)
+    
+    imported_count = 0
+    for eml_path in eml_files:
+        try:
+            with open(eml_path, "r", encoding="utf-8", errors="ignore") as f:
+                msg = message_from_file(f)
+            
+            subject = msg.get("Subject", "")
+            
+            # Extract plain text body
+            body = ""
+            if msg.is_multipart():
+                for part in msg.walk():
+                    if part.get_content_type() == "text/plain":
+                        body += part.get_payload(decode=True).decode(part.get_content_charset() or 'utf-8', errors='ignore')
+                    elif part.get_content_type() == "text/html" and not body:
+                        html_body = part.get_payload(decode=True).decode(part.get_content_charset() or 'utf-8', errors='ignore')
+                        body += ml_classifier.clean_html_to_text(html_body)
+            else:
+                content_type = msg.get_content_type()
+                if content_type == "text/plain":
+                    body = msg.get_payload(decode=True).decode(msg.get_content_charset() or 'utf-8', errors='ignore')
+                elif content_type == "text/html":
+                    html_body = msg.get_payload(decode=True).decode(msg.get_content_charset() or 'utf-8', errors='ignore')
+                    body = ml_classifier.clean_html_to_text(html_body)
+                    
+            if "<html>" in body.lower() or "<div" in body.lower() or "<!doctype" in body.lower():
+                body = ml_classifier.clean_html_to_text(body)
+                
+            if not body.strip():
+                continue
+                
+            # Use EmailIngestionService to split multi-paper email
+            from app.services.email_service import EmailIngestionService
+            ingestion_service = EmailIngestionService()
+            sections = ingestion_service.split_multi_paper_email(body)
+            
+            for idx, sec in enumerate(sections):
+                meta = extractor.parse_text_metadata(sec, sec[:2000])
+                title = meta.get("title", f"Paper from {subject}")
+                
+                # Check duplicate
+                existing = db.query(ResearchPaper).filter(ResearchPaper.title == title).first()
+                if not existing and meta.get("doi"):
+                    existing = db.query(ResearchPaper).filter(ResearchPaper.doi == meta["doi"]).first()
+                    
+                if existing:
+                    continue
+                
+                # Generate AI summary
+                ai_sum = summarizer.summarize(meta["abstract"], max_sentences=3)
+                
+                # Create paper using clean metadata
+                paper = ResearchPaper(
+                    title=meta["title"],
+                    abstract=meta["abstract"],
+                    authors_raw=meta["authors_raw"],
+                    authors_list=meta["authors_list"],
+                    department=meta["department"],
+                    journal_or_conference=meta["journal_or_conference"],
+                    publication_type=meta.get("publication_type", "Journal"),
+                    publication_date=meta["publication_date"],
+                    publication_year=meta["publication_year"],
+                    doi=meta["doi"],
+                    paper_url=meta.get("paper_url"),
+                    keywords_list=meta["keywords_list"],
+                    categories_list=meta["categories_list"],
+                    ml_confidence=meta["ml_confidence"],
+                    ml_predicted_dept=meta["ml_predicted_dept"],
+                    ai_summary=ai_sum,
+                    pdf_filename=None,
+                    pdf_url=None,
+                    email_source_subject=subject,
+                    citation_count=meta["publication_year"] % 10 * 3 + 4
+                )
+                db.add(paper)
+                imported_count += 1
+                
+        except Exception as e:
+            print(f"Emails Seeder: Error seeding {eml_path}: {e}", flush=True)
+            
+    if imported_count > 0:
+        db.commit()
+        print(f"Emails Seeder: Successfully imported {imported_count} papers from email corpus.", flush=True)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

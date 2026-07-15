@@ -42,6 +42,7 @@ services:
       - PYTHONUNBUFFERED=1
     volumes:
       - ./backend/storage:/app/storage
+      - ./emails:/app/emails:ro
     depends_on:
       - db
     networks:
@@ -97,6 +98,7 @@ services:
       - PYTHONUNBUFFERED=1
     volumes:
       - ./backend/storage:/app/storage
+      - ./emails:/app/emails:ro
     depends_on:
       - redis
       - db

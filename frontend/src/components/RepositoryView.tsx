@@ -33,6 +33,7 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
   const [authorQuery, setAuthorQuery] = useState('');
   const [startYear, setStartYear] = useState('All');
   const [endYear, setEndYear] = useState('All');
+  const [selectedQuartile, setSelectedQuartile] = useState('All');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
 
@@ -45,6 +46,7 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
   const handleSetAuthorQuery = (val: string) => { setAuthorQuery(val); setCurrentPage(1); };
   const handleSetStartYear = (val: string) => { setStartYear(val); setCurrentPage(1); };
   const handleSetEndYear = (val: string) => { setEndYear(val); setCurrentPage(1); };
+  const handleSetSelectedQuartile = (val: string) => { setSelectedQuartile(val); setCurrentPage(1); };
 
   // Upload modal state
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -85,7 +87,11 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
       matchesTimePeriod = yearVal >= startVal && yearVal <= endVal;
     }
 
-    return matchesQuery && matchesDept && matchesCat && matchesType && matchesAuthor && matchesTimePeriod;
+    // Quartile filter
+    const matchesQuartile = selectedQuartile === 'All' || 
+      (p.abstract && p.abstract.toLowerCase().includes(selectedQuartile.toLowerCase()));
+
+    return matchesQuery && matchesDept && matchesCat && matchesType && matchesAuthor && matchesTimePeriod && matchesQuartile;
   });
 
   const handleExportExcel = () => {
@@ -171,8 +177,8 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
         
         {/* Filter Toolbar Section */}
         <div className="p-5 sm:p-6 space-y-4 bg-brand-card">
-          {/* Row 1: Core Search and Department / Category / Type */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          {/* Row 1: Core Search and Department / Category / Type / Quartile */}
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
             
             {/* Search Bar */}
             <div className="relative">
@@ -223,6 +229,21 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
                 {pubTypes.map((type) => (
                   <option key={type} value={type}>Type: {type}</option>
                 ))}
+              </select>
+            </div>
+
+            {/* Journal Quartile Filter */}
+            <div>
+              <select
+                value={selectedQuartile}
+                onChange={(e) => handleSetSelectedQuartile(e.target.value)}
+                className="w-full px-3.5 py-2.5 rounded-xl bg-brand-bg border border-brand-border text-white text-xs focus:outline-none focus:border-brand-cyan transition-all cursor-pointer"
+              >
+                <option value="All">Quartile: All</option>
+                <option value="Q1">Quartile: Q1</option>
+                <option value="Q2">Quartile: Q2</option>
+                <option value="Q3">Quartile: Q3</option>
+                <option value="Q4">Quartile: Q4</option>
               </select>
             </div>
 
@@ -290,7 +311,7 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
           {/* Clear / Showing stats */}
           <div className="flex items-center justify-between text-xs text-brand-gray pt-3 border-t border-brand-border/40">
             <span>Showing <strong className="text-white font-mono">{filteredPapers.length}</strong> research publications</span>
-            {(searchQuery || authorQuery || selectedDept !== 'All' || selectedCat !== 'All' || selectedYear !== 'All' || selectedType !== 'All' || startYear !== 'All' || endYear !== 'All') && (
+            {(searchQuery || authorQuery || selectedDept !== 'All' || selectedCat !== 'All' || selectedYear !== 'All' || selectedType !== 'All' || startYear !== 'All' || endYear !== 'All' || selectedQuartile !== 'All') && (
               <button
                 onClick={() => {
                   setSearchQuery('');
@@ -301,6 +322,7 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
                   setAuthorQuery('');
                   setStartYear('All');
                   setEndYear('All');
+                  setSelectedQuartile('All');
                   setCurrentPage(1);
                 }}
                 className="text-brand-cyan hover:brightness-110 font-semibold underline cursor-pointer text-xs"

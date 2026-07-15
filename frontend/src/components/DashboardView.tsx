@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   BookOpen, Users, Building2, Award, Calendar, ArrowUpRight, 
   CheckCircle2, Download, Activity, TrendingUp
@@ -27,6 +27,23 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   const [dateRange, setDateRange] = useState('30d');
   const [syncing, setSyncing] = useState(false);
   const [syncMessage, setSyncMessage] = useState<string | null>(null);
+  const [lastSyncTime, setLastSyncTime] = useState<string | null>(() => localStorage.getItem('crd_last_sync_time'));
+
+  useEffect(() => {
+    if (!lastSyncTime) {
+      emailService.getLogs(1)
+        .then(logs => {
+          if (logs && logs.length > 0) {
+            const latestLogTime = logs[0].received_at;
+            if (latestLogTime) {
+              setLastSyncTime(latestLogTime);
+              localStorage.setItem('crd_last_sync_time', latestLogTime);
+            }
+          }
+        })
+        .catch(err => console.error("Error fetching latest log for sync time:", err));
+    }
+  }, [lastSyncTime]);
 
   const handleSyncEmails = async () => {
     setSyncing(true);
@@ -34,6 +51,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     try {
       const res = await emailService.sync();
       setSyncMessage(res.message || "Email synchronization completed successfully.");
+      const now = new Date().toISOString();
+      localStorage.setItem('crd_last_sync_time', now);
+      setLastSyncTime(now);
       if (onRefresh) onRefresh();
       setTimeout(() => setSyncMessage(null), 4000);
     } catch (err: any) {
@@ -42,6 +62,21 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     } finally {
       setSyncing(false);
     }
+  };
+
+  const formatLastSync = (timeStr: string | null) => {
+    if (!timeStr) return "Never synced";
+    const date = new Date(timeStr);
+    if (isNaN(date.getTime())) return "Never synced";
+    
+    return `Last synced: ${date.toLocaleString([], {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    })}`;
   };
 
   if (!analytics) {
@@ -83,48 +118,53 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2.5 shrink-0">
-            {/* Date Range Pill */}
-            <div className="inline-flex items-center bg-brand-card border border-brand-border rounded-xl p-1 shadow-2xs">
+          <div className="flex flex-col items-start sm:items-end gap-1.5 shrink-0">
+            <div className="flex flex-wrap items-center gap-2.5">
+              {/* Date Range Pill */}
+              <div className="inline-flex items-center bg-brand-card border border-brand-border rounded-xl p-1 shadow-2xs">
+                <button
+                  onClick={() => setDateRange('30d')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center space-x-1.5 ${
+                    dateRange === '30d' ? 'bg-brand-cyan text-real-white shadow-2xs' : 'text-brand-gray hover:text-white'
+                  }`}
+                >
+                  <Calendar className="w-3.5 h-3.5" />
+                  <span>Last 30 Days</span>
+                </button>
+                <button
+                  onClick={() => setDateRange('90d')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                    dateRange === '90d' ? 'bg-brand-cyan text-real-white shadow-2xs' : 'text-brand-gray hover:text-white'
+                  }`}
+                >
+                  <span>Quarter</span>
+                </button>
+              </div>
+
+              {/* Export PDF Button */}
               <button
-                onClick={() => setDateRange('30d')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center space-x-1.5 ${
-                  dateRange === '30d' ? 'bg-brand-cyan text-real-white shadow-2xs' : 'text-brand-gray hover:text-white'
-                }`}
+                onClick={() => exportService.downloadPdf()}
+                className="px-3.5 py-2 rounded-xl bg-brand-cyan hover:brightness-110 text-real-white font-bold text-xs shadow-sm transition-all flex items-center space-x-1.5 cursor-pointer"
+                title="Download Formatted PDF Report (.pdf)"
               >
-                <Calendar className="w-3.5 h-3.5" />
-                <span>Last 30 Days</span>
+                <Download className="w-3.5 h-3.5 stroke-[2.5]" />
+                <span>Export PDF</span>
               </button>
+
+              {/* Sync Emails Button */}
               <button
-                onClick={() => setDateRange('90d')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                  dateRange === '90d' ? 'bg-brand-cyan text-real-white shadow-2xs' : 'text-brand-gray hover:text-white'
-                }`}
+                onClick={handleSyncEmails}
+                disabled={syncing}
+                className="px-3.5 py-2 rounded-xl border border-brand-cyan/30 text-brand-cyan hover:bg-brand-cyan/10 font-bold text-xs shadow-sm transition-all flex items-center space-x-1.5 cursor-pointer disabled:opacity-50"
+                title="Poll inbox for new unseen publication announcement emails"
               >
-                <span>Quarter</span>
+                <Activity className={`w-3.5 h-3.5 ${syncing ? 'animate-spin' : ''}`} />
+                <span>{syncing ? 'Syncing...' : 'Sync Emails'}</span>
               </button>
             </div>
-
-            {/* Export PDF Button */}
-            <button
-              onClick={() => exportService.downloadPdf()}
-              className="px-3.5 py-2 rounded-xl bg-brand-cyan hover:brightness-110 text-real-white font-bold text-xs shadow-sm transition-all flex items-center space-x-1.5 cursor-pointer"
-              title="Download Formatted PDF Report (.pdf)"
-            >
-              <Download className="w-3.5 h-3.5 stroke-[2.5]" />
-              <span>Export PDF</span>
-            </button>
-
-            {/* Sync Emails Button */}
-            <button
-              onClick={handleSyncEmails}
-              disabled={syncing}
-              className="px-3.5 py-2 rounded-xl border border-brand-cyan/30 text-brand-cyan hover:bg-brand-cyan/10 font-bold text-xs shadow-sm transition-all flex items-center space-x-1.5 cursor-pointer disabled:opacity-50"
-              title="Poll inbox for new unseen publication announcement emails"
-            >
-              <Activity className={`w-3.5 h-3.5 ${syncing ? 'animate-spin' : ''}`} />
-              <span>{syncing ? 'Syncing...' : 'Sync Emails'}</span>
-            </button>
+            <span className="text-[10px] text-brand-gray/80 font-medium tracking-wide">
+              {formatLastSync(lastSyncTime)}
+            </span>
           </div>
         </div>
 

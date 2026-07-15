@@ -1,37 +1,20 @@
-# 🎓 Automated Research Publication Tracking and Management System (CRD System)
+# College Research Digest (CRD System)
 
-> **College Research Digest (CRD System)** is a sophisticated, enterprise-grade platform designed to solve the arduous task of manually navigating and reviewing daily emails containing published research papers from college professors and staff.
+College Research Digest is an automated, enterprise-grade research tracking and management system designed to streamline the ingestion, classification, parsing, and analysis of academic research publications announced via faculty emails. 
 
-By combining an event-driven email ingestion pipeline, a **Scikit-Learn Machine Learning Classifier**, PyMuPDF text extraction, and **NLP Extractive Summarization**, CRD System automates paper indexing, categorization, citation tracking, and collaboration visualization across academic departments.
-
----
-
-## ✨ Key System Features & Capabilities
-
-### 1. 🤖 Event-Driven ML & NLP Ingestion Engine
-* **Intelligent Email Relevance Classifier:** Uses a **TF-IDF n-gram (1,2) Vectorizer** combined with a **Multinomial Naive Bayes / Random Forest model** (`scikit-learn`) to filter incoming faculty emails. It distinguishes authentic research publication submissions from routine administrative spam or meeting reminders with over 95% accuracy.
-* **Automated Department Predictor:** Evaluates abstract terminology to predict academic department attribution (e.g., *Computer Science*, *Physics*, *Chemistry*, *Biotechnology*).
-* **Extractive NLP Summarizer:** Computes sentence-level TF-IDF scores and keyword densities to generate concise 2-3 sentence executive summaries of multi-page academic publications.
-* **PyMuPDF PDF Parser:** Automatically extracts metadata (Title, Authors, Abstract, Year, DOI) from email attachments and uploaded PDF files.
-
-### 2. 🔐 Role-Based Access Control (RBAC) & Security
-* **JWT Bearer Authentication:** Secure stateless authentication with PBKDF2 SHA-256 password hashing (zero compatibility issues across Python versions).
-* **Dual Roles:**
-  * **👨‍🏫 Faculty Role (`faculty`):** Can submit papers, view analytics, simulate ingestion, and export repository reports.
-  * **🛡️ Administrator Role (`admin`):** Full control over user accounts, paper deletion, dynamic category introduction, and scikit-learn model retraining.
-* **⚡ Quick Role Switcher:** The UI features a built-in demo toggle in the navbar to instantly switch between pre-configured Admin (`admin@college.edu`) and Faculty (`faculty@college.edu`) accounts.
-
-### 3. 📊 Interactive Visual Analytics & Collaboration Mapping
-* **Recharts Intelligence Dashboards:** Visualizes departmental research output, publication growth trajectories over time, and top research categories.
-* **🕸️ Co-Authorship Collaboration Network Graph:** Renders an interactive network visualization mapping inter-departmental co-authorship relationships and researcher productivity nodes.
-* **Advanced Filtering & Reporting:** Real-time search across titles, authors, and abstracts with instant export capabilities to **Excel (`.xlsx`)** and **Formatted PDF Reports (`.pdf`)**.
-
-### 4. 🏷️ Dynamic Categorization Engine
-* As explicitly designed for evolving research domains, administrators can **dynamically introduce new custom categories** (e.g., *Quantum Robotics*, *Astrobiology*, *6G Networks*) via the Admin Control Panel without database migrations or code changes.
+The system automates the processing of email communications, filters administrative noise and spam, extracts paper metadata, generates executive summaries, and classifies publications by academic department and research category.
 
 ---
 
-## 🏗️ Technical Architecture & Tech Stack
+## Core System Architecture
+
+The CRD System uses a decoupled, event-driven architecture that automatically processes incoming publication announcements:
+
+1. **Email Ingestion and Normalization:** The system periodically polls the target mailbox or accepts simulated email payloads. Clean, plain text content is extracted by stripping HTML, CSS blocks, and metadata tags.
+2. **Relevance Filtering (ML Classifier):** Cleaned email text is evaluated by a machine learning classification pipeline. Emails determined to be administrative chatter or spam are logged and rejected from database indexing.
+3. **Metadata Extraction (NLP Parser):** Document headers, multi-line author lists, journal titles, DOIs, publication years, and impact metrics (Impact Factor and Quartile ratings) are extracted using structured regex and pattern heuristic parsers.
+4. **Extractive Summarization (NLP Engine):** The text is summarized into a concise, sentence-level executive summary using TF-IDF sentence scoring.
+5. **Database Indexing:** Indexed research papers are associated with academic departments and relevant research categories, then stored in the database for query and retrieval.
 
 ```mermaid
 graph TD
@@ -45,90 +28,91 @@ graph TD
     H <-->|Axios / JSON| I[Vite + React + Tailwind v4 UI]
 ```
 
-### Backend (`/backend`)
-* **Framework:** Python 3.14+, **FastAPI**, Pydantic v2, SQLAlchemy 2.0
-* **Machine Learning & NLP:** `scikit-learn`, `numpy`, `PyMuPDF` (`fitz`), Extractive TF-IDF Summarizer
-* **Security & Auth:** `python-jose`, `passlib[pbkdf2]`, OAuth2PasswordBearer
-* **Reporting & Export:** `openpyxl` (Excel), `reportlab` (PDF generation)
+---
 
-### Frontend (`/frontend`)
-* **Framework:** **Vite**, **React 19**, **TypeScript**
-* **Styling & Aesthetics:** **Tailwind CSS v4** (rich dark mode, glassmorphism UI, micro-animations, custom scrollbars)
-* **Visualizations:** `recharts` (Bar, Pie, Line charts), Custom SVG Co-Authorship Network Canvas
-* **Icons & HTTP:** `lucide-react`, `axios`
+## Machine Learning and NLP Pipelines
+
+### Relevance and Department Classification
+The system uses a Scikit-Learn machine learning pipeline initialized and trained at startup:
+* **Feature Extraction:** Standardized text is vectorized using a Term Frequency-Inverse Document Frequency (TF-IDF) n-gram (1,2) Vectorizer with English stop-word filtering.
+* **Relevance Classifier:** A Multinomial Naive Bayes model determines whether the incoming email text represents a research publication announcement or administrative spam.
+* **Department Classifier:** Categorizes research publications into eight college academic departments (Computer Science, Physics, Chemistry, Biotechnology, Mechanical Engineering, Electrical Engineering, Mathematics, Economics and Finance).
+
+### Extractive NLP Summarizer
+Generates a concise executive summary by tokenizing the input text into sentences, computing sentence-level TF-IDF importance scores based on document terms, and selecting the highest-scoring sentences.
 
 ---
 
-## 🐳 Quick Start with Docker (Recommended for Easy Setup)
-
-You can launch the entire stack (FastAPI Backend + Scikit-Learn ML Engine + React Frontend + Nginx Reverse Proxy) using Docker Compose:
-
-```bash
-# Launch both backend and frontend containers in detached mode
-docker compose up --build -d
-```
-> * **Interactive Web Application:** **[http://localhost:3000](http://localhost:3000)** (or `http://localhost:5173`)
-> * **API Swagger Documentation:** **[http://localhost:8000/docs](http://localhost:8000/docs)**
-> * *To stop containers:* `docker compose down`
-
----
-
-## 💻 Manual Setup (Without Docker)
+## Getting Started
 
 ### Prerequisites
-* Linux / macOS / Windows
-* **Python 3.10+** (tested on Python 3.14)
-* **Node.js 18+** & `npm`
+* Python 3.10 or higher
+* Node.js 18 or higher
+* Docker and Docker Compose (recommended)
 
-### 1. Start the FastAPI Backend
+### Docker Deployment
+Build and run the entire stack (FastAPI Backend, SQLite/PostgreSQL Database, Nginx serving compiled React frontend):
 ```bash
-cd backend
-
-# Create and activate virtual environment (if not already activated)
-python3 -m venv venv
-source venv/bin/activate
-
-# Install Python dependencies
-pip install -r requirements.txt
-
-# Start the API server (automatically seeds demo users, categories, papers & trains ML models on first run!)
-uvicorn main:app --reload --port 8000
+docker compose up --build -d
 ```
-> *API Documentation & Swagger UI will be live at:* **[http://localhost:8000/docs](http://localhost:8000/docs)**
+* Interactive Web Application: http://localhost:3000
+* API Swagger Documentation: http://localhost:8000/docs
 
-### 2. Start the Vite React Frontend
-Open a new terminal window:
-```bash
-cd frontend
+### Manual Development Setup
 
-# Install Node dependencies
-npm install
+#### Backend Setup
+1. Navigate to the backend directory:
+   ```bash
+   cd backend
+   ```
+2. Create and activate a Python virtual environment:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate
+   ```
+3. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+4. Run the development server:
+   ```bash
+   uvicorn main:app --reload --port 8000
+   ```
 
-# Start the local development server
-npm run dev
-```
-> *The interactive web application will be live at:* **[http://localhost:5173](http://localhost:5173)**
+#### Frontend Setup
+1. Navigate to the frontend directory:
+   ```bash
+   cd frontend
+   ```
+2. Install Node dependencies:
+   ```bash
+   npm install
+   ```
+3. Compile and start the development server:
+   ```bash
+   npm run dev
+   ```
 
 ---
 
-## 🔑 Default Demo Credentials
+## API Endpoints Summary
 
-When the database initializes, two default accounts are seeded for testing:
+All API endpoints are prefixed with `/api/v1` and require JWT bearer authorization (except `/auth/login` and `/auth/register`):
 
-| Role | Email Address | Password | Permissions |
-| :--- | :--- | :--- | :--- |
-| **🛡️ Administrator** | `admin@college.edu` | `admin123` | Full RBAC access, User management, ML model retraining, Custom category creation |
-| **👨‍🏫 Faculty Member** | `faculty@college.edu` | `faculty123` | Paper repository browsing, PDF upload, Live ML email ingestion simulation, Exports |
-
-> **Tip:** You can use the **"Switch Role"** button directly in the application navbar or login modal to seamlessly transition between roles during testing!
+* `POST /auth/login` - Obtain authorization token.
+* `POST /auth/register` - Create a new user account.
+* `GET /papers/` - Query publication repository with filters (title, author, department, category, year).
+* `POST /papers/upload` - Upload PDF and trigger metadata extraction pipeline.
+* `DELETE /papers/{id}` - Delete a paper (Admin only).
+* `POST /emails/simulate` - Simulate email arrival and execute ML classification pipeline.
+* `GET /emails/logs` - Retrieve historical ingestion audit logs.
+* `POST /admin/retrain-ml` - Force retraining of classification models on current corpus (Admin only).
 
 ---
 
-## 🧪 Testing the Machine Learning Pipeline
+## Default System Credentials
 
-1. Navigate to the **"ML Email Ingestion"** tab in the web UI.
-2. Choose one of the built-in presets:
-   * **🧪 Preset 1 (Chemistry Paper):** High ML confidence score (~85-98%), automatically categorized and indexed.
-   * **🤖 Preset 2 (AI & CS Paper):** Extracted author names and generated AI summary.
-   * **🚫 Preset 3 (Routine Meeting Spam):** Scikit-learn Naive Bayes model detects non-academic administrative chatter and **rejects** it with a spam audit entry.
-3. Check the **Real-Time ML Classification Decision Card** and **Ingestion Audit Log Table** to observe model confidence scores and processing status.
+For testing and local development, the system is seeded with the following demo credentials:
+
+* **Administrator Account:** `admin@college.edu` / `admin123`
+* **Faculty Account:** `faculty@college.edu` / `faculty123`

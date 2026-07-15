@@ -30,3 +30,7 @@ backend/storage/ml_models/*
 backend/storage/crd_database.db
 backend/storage/pdfs/*
 backend/storage/exports/*
+
+# Project-specific local files (SRM University private data)
+emails/
+email_analysis.md

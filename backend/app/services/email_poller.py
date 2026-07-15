@@ -9,6 +9,32 @@ from app.database import SessionLocal
 from app.services.email_service import email_service
 from app.schemas.email import SimulateEmailRequest
 from app.config import settings
+from html.parser import HTMLParser
+
+class HTMLTextExtractor(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.text = []
+        self.ignore_tags = {"style", "script", "head", "title", "meta", "link"}
+        self.current_tag = []
+
+    def handle_starttag(self, tag, attrs):
+        self.current_tag.append(tag.lower())
+
+    def handle_endtag(self, tag):
+        tag = tag.lower()
+        if self.current_tag and self.current_tag[-1] == tag:
+            self.current_tag.pop()
+
+    def handle_data(self, data):
+        if any(ignored in self.current_tag for ignored in self.ignore_tags):
+            return
+        self.text.append(data)
+
+    def get_text(self):
+        raw_text = "".join(self.text)
+        lines = [line.strip() for line in raw_text.splitlines()]
+        return "\n".join([line for line in lines if line])
 
 class EmailPoller:
     def __init__(self):
@@ -55,10 +81,36 @@ class EmailPoller:
                 return decoded.decode('utf-8', errors='ignore')
         return str(decoded)
 
+    def clean_html_to_text(self, html_content):
+        try:
+            parser = HTMLTextExtractor()
+            parser.feed(html_content)
+            return parser.get_text()
+        except Exception as e:
+            print(f"Email Poller HTML clean error: {e}", flush=True)
+            return html_content
+
+    def format_imap_date(self, dt):
+        months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+        return f"{dt.day}-{months[dt.month - 1]}-{dt.year}"
+
     def poll_emails(self):
         if not settings.EMAIL_USERNAME or not settings.EMAIL_PASSWORD:
             print("Email Poller: Missing credentials, skipping poll.", flush=True)
             return
+
+        # Query the database for the latest email ingestion log date
+        search_date = "15-Jul-2026"
+        db_check: Session = SessionLocal()
+        try:
+            from app.models.email_log import EmailIngestionLog
+            latest_log = db_check.query(EmailIngestionLog).order_by(EmailIngestionLog.received_at.desc()).first()
+            if latest_log and latest_log.received_at:
+                search_date = self.format_imap_date(latest_log.received_at)
+        except Exception as db_err:
+            print(f"Email Poller: Error checking latest sync time from DB: {db_err}", flush=True)
+        finally:
+            db_check.close()
 
         try:
             # Connect to IMAP server
@@ -68,23 +120,30 @@ class EmailPoller:
             mail.select("inbox")
             print("Email Poller: Connected and authenticated successfully.", flush=True)
 
-            # Search for messages with subject containing "published" that are UNSEEN
-            status, messages = mail.search(None, 'UNSEEN', 'SUBJECT', 'published')
-            if status != "OK":
-                print("Email Poller: IMAP search failed.", flush=True)
+            # Search for messages since search_date with subject containing target keywords
+            mail_ids = set()
+            keywords_to_search = ["published", "paper", "research", "digest", "publication"]
+            for keyword in keywords_to_search:
+                try:
+                    status, messages = mail.search(None, 'SINCE', search_date, 'SUBJECT', keyword)
+                    if status == "OK" and messages[0]:
+                        mail_ids.update(messages[0].split())
+                except Exception as search_err:
+                    print(f"Email Poller search error for '{keyword}' since {search_date}: {search_err}", flush=True)
+
+            if not mail_ids:
+                print(f"Email Poller: No matching emails found in inbox since {search_date}.", flush=True)
                 mail.logout()
                 return
 
-            mail_ids = messages[0].split()
-            print(f"Email Poller: Found {len(mail_ids)} matching emails in inbox.", flush=True)
-            if not mail_ids:
-                mail.logout()
-                return
+            # Chronological sort (oldest to newest)
+            mail_ids_list = sorted(list(mail_ids), key=lambda x: int(x))
+            print(f"Email Poller: Found {len(mail_ids_list)} unique matching emails in inbox since {search_date}.", flush=True)
 
             db: Session = SessionLocal()
             try:
-                # Process newest emails first
-                for mail_id in reversed(mail_ids):
+                # Process oldest emails first so that the sync progresses chronologically
+                for mail_id in mail_ids_list:
                     # Fetch only the header first to check the subject quickly
                     status, data = mail.fetch(mail_id, "(RFC822.HEADER)")
                     if status != "OK":
@@ -97,8 +156,20 @@ class EmailPoller:
 
                     print(f"Email Poller: Found target email - Subject: '{subject}' | From: '{sender}'", flush=True)
 
-                    if "paper" not in subject.lower() or "published" not in subject.lower():
+                    subject_lower = subject.lower()
+                    allowed_keywords = ["paper", "published", "publish", "research", "digest", "publication"]
+                    if not any(kw in subject_lower for kw in allowed_keywords):
                         # Skip if it doesn't match our target keywords
+                        continue
+
+                    # Deduplication check: only process if we don't already have a processed/rejected log for this sender & subject
+                    from app.models.email_log import EmailIngestionLog
+                    existing_log = db.query(EmailIngestionLog).filter(
+                        EmailIngestionLog.sender == sender,
+                        EmailIngestionLog.subject == subject
+                    ).first()
+                    if existing_log and existing_log.status in ["processed", "rejected_spam"]:
+                        print(f"Email Poller: Skipping duplicate email - Subject: '{subject}' (already logged with status '{existing_log.status}')", flush=True)
                         continue
 
                     # Fetch the full email content
@@ -127,7 +198,7 @@ class EmailPoller:
                             elif content_type == "text/html" and not body and "attachment" not in content_disposition:
                                 try:
                                     html_body = part.get_payload(decode=True).decode(part.get_content_charset() or 'utf-8', errors='ignore')
-                                    body += html_body
+                                    body += self.clean_html_to_text(html_body)
                                 except Exception:
                                     pass
                             
@@ -157,6 +228,12 @@ class EmailPoller:
                         content_type = msg.get_content_type()
                         if content_type == "text/plain":
                             body = msg.get_payload(decode=True).decode(msg.get_content_charset() or 'utf-8', errors='ignore')
+                        elif content_type == "text/html":
+                            try:
+                                html_body = msg.get_payload(decode=True).decode(msg.get_content_charset() or 'utf-8', errors='ignore')
+                                body = self.clean_html_to_text(html_body)
+                            except Exception:
+                                pass
 
                     print(f"Email Poller: Processing email - From: {sender}, Subject: {subject}", flush=True)
 

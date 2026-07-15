@@ -6,6 +6,32 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.pipeline import Pipeline
 from app.config import settings
+from html.parser import HTMLParser
+
+class HTMLTextExtractor(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.text = []
+        self.ignore_tags = {"style", "script", "head", "title", "meta", "link"}
+        self.current_tag = []
+
+    def handle_starttag(self, tag, attrs):
+        self.current_tag.append(tag.lower())
+
+    def handle_endtag(self, tag):
+        tag = tag.lower()
+        if self.current_tag and self.current_tag[-1] == tag:
+            self.current_tag.pop()
+
+    def handle_data(self, data):
+        if any(ignored in self.current_tag for ignored in self.ignore_tags):
+            return
+        self.text.append(data)
+
+    def get_text(self):
+        raw_text = "".join(self.text)
+        lines = [line.strip() for line in raw_text.splitlines()]
+        return "\n".join([line for line in lines if line])
 
 class ResearchMLClassifier:
     def __init__(self):
@@ -80,9 +106,119 @@ class ResearchMLClassifier:
         
         self.retrain_models()
 
+    def clean_html_to_text(self, html_content):
+        try:
+            parser = HTMLTextExtractor()
+            parser.feed(html_content)
+            return parser.get_text()
+        except Exception as e:
+            print(f"ML Classifier HTML clean error: {e}", flush=True)
+            return html_content
+
+    def _load_real_emails_for_training(self):
+        real_texts = []
+        real_depts = []
+        real_classes = []
+        
+        emails_dir = "/app/emails"
+        if not os.path.exists(emails_dir):
+            # Fallback for local manual development outside Docker
+            emails_dir = os.path.join(os.path.dirname(settings.BASE_DIR), "emails")
+        if not os.path.exists(emails_dir):
+            return real_texts, real_depts, real_classes
+            
+        import glob
+        from email import message_from_file
+        
+        dept_mapping = {
+            "computer science": "Computer Science",
+            "physics": "Physics",
+            "chemistry": "Chemistry",
+            "biotechnology": "Biotechnology",
+            "biological sciences": "Biotechnology",
+            "mechanical": "Mechanical Engineering",
+            "electronics": "Electrical Engineering",
+            "electrical": "Electrical Engineering",
+            "mathematics": "Mathematics",
+            "economics": "Economics & Finance",
+            "management": "Economics & Finance",
+            "business": "Economics & Finance",
+            "civil": "Mechanical Engineering",
+            "environmental": "Chemistry",
+            "literature": "Mathematics",
+        }
+        
+        for eml_path in glob.glob(os.path.join(emails_dir, "*.eml")):
+            try:
+                with open(eml_path, "r", encoding="utf-8", errors="ignore") as f:
+                    msg = message_from_file(f)
+                
+                subject = msg.get("Subject", "")
+                
+                # Extract body
+                body = ""
+                if msg.is_multipart():
+                    for part in msg.walk():
+                        if part.get_content_type() == "text/plain":
+                            body += part.get_payload(decode=True).decode(part.get_content_charset() or 'utf-8', errors='ignore')
+                        elif part.get_content_type() == "text/html" and not body:
+                            html_body = part.get_payload(decode=True).decode(part.get_content_charset() or 'utf-8', errors='ignore')
+                            body += self.clean_html_to_text(html_body)
+                else:
+                    content_type = msg.get_content_type()
+                    if content_type == "text/plain":
+                        body = msg.get_payload(decode=True).decode(msg.get_content_charset() or 'utf-8', errors='ignore')
+                    elif content_type == "text/html":
+                        html_body = msg.get_payload(decode=True).decode(msg.get_content_charset() or 'utf-8', errors='ignore')
+                        body = self.clean_html_to_text(html_body)
+                
+                if "<html>" in body.lower() or "<div" in body.lower() or "<!doctype" in body.lower():
+                    body = self.clean_html_to_text(body)
+                
+                import re
+                # Clean and extract Title/Journal/Abstract using regex to match real test input format
+                title_match = re.search(r'(?i)title(?:\s+of\s+the\s+paper)?[\s*\:\-\*]+([\s\S]+?)(?=\n\s*\*?(?:journal|authors?|doi|if\s+(?:and|&)\s+q|impact\s+factor)\b)', body)
+                title = title_match.group(1).strip("*_ \t\r\n") if title_match else subject
+                title = re.sub(r'^(?:\d+[\.\)]\s*)', '', title).strip("*_ \t\r\n")
+                
+                journal_match = re.search(r'(?i)journal[\s*\:\-\*]+([^\n]+)', body)
+                journal = journal_match.group(1).strip("*_ \t\r\n") if journal_match else "International Journal of College Research"
+                
+                abstract_match = re.search(r'(?i)abstract[\s*\:\-]+([\s\S]+)', body)
+                abstract = abstract_match.group(1).strip() if abstract_match else f"This publication outlines research on '{title}', accepted at '{journal}'."
+                
+                # Use clean Title + Abstract for classifier training so it aligns perfectly with prediction text format
+                combined_text = f"{title} {abstract}"
+                filename_lower = os.path.basename(eml_path).lower()
+                text_lower = body.lower()
+                
+                matched_dept = "Computer Science"
+                for kw, standard_dept in dept_mapping.items():
+                    if kw in filename_lower or kw in text_lower:
+                        matched_dept = standard_dept
+                        break
+                
+                real_texts.append(combined_text)
+                real_depts.append(matched_dept)
+                real_classes.append("research_paper")
+            except Exception as e:
+                print(f"Error parsing training email {eml_path}: {e}", flush=True)
+                
+        return real_texts, real_depts, real_classes
+
     def retrain_models(self, extra_texts=None, extra_depts=None, extra_email_texts=None, extra_email_classes=None):
         texts, depts, email_classes = self._get_seed_training_data()
         
+        try:
+            real_texts, real_depts, real_classes = self._load_real_emails_for_training()
+            if real_texts:
+                texts.extend(real_texts)
+                depts.extend(real_depts)
+                email_classes.extend(real_classes)
+                print(f"ML Classifier Retrain: Dynamically seeded {len(real_texts)} real emails from college corpus.", flush=True)
+        except Exception as seed_err:
+            print(f"ML Classifier Retrain Error: Failed to seed real emails: {seed_err}", flush=True)
+
         # Add research papers to training corpus
         if extra_texts and extra_depts:
             for t, d in zip(extra_texts, extra_depts):

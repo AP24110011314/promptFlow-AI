@@ -8,8 +8,45 @@ from app.ml_engine.summarizer import summarizer
 from app.schemas.email import SimulateEmailRequest
 
 class EmailIngestionService:
+    def split_multi_paper_email(self, body: str) -> list:
+        if not body:
+            return [""]
+        import re
+        # Find start indices of all "Title of the paper:" (including numbered, space-less, and asterisk variations)
+        matches = list(re.finditer(r'(?i)(?:\b\d+[\.\)]\s*(?:\*\s*)*)?Title(?:\s+of\s+the\s+paper)?[\s*\:\-\*]+', body))
+        if len(matches) <= 1:
+            return [body]
+            
+        sections = []
+        for i in range(len(matches)):
+            start = matches[i].start()
+            end = matches[i+1].start() if i + 1 < len(matches) else len(body)
+            sections.append(body[start:end])
+            
+        return sections
+
     def process_simulated_email(self, db: Session, req: SimulateEmailRequest, pdf_path: str = None) -> EmailIngestionLog:
-        """Processes an incoming simulated or real email through the ML classification and PDF extraction pipeline."""
+        """Processes an incoming simulated or real email, checking for multi-paper content and routing to the extraction pipeline."""
+        if not pdf_path and req.body:
+            sections = self.split_multi_paper_email(req.body)
+            if len(sections) > 1:
+                print(f"Email Ingestion: Detected {len(sections)} distinct papers in a single email. Processing each separately...", flush=True)
+                last_log = None
+                for idx, sec in enumerate(sections):
+                    sec_subject = f"{req.subject} (Paper {idx+1})"
+                    sec_req = SimulateEmailRequest(
+                        sender=req.sender,
+                        subject=sec_subject,
+                        body=sec,
+                        department_hint=req.department_hint
+                    )
+                    last_log = self._process_single_email(db, sec_req, pdf_path=None)
+                return last_log
+
+        return self._process_single_email(db, req, pdf_path)
+
+    def _process_single_email(self, db: Session, req: SimulateEmailRequest, pdf_path: str = None) -> EmailIngestionLog:
+        """Processes a single publication email through the ML classification and PDF extraction pipeline."""
         # 1. Classify email relevance using ML model
         classification_res = ml_classifier.classify_email_relevance(f"{req.subject} {req.body}")
         score = classification_res["confidence"]

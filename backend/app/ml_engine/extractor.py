@@ -34,29 +34,41 @@ class ResearchPaperExtractor:
 
         # Check if this is a plain text announcement email (contains Title/Journal/Authors/DOI fields)
         text_lower = full_text.lower()
-        announcement_mode = any(k in text_lower for k in ["title of the paper", "title of paper", "journal:", "authors:", "doi:"])
+        announcement_mode = any(k in text_lower for k in ["title of the paper", "title of paper", "title:", "journal", "authors", "doi"])
 
         if announcement_mode:
             # Extract using structured announcement patterns
-            # Match multi-line title until next header block (Journal, Authors, or DOI)
-            title_match = re.search(r'(?i)title(?:\s+of\s+the\s+paper)?[\s*\:\-]+([\s\S]+?)(?=\n\s*\*?(?:journal|authors?|doi|if and q)\b)', full_text)
+            # Match multi-line title until next header block (Journal, Authors, DOI, or IF/Q)
+            title_match = re.search(r'(?i)title(?:\s+of\s+the\s+paper)?[\s*\:\-\*]+([\s\S]+?)(?=\n\s*\*?(?:journal|authors?|doi|if\s+(?:and|&)\s+q|impact\s+factor)\b)', full_text)
             if title_match:
                 title = re.sub(r'\s+', ' ', title_match.group(1)).strip("*_ \t\r\n")
+                # Remove leading numbers (like "1. " or "2. ") from title
+                title = re.sub(r'^(?:\d+[\.\)]\s*)', '', title).strip("*_ \t\r\n")
             else:
                 title_match_fallback = re.search(r'(?i)title(?:\s+of\s+the\s+paper)?[\s*\:\-]+([^\n]+)', full_text)
                 title = title_match_fallback.group(1).strip("*_ \t\r\n") if title_match_fallback else "Untitled Research Publication"
+                title = re.sub(r'^(?:\d+[\.\)]\s*)', '', title).strip("*_ \t\r\n")
             
-            journal_match = re.search(r'(?i)journal[\s*\:\-]+([^\n]+)', full_text)
+            journal_match = re.search(r'(?i)journal[\s*\:\-\*]+([^\n]+)', full_text)
             journal = journal_match.group(1).strip("*_ \t\r\n") if journal_match else "International Journal of College Research"
             
-            authors_match = re.search(r'(?i)authors?[\s*\:\-]+([^\n]+)', full_text)
-            authors_raw = authors_match.group(1).strip("*_ \t\r\n") if authors_match else "Faculty Research Team"
+            # Match multi-line authors block until the next header block
+            authors_match = re.search(r'(?i)authors?[\s*\:\-\*]+([\s\S]+?)(?=\n\s*\*?(?:journal|doi|if\s+(?:and|&)\s+q|impact\s+factor|title|\d+[\.\)]\s*\*?\s*\*?title)\b)', full_text)
+            if authors_match:
+                authors_raw = authors_match.group(1).strip("*_ \t\r\n")
+            else:
+                authors_match_fallback = re.search(r'(?i)authors?[\s*\:\-]+([^\n]+)', full_text)
+                authors_raw = authors_match_fallback.group(1).strip("*_ \t\r\n") if authors_match_fallback else "Faculty Research Team"
             
-            doi_match = re.search(r'(?i)doi[\s*\:\-]+([^\n]+)', full_text)
+            doi_match = re.search(r'(?i)doi[\s*\:\-\*]+([^\n]+)', full_text)
             doi_raw = doi_match.group(1).strip("*_ \t\r\n") if doi_match else ""
 
-            # Year
-            year_matches = re.findall(r'\b(19\d\d|20[0-2]\d)\b', full_text)
+            # Extract IF and Q value
+            if_q_match = re.search(r'(?i)(?:if\s+and\s+q|impact\s+factor)[\s*\:\-\*]+([^\n]+)', full_text)
+            if_q_val = if_q_match.group(1).strip("*_ \t\r\n") if if_q_match else ""
+
+            # Year (supporting any year up to 2099)
+            year_matches = re.findall(r'\b(19\d\d|20[0-9]\d)\b', full_text)
             publication_year = int(year_matches[0]) if year_matches else 2026
             publication_date = f"{publication_year}-01-01"
             
@@ -69,11 +81,17 @@ class ResearchPaperExtractor:
                 title_hash = hashlib.md5(title.encode('utf-8')).hexdigest()[:8]
                 doi = f"10.1016/j.crd.{publication_year}.{title_hash}"
 
-            # Authors List parsing (filter out designations and affiliations)
+            # Authors List parsing (split by comma, semicolon, "and", or newline, filtering out designations and affiliations)
             authors_list = []
-            for part in re.split(r'[,;]|\band\b', authors_raw):
-                part_clean = re.sub(r'(?i)(?:Dr\.|Prof\.|Assistant\s+Professor|Associate\s+Professor|Professor|Department\s+of\s+.*|Lecturer|Researcher|Scholar)', '', part).strip("*_ \t\r\n")
-                if len(part_clean) > 3 and not any(aff in part_clean.lower() for aff in ["university", "institute", "engineering", "science", "department", "research"]):
+            for part in re.split(r'[\n,;]|\band\b', authors_raw):
+                part_clean = part.strip("*_ \t\r\n")
+                if not part_clean:
+                    continue
+                # Strip common academic prefixes and suffixes
+                part_clean = re.sub(r'(?i)(?:Dr\.|Prof\.|Assistant\s+Professor|Associate\s+Professor|Professor|Department\s+of\s+.*|Lecturer|Researcher|Scholar|PhD|Mr\.|Ms\.|Mrs\.)', '', part_clean).strip("*_ \t\r\n")
+                # Remove parentheses contents (e.g. PhD Scholar)
+                part_clean = re.sub(r'\(.*?\)', '', part_clean).strip("*_ \t\r\n")
+                if len(part_clean) > 3 and not any(aff in part_clean.lower() for aff in ["university", "institute", "engineering", "science", "department", "research", "associate", "professor"]):
                     authors_list.append(part_clean)
             if not authors_list:
                 authors_list = ["Faculty Research Team"]
@@ -81,6 +99,8 @@ class ResearchPaperExtractor:
             # Abstract: For announcements, the email text contains details, or we use title
             abstract_match = re.search(r'(?i)abstract[\s*\:\-]+([\s\S]+)', full_text)
             abstract = abstract_match.group(1).strip() if abstract_match else f"This publication outlines research on '{title}', accepted at '{journal}'."
+            if if_q_val:
+                abstract += f"\n\n[Impact Factor & Quartile: {if_q_val}]"
 
             # Predict department & categories
             ml_dept_res = ml_classifier.predict_department(f"{title} {abstract}")

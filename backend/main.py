@@ -276,8 +276,7 @@ def seed_real_emails(db):
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup: retrain/initialize models, then seed initial data
-    ml_classifier.retrain_models() # ensure ML models are initialized
+    # Startup: seed initial database data (ML models are initialized on import)
     seed_initial_data()
     
     # Start Real Email Poller background worker

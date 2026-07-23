@@ -49,7 +49,7 @@ class AlertService:
             print(f"Alert Service: No faculty members found in department {paper.department}. Skipping immediate alert.", flush=True)
             return
 
-        subject = f"[CRD System] New Publication: {paper.title}"
+        subject = f"[promptFlow-AI System] New Publication: {paper.title}"
         pdf_link = "http://localhost:3000/repository"
 
         for user in users:
@@ -70,7 +70,7 @@ class AlertService:
             <body>
                 <div class="container">
                     <div class="header">
-                        <h2>College Research Digest (CRD)</h2>
+                        <h2>promptFlow-AI</h2>
                         <p>New Research Alert</p>
                     </div>
                     <p>Hello {user.full_name},</p>
@@ -81,7 +81,7 @@ class AlertService:
                         <p class="summary"><strong>AI Summary:</strong> {paper.ai_summary or "No summary available."}</p>
                     </div>
                     <div class="footer">
-                        <p>This is an automated email from the CRD System.<br/>To change your notification settings, please update your profile in the CRD Portal.</p>
+                        <p>This is an automated email from promptFlow-AI System.<br/>To change your notification settings, please update your profile in the promptFlow-AI Portal.</p>
                     </div>
                 </div>
             </body>
@@ -120,7 +120,7 @@ class AlertService:
             if not new_papers:
                 continue
 
-            subject = f"[CRD System] New Research Publications in {dept}"
+            subject = f"[promptFlow-AI System] New Research Publications in {dept}"
             pdf_link = "http://localhost:3000/repository"
             
             html = f"""
@@ -140,7 +140,7 @@ class AlertService:
             <body>
                 <div class="container">
                     <div class="header">
-                        <h2>College Research Digest (CRD)</h2>
+                        <h2>promptFlow-AI</h2>
                         <p>Daily Research Alert for {user.full_name}</p>
                     </div>
                     <p>Hello {user.full_name},</p>
@@ -161,7 +161,7 @@ class AlertService:
 
             html += """
                     <div class="footer">
-                        <p>This is an automated email from the CRD System.<br/>To change your notification settings, please update your profile in the CRD Portal.</p>
+                        <p>This is an automated email from promptFlow-AI System.<br/>To change your notification settings, please update your profile in the promptFlow-AI Portal.</p>
                     </div>
                 </div>
             </body>

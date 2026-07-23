@@ -190,7 +190,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
                     className="w-full px-4 py-2.5 text-left text-xs font-semibold text-amber-500 hover:bg-amber-500/10 flex items-center space-x-2.5 transition-colors cursor-pointer"
                   >
                     <LogOut className="w-4 h-4 shrink-0" />
-                    <span>Log Out of CRD</span>
+                    <span>Log Out of promptFlow-AI</span>
                   </button>
                 </div>
               </div>

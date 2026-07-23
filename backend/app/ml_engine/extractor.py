@@ -79,7 +79,7 @@ class ResearchPaperExtractor:
             else:
                 import hashlib
                 title_hash = hashlib.md5(title.encode('utf-8')).hexdigest()[:8]
-                doi = f"10.1016/j.crd.{publication_year}.{title_hash}"
+                doi = f"10.1016/j.promptflow.{publication_year}.{title_hash}"
 
             # Authors List parsing (split by comma, semicolon, "and", or newline, filtering out designations and affiliations)
             authors_list = []
@@ -199,7 +199,7 @@ class ResearchPaperExtractor:
         else:
             import hashlib
             title_hash = hashlib.md5(title.encode('utf-8')).hexdigest()[:8]
-            doi = f"10.1016/j.crd.{publication_year}.{title_hash}"
+            doi = f"10.1016/j.promptflow.{publication_year}.{title_hash}"
 
         # 6. Journal / Conference
         journal = "International Journal of College Research"

@@ -28,7 +28,7 @@ export default function App() {
   const [selectedPaper, setSelectedPaper] = useState<ResearchPaper | null>(null);
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem('crd_theme') as 'dark' | 'light' | null;
+    const savedTheme = localStorage.getItem('promptflow_theme') as 'dark' | 'light' | null;
     const initialTheme = savedTheme || 'light';
     setTheme(initialTheme);
     if (initialTheme === 'dark') {
@@ -42,7 +42,7 @@ export default function App() {
   const handleToggleTheme = () => {
     const nextTheme = theme === 'dark' ? 'light' : 'dark';
     setTheme(nextTheme);
-    localStorage.setItem('crd_theme', nextTheme);
+    localStorage.setItem('promptflow_theme', nextTheme);
     if (nextTheme === 'dark') {
       document.documentElement.classList.add('dark-theme');
     } else {
@@ -51,14 +51,14 @@ export default function App() {
   };
 
   const initAuthAndData = async () => {
-    const token = localStorage.getItem('crd_token');
+    const token = localStorage.getItem('promptflow_token');
     if (token) {
       try {
         const u = await authService.getMe();
         setUser(u);
         setShowLoginModal(false);
       } catch (err) {
-        localStorage.removeItem('crd_token');
+        localStorage.removeItem('promptflow_token');
         setShowLoginModal(true);
       }
     } else {
@@ -80,7 +80,7 @@ export default function App() {
       setLogs(lData);
       setAnalytics(aData);
     } catch (err) {
-      console.error("Error loading CRD data:", err);
+      console.error("Error loading promptFlow-AI data:", err);
     }
   };
 
@@ -91,7 +91,7 @@ export default function App() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('crd_token');
+    localStorage.removeItem('promptflow_token');
     setUser(null);
     setShowLoginModal(true);
   };
@@ -101,7 +101,7 @@ export default function App() {
     const targetPass = user?.role === 'admin' ? 'faculty123' : 'admin123';
     try {
       const res = await authService.login(targetEmail, targetPass);
-      localStorage.setItem('crd_token', res.access_token);
+      localStorage.setItem('promptflow_token', res.access_token);
       setUser(res.user);
       if (res.user.role !== 'admin' && (activeTab === 'admin' || activeTab === 'simulation')) {
         setActiveTab('dashboard');

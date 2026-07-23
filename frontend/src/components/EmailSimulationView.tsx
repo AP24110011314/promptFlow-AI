@@ -251,7 +251,7 @@ export const EmailSimulationView: React.FC<EmailSimulationViewProps> = ({
                     {lastResult.extracted_paper_id && (
                       <div className="pt-2 border-t border-brand-border flex items-center justify-between">
                         <span className="text-brand-gray font-medium">Extracted Paper ID:</span>
-                        <span className="text-brand-cyan font-mono font-bold">#CRD-{lastResult.extracted_paper_id}</span>
+                        <span className="text-brand-cyan font-mono font-bold">#PROMPTFLOW-{lastResult.extracted_paper_id}</span>
                       </div>
                     )}
                   </div>

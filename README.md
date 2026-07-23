@@ -1,6 +1,6 @@
-# College Research Digest (CRD System)
+# promptFlow-AI System (Research Publication Tracking & Management)
 
-College Research Digest is an automated, enterprise-grade research tracking and management system designed to streamline the ingestion, classification, parsing, and analysis of academic research publications announced via faculty emails. 
+promptFlow-AI is an automated, enterprise-grade research tracking and management system designed to streamline the ingestion, classification, parsing, and analysis of academic research publications announced via faculty emails. 
 
 The system automates the processing of email communications, filters administrative noise and spam, extracts paper metadata, generates executive summaries, and classifies publications by academic department and research category.
 
@@ -8,7 +8,7 @@ The system automates the processing of email communications, filters administrat
 
 ## Core System Architecture
 
-The CRD System uses a decoupled, event-driven architecture that automatically processes incoming publication announcements:
+The promptFlow-AI System uses a decoupled, event-driven architecture that automatically processes incoming publication announcements:
 
 1. **Email Ingestion and Normalization:** The system periodically polls the target mailbox or accepts simulated email payloads. Clean, plain text content is extracted by stripping HTML, CSS blocks, and metadata tags.
 2. **Relevance Filtering (ML Classifier):** Cleaned email text is evaluated by a machine learning classification pipeline. Emails determined to be administrative chatter or spam are logged and rejected from database indexing.

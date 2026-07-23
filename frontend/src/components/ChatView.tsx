@@ -74,8 +74,8 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper }) => {
   // Load user-specific sessions and activeSessionId when user changes
   useEffect(() => {
     const userEmail = user?.email || 'default';
-    const storageKey = `crd_chat_sessions_${userEmail}`;
-    const activeKey = `crd_active_chat_id_${userEmail}`;
+    const storageKey = `promptflow_chat_sessions_${userEmail}`;
+    const activeKey = `promptflow_active_chat_id_${userEmail}`;
     
     const savedSessions = localStorage.getItem(storageKey);
     let loadedSessions: ChatSession[] = [];
@@ -108,7 +108,7 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper }) => {
             {
               id: 'welcome_init',
               role: 'assistant',
-              text: `Hello ${user?.full_name || 'Professor'}. I am your CRD AI Research Assistant. You can ask me queries about research papers, authors, departments, or publication categories in natural language. How can I help you today?`,
+              text: `Hello ${user?.full_name || 'Professor'}. I am your promptFlow-AI Research Assistant. You can ask me queries about research papers, authors, departments, or publication categories in natural language. How can I help you today?`,
               timestamp: new Date()
             }
           ],
@@ -131,14 +131,14 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper }) => {
   // Sync to user-specific localStorage when sessions change
   useEffect(() => {
     if (user?.email && sessions.length > 0) {
-      localStorage.setItem(`crd_chat_sessions_${user.email}`, JSON.stringify(sessions));
+      localStorage.setItem(`promptflow_chat_sessions_${user.email}`, JSON.stringify(sessions));
     }
   }, [sessions, user?.email]);
 
   // Sync activeSessionId when it changes
   useEffect(() => {
     if (user?.email) {
-      localStorage.setItem(`crd_active_chat_id_${user.email}`, activeSessionId);
+      localStorage.setItem(`promptflow_active_chat_id_${user.email}`, activeSessionId);
     }
   }, [activeSessionId, user?.email]);
 
@@ -166,7 +166,7 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper }) => {
         {
           id: 'welcome_' + newId,
           role: 'assistant',
-          text: `Hello ${user?.full_name || 'Professor'}. I am your CRD AI Research Assistant. You can ask me queries about research papers, authors, departments, or publication categories in natural language. How can I help you today?`,
+          text: `Hello ${user?.full_name || 'Professor'}. I am your promptFlow-AI Research Assistant. You can ask me queries about research papers, authors, departments, or publication categories in natural language. How can I help you today?`,
           timestamp: new Date()
         }
       ],
@@ -197,9 +197,9 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper }) => {
 
   const handleClearAllHistory = () => {
     if (!window.confirm("Are you sure you want to clear all chat history and start fresh?")) return;
-    localStorage.removeItem('crd_chat_sessions');
-    localStorage.removeItem('crd_active_chat_id');
-    sessionStorage.removeItem('crd_chat_messages');
+    localStorage.removeItem('promptflow_chat_sessions');
+    localStorage.removeItem('promptflow_active_chat_id');
+    sessionStorage.removeItem('promptflow_chat_messages');
     
     const newId = 'default-session';
     const freshSession: ChatSession = {
@@ -209,7 +209,7 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper }) => {
         {
           id: 'welcome_' + newId,
           role: 'assistant',
-          text: `Hello ${user?.full_name || 'Professor'}. I am your CRD AI Research Assistant. You can ask me queries about research papers, authors, departments, or publication categories in natural language. How can I help you today?`,
+          text: `Hello ${user?.full_name || 'Professor'}. I am your promptFlow-AI Research Assistant. You can ask me queries about research papers, authors, departments, or publication categories in natural language. How can I help you today?`,
           timestamp: new Date()
         }
       ],
@@ -449,7 +449,7 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper }) => {
               </div>
               <div>
                 <h2 className="text-xs sm:text-sm font-bold text-white leading-tight">
-                  CRD Research Assistant
+                  promptFlow-AI Research Assistant
                 </h2>
                 <div className="flex items-center space-x-1.5 text-[10px] text-brand-gray">
                   <span>AI Research Assistant</span>
@@ -549,7 +549,7 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper }) => {
                         {/* Sender Info & Timestamp */}
                         <div className="flex items-center justify-between mb-1.5 text-[10px] text-brand-gray/80">
                           <span className="font-bold uppercase tracking-wider flex items-center">
-                            {isUser ? 'You' : 'CRD Research Agent'}
+                            {isUser ? 'You' : 'promptFlow-AI Research Agent'}
                           </span>
                           <span>{formatTime(msg.timestamp)}</span>
                         </div>
@@ -780,7 +780,7 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper }) => {
             <div className="p-3 sm:p-4 bg-gradient-to-t from-brand-bg via-brand-bg/95 to-brand-bg/80 backdrop-blur-md border-t border-brand-border/60 shrink-0 z-10">
               {renderPilledInputBox(false)}
               <div className="mt-2 text-center text-[10px] text-brand-gray/70 font-sans flex items-center justify-center space-x-2">
-                <span>CRD Research Agent v3.5 can make mistakes. Verify important citations and DOI metadata against the primary repository.</span>
+                <span>promptFlow-AI Research Agent v3.5 can make mistakes. Verify important citations and DOI metadata against the primary repository.</span>
               </div>
             </div>
 

@@ -27,7 +27,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   const [dateRange, setDateRange] = useState('30d');
   const [syncing, setSyncing] = useState(false);
   const [syncMessage, setSyncMessage] = useState<string | null>(null);
-  const [lastSyncTime, setLastSyncTime] = useState<string | null>(() => localStorage.getItem('crd_last_sync_time'));
+  const [lastSyncTime, setLastSyncTime] = useState<string | null>(() => localStorage.getItem('promptflow_last_sync_time'));
 
   useEffect(() => {
     if (!lastSyncTime) {
@@ -37,7 +37,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             const latestLogTime = logs[0].received_at;
             if (latestLogTime) {
               setLastSyncTime(latestLogTime);
-              localStorage.setItem('crd_last_sync_time', latestLogTime);
+              localStorage.setItem('promptflow_last_sync_time', latestLogTime);
             }
           }
         })
@@ -52,7 +52,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       const res = await emailService.sync();
       setSyncMessage(res.message || "Email synchronization completed successfully.");
       const now = new Date().toISOString();
-      localStorage.setItem('crd_last_sync_time', now);
+      localStorage.setItem('promptflow_last_sync_time', now);
       setLastSyncTime(now);
       if (onRefresh) onRefresh();
       setTimeout(() => setSyncMessage(null), 4000);
@@ -84,7 +84,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       <div className="p-8 flex items-center justify-center min-h-[60vh]">
         <div className="flex flex-col items-center space-y-3">
           <div className="w-10 h-10 border-4 border-brand-cyan border-t-transparent rounded-full animate-spin" />
-          <p className="text-sm font-semibold text-brand-gray">Loading CRD Dashboard &amp; PyMuPDF Intelligence...</p>
+          <p className="text-sm font-semibold text-brand-gray">Loading promptFlow-AI Dashboard &amp; PyMuPDF Intelligence...</p>
         </div>
       </div>
     );
@@ -114,7 +114,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               {getGreeting()}, {formattedName}! 👋
             </h1>
             <p className="text-xs sm:text-sm text-brand-gray mt-1 font-medium">
-              Welcome to the CRD Research Hub. Here is what is happening across academic publications today.
+              Welcome to the promptFlow-AI Research Hub. Here is what is happening across academic publications today.
             </p>
           </div>
 

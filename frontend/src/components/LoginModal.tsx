@@ -19,7 +19,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
     setError(null);
     try {
       const res = await authService.login(email, password);
-      localStorage.setItem('crd_token', res.access_token);
+      localStorage.setItem('promptflow_token', res.access_token);
       onLoginSuccess(res.user, res.access_token);
     } catch (err: any) {
       setError(err.response?.data?.detail || 'Login failed. Please check credentials.');
@@ -42,7 +42,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
           <div className="w-12 h-12 mx-auto rounded-2xl bg-brand-cyan text-real-white flex items-center justify-center shadow-md mb-3 font-bold">
             <Zap className="w-6 h-6 fill-real-white text-real-white" />
           </div>
-          <h2 className="text-2xl font-bold text-white tracking-tight">Sign in to CRD System</h2>
+          <h2 className="text-2xl font-bold text-white tracking-tight">Sign in to promptFlow-AI</h2>
           <p className="text-xs text-brand-gray mt-1 font-medium">
             College Research Publication Management
           </p>

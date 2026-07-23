@@ -14,7 +14,7 @@ from app.models.paper import ResearchPaper
 class ExportService:
     def export_to_excel(self, papers: List[ResearchPaper]) -> str:
         """Generates a styled Excel (.xlsx) spreadsheet report of research publications."""
-        filename = f"crd_research_report_{int(time.time())}.xlsx"
+        filename = f"promptflow_ai_research_report_{int(time.time())}.xlsx"
         filepath = os.path.join(settings.EXPORTS_DIR, filename)
 
         wb = openpyxl.Workbook()
@@ -23,7 +23,7 @@ class ExportService:
 
         # Title block
         ws.merge_cells("A1:H1")
-        ws["A1"] = "College Research Digest (CRD) - Publications Audit Report"
+        ws["A1"] = "promptFlow-AI - Publications Audit Report"
         ws["A1"].font = Font(name="Arial", size=16, bold=True, color="FFFFFF")
         ws["A1"].fill = PatternFill(start_color="1E3A8A", end_color="1E3A8A", fill_type="solid")
         ws["A1"].alignment = Alignment(horizontal="center", vertical="center")
@@ -99,7 +99,7 @@ class ExportService:
 
     def export_to_pdf(self, papers: List[ResearchPaper]) -> str:
         """Generates a publication-ready PDF summary report of research papers."""
-        filename = f"crd_research_report_{int(time.time())}.pdf"
+        filename = f"promptflow_ai_research_report_{int(time.time())}.pdf"
         filepath = os.path.join(settings.EXPORTS_DIR, filename)
 
         doc = SimpleDocTemplate(filepath, pagesize=letter, rightMargin=36, leftMargin=36, topMargin=40, bottomMargin=40)
@@ -141,7 +141,7 @@ class ExportService:
         )
 
         elements = []
-        elements.append(Paragraph("College Research Digest (CRD)", title_style))
+        elements.append(Paragraph("promptFlow-AI System", title_style))
         elements.append(Paragraph(f"Academic Research Publications Audit | Generated: {time.strftime('%Y-%m-%d')} | Total Records: {len(papers)}", sub_style))
         elements.append(HRFlowable(width="100%", thickness=2, color=colors.HexColor('#3B82F6'), spaceAfter=15))
 

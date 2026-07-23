@@ -2,13 +2,13 @@ import os
 from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
-    PROJECT_NAME: str = "College Research Digest (CRD) System"
+    PROJECT_NAME: str = "promptFlow-AI System"
     API_V1_STR: str = "/api/v1"
-    SECRET_KEY: str = os.getenv("SECRET_KEY", "crd_super_secret_jwt_key_2026_advanced_research_digest")
+    SECRET_KEY: str = os.getenv("SECRET_KEY", "promptflow_ai_super_secret_jwt_key_2026")
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7  # 7 days
     
     # Database
-    DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./crd_database.db")
+    DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./promptflow_database.db")
     
     # Paths
     BASE_DIR: str = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

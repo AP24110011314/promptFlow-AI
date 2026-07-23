@@ -9,7 +9,7 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('crd_token');
+  const token = localStorage.getItem('promptflow_token');
   if (token && config.headers) {
     config.headers.Authorization = `Bearer ${token}`;
   }

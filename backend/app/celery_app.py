@@ -6,7 +6,7 @@ celery_broker = os.getenv("CELERY_BROKER_URL", "redis://redis:6379/0")
 celery_backend = os.getenv("CELERY_RESULT_BACKEND", "redis://redis:6379/0")
 
 celery_app = Celery(
-    "crd_tasks",
+    "promptflow_ai_tasks",
     broker=celery_broker,
     backend=celery_backend,
     include=["app.tasks"]

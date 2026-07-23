@@ -115,7 +115,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <Zap className="w-4 h-4 fill-real-white text-real-white" />
               </div>
               <span className="text-xs font-bold text-white tracking-tight font-display">
-                CRD System
+                promptFlow-AI
               </span>
             </div>
           </div>

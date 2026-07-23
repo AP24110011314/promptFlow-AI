@@ -1,30 +1,30 @@
 services:
   db:
     image: postgres:15-alpine
-    container_name: crd_db
+    container_name: promptflow_db
     restart: always
     environment:
-      - POSTGRES_USER=crd_user
-      - POSTGRES_PASSWORD=crd_password
-      - POSTGRES_DB=crd_database
+      - POSTGRES_USER=promptflow_user
+      - POSTGRES_PASSWORD=promptflow_password
+      - POSTGRES_DB=promptflow_database
     ports:
       - "5432:5432"
     volumes:
       - ./backend/storage/postgres_data:/var/lib/postgresql/data
     networks:
-      - crd_network
+      - promptflow_network
 
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: crd_backend
+    container_name: promptflow_backend
     restart: always
     ports:
       - "8000:8000"
     environment:
       - DATABASE_URL
-      - SECRET_KEY=crd_super_secret_jwt_key_2026_advanced_research_digest
+      - SECRET_KEY=promptflow_ai_super_secret_jwt_key_2026
       - GEMINI_API_KEY
       - OPENROUTER_API_KEY
       - OPENROUTER_MODEL
@@ -46,13 +46,13 @@ services:
     depends_on:
       - db
     networks:
-      - crd_network
+      - promptflow_network
 
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: crd_frontend
+    container_name: promptflow_frontend
     restart: always
     ports:
       - "3000:80"
@@ -60,27 +60,27 @@ services:
     depends_on:
       - backend
     networks:
-      - crd_network
+      - promptflow_network
 
   redis:
     image: redis:alpine
-    container_name: crd_redis
+    container_name: promptflow_redis
     restart: always
     ports:
       - "6379:6379"
     networks:
-      - crd_network
+      - promptflow_network
 
   celery_worker:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: crd_celery_worker
+    container_name: promptflow_celery_worker
     command: celery -A app.celery_app.celery_app worker --loglevel=info
     restart: always
     environment:
       - DATABASE_URL
-      - SECRET_KEY=crd_super_secret_jwt_key_2026_advanced_research_digest
+      - SECRET_KEY=promptflow_ai_super_secret_jwt_key_2026
       - GEMINI_API_KEY
       - OPENROUTER_API_KEY
       - OPENROUTER_MODEL
@@ -104,8 +104,8 @@ services:
       - db
       - backend
     networks:
-      - crd_network
+      - promptflow_network
 
 networks:
-  crd_network:
+  promptflow_network:
     driver: bridge

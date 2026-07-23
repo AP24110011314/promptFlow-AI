@@ -28,6 +28,7 @@ GEMINI.md
 backend/storage/ml_models/*
 !backend/storage/ml_models/.gitkeep
 backend/storage/crd_database.db
+backend/storage/promptflow_database.db
 backend/storage/pdfs/*
 backend/storage/exports/*
 

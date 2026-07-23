@@ -89,7 +89,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           {!collapsed && (
             <div className="animate-in fade-in slide-in-from-left-2 duration-200">
               <h1 className="text-base font-bold text-white tracking-tight leading-tight">
-                CRD System
+                promptFlow-AI
               </h1>
               <p className="text-[11px] text-brand-gray font-medium tracking-wider uppercase">
                 Research Digest
@@ -200,7 +200,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     className="w-full px-4 py-2.5 text-left text-xs font-semibold text-amber-500 hover:bg-amber-500/10 flex items-center space-x-2.5 transition-colors cursor-pointer"
                   >
                     <LogOut className="w-4 h-4 shrink-0" />
-                    <span>Log Out of CRD</span>
+                    <span>Log Out of promptFlow-AI</span>
                   </button>
                 </div>
               </div>

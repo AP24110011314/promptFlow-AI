@@ -61,7 +61,7 @@ class ChatAgentService:
                     "Authorization": f"Bearer {self.openrouter_key}",
                     "Content-Type": "application/json",
                     "HTTP-Referer": "http://localhost:3000",
-                    "X-Title": "CRD System"
+                    "X-Title": "promptFlow-AI"
                 }
                 
                 messages = []
@@ -107,7 +107,7 @@ class ChatAgentService:
         
         rejection = ""
         if not is_academic:
-            rejection = "I can only answer questions related to academic research publications, authors, departments, or categories in the CRD system. Please ask something related to papers."
+            rejection = "I can only answer questions related to academic research publications, authors, departments, or categories in promptFlow-AI. Please ask something related to papers."
             
         filters = {
             "title_keywords": [],
@@ -185,7 +185,7 @@ class ChatAgentService:
 
     def parse_query(self, user_query: str) -> Dict[str, Any]:
         system_instruction = (
-            "You are the CRD (College Research Digest) AI Assistant parser. "
+            "You are the promptFlow-AI Assistant parser. "
             "Your sole job is to analyze the user's natural language query and convert it into structured search filters "
             "to query the SQL database. "
             "Apply strict guardrails: You ONLY handle queries related to academic research papers, publications, authors, departments, and categories. "
@@ -400,7 +400,7 @@ class ChatAgentService:
             })
             
         system_instruction = (
-            "You are the CRD (College Research Digest) AI Assistant. "
+            "You are the promptFlow-AI Assistant. "
             "Your task is to write a short, concise, and direct natural language response summarizing the search result. "
             "CRITICAL: Do NOT write an email. Do NOT use email formatting, headers, subject lines, greetings (e.g. 'Dear Professor', 'Hello Dr.'), or sign-offs (e.g. 'Best regards', 'Sincerely'). "
             "Describe what publications were found directly and briefly. Keep it under 3-4 sentences total."

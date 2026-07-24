@@ -40,7 +40,9 @@ def get_dashboard_analytics(db: Session = Depends(get_db)):
         for cat in (p.categories_list or ["General Research"]):
             category_counts[cat] += 1
 
-        authors = p.authors_list or []
+        from app.ml_engine.extractor import clean_single_author_name
+
+        authors = [clean_single_author_name(a) for a in (p.authors_list or []) if clean_single_author_name(a)]
         for a in authors:
             author_counts[a] += 1
             author_dept_map[a] = dept
@@ -49,6 +51,7 @@ def get_dashboard_analytics(db: Session = Depends(get_db)):
                 nodes_map[a] = CollaborationNode(id=a, group=abs(hash(dept)) % 8 + 1, val=1)
             else:
                 nodes_map[a].val += 1
+
 
         # Co-authorship links
         for i in range(len(authors)):

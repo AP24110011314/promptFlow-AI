@@ -4,6 +4,75 @@ import fitz  # PyMuPDF
 from typing import Dict, Any, List
 from app.ml_engine.classifier import ml_classifier
 
+def clean_single_author_name(name_str: str) -> str:
+    """Cleans a single author name string by removing titles, designations, and affiliations."""
+    if not name_str:
+        return ""
+
+    # Strip academic titles, roles, and designations
+    cleaned = re.sub(
+        r'(?i)\b(?:Dr|Prof|Professor|Assistant\s+Professor|Associate\s+Professor|Senior\s+Professor|Professor\s+of\s+Practice|Post-doctoral\s+Research\s+Fellow|Post-doctoral|Research\s+Fellow|Lecturer|Researcher|Scholar|Head|Dean|Chair|PhD|Ph\.D|Mr|Mrs|Ms|Er|Eng|Sir)\b\.?',
+        '',
+        name_str
+    ).strip("*_ \t\r\n")
+
+    # Remove parenthetical text e.g. (Adhoc), (Co-Author)
+    cleaned = re.sub(r'\(.*?\)', '', cleaned).strip("*_ \t\r\n")
+
+    # Remove trailing department/school/university affiliation text
+    cleaned = re.sub(
+        r'(?i)\b(?:Department|Dept|Centre|Center|School|Faculty|University|College|Institute)\b.*$',
+        '',
+        cleaned
+    ).strip("*_ \t\r\n")
+
+    # Clean leading/trailing non-alphabet characters
+    cleaned = re.sub(r'^[^a-zA-Z]+|[^a-zA-Z.]+$', '', cleaned).strip()
+
+    # Reject non-person organizational keywords, discipline terms, and email noise
+    invalid_keywords = [
+        "department", "dept", "centre", "center", "school", "faculty", "university", 
+        "college", "institute", "engineering", "science", "business", "research", 
+        "practice", "fellow", "professor", "associate", "assistant", "adhoc", "head", 
+        "society", "laboratory", "labs", "nature", "index", "ieee", "acm", "journal",
+        "anthropology", "sociology", "literature", "languages", "environmental", 
+        "biology", "physics", "chemistry", "mathematics", "economics", "management", 
+        "civil", "energy", "electronics", "communication", "paari", "srm", "srmap",
+        "leetcoder", "trajectory", "career", "choose", "would", "life", "dear", "regards",
+        "fwd", "fw", "re", "subject", "paper", "published", "title", "authors", "doi"
+    ]
+    cleaned_lower = cleaned.lower()
+    if any(kw in cleaned_lower for kw in invalid_keywords):
+        return ""
+
+    # Validate name length and word count (1 to 4 words, 3-50 chars)
+    words = cleaned.split()
+    if len(words) < 1 or len(words) > 4 or len(cleaned) < 3:
+        return ""
+
+    # Ensure valid personal name capitalization (e.g. Aditya Kumar Sahu)
+    for w in words:
+        if not (w[0].isupper() or w.isupper()):
+            return ""
+
+    return cleaned
+
+def parse_authors_from_raw_string(authors_raw: str) -> List[str]:
+    """Parses and cleans raw multi-author string into a clean list of individual faculty names."""
+    if not authors_raw:
+        return ["Faculty Research Team"]
+
+    # Split by newline, comma, semicolon, or " and "
+    raw_parts = re.split(r'[\n,;]|\band\b', authors_raw)
+    valid_authors = []
+
+    for part in raw_parts:
+        cleaned = clean_single_author_name(part)
+        if cleaned and cleaned not in valid_authors:
+            valid_authors.append(cleaned)
+
+    return valid_authors if valid_authors else ["Faculty Research Team"]
+
 class ResearchPaperExtractor:
     def extract_from_pdf(self, pdf_path: str) -> Dict[str, Any]:
         """Extracts text from PDF and parses metadata (Title, Authors, Abstract, Year, DOI, Keywords)."""
@@ -32,17 +101,13 @@ class ResearchPaperExtractor:
         if not first_page_text:
             first_page_text = full_text[:3000]
 
-        # Check if this is a plain text announcement email (contains Title/Journal/Authors/DOI fields)
         text_lower = full_text.lower()
         announcement_mode = any(k in text_lower for k in ["title of the paper", "title of paper", "title:", "journal", "authors", "doi"])
 
         if announcement_mode:
-            # Extract using structured announcement patterns
-            # Match multi-line title until next header block (Journal, Authors, DOI, or IF/Q)
             title_match = re.search(r'(?i)title(?:\s+of\s+the\s+paper)?[\s*\:\-\*]+([\s\S]+?)(?=\n\s*\*?(?:journal|authors?|doi|if\s+(?:and|&)\s+q|impact\s+factor)\b)', full_text)
             if title_match:
                 title = re.sub(r'\s+', ' ', title_match.group(1)).strip("*_ \t\r\n")
-                # Remove leading numbers (like "1. " or "2. ") from title
                 title = re.sub(r'^(?:\d+[\.\)]\s*)', '', title).strip("*_ \t\r\n")
             else:
                 title_match_fallback = re.search(r'(?i)title(?:\s+of\s+the\s+paper)?[\s*\:\-]+([^\n]+)', full_text)
@@ -52,7 +117,6 @@ class ResearchPaperExtractor:
             journal_match = re.search(r'(?i)journal[\s*\:\-\*]+([^\n]+)', full_text)
             journal = journal_match.group(1).strip("*_ \t\r\n") if journal_match else "International Journal of College Research"
             
-            # Match multi-line authors block until the next header block
             authors_match = re.search(r'(?i)authors?[\s*\:\-\*]+([\s\S]+?)(?=\n\s*\*?(?:journal|doi|if\s+(?:and|&)\s+q|impact\s+factor|title|\d+[\.\)]\s*\*?\s*\*?title)\b)', full_text)
             if authors_match:
                 authors_raw = authors_match.group(1).strip("*_ \t\r\n")
@@ -63,16 +127,13 @@ class ResearchPaperExtractor:
             doi_match = re.search(r'(?i)doi[\s*\:\-\*]+([^\n]+)', full_text)
             doi_raw = doi_match.group(1).strip("*_ \t\r\n") if doi_match else ""
 
-            # Extract IF and Q value
             if_q_match = re.search(r'(?i)(?:if\s+and\s+q|impact\s+factor)[\s*\:\-\*]+([^\n]+)', full_text)
             if_q_val = if_q_match.group(1).strip("*_ \t\r\n") if if_q_match else ""
 
-            # Year (supporting any year up to 2099)
             year_matches = re.findall(r'\b(19\d\d|20[0-9]\d)\b', full_text)
             publication_year = int(year_matches[0]) if year_matches else 2026
             publication_date = f"{publication_year}-01-01"
             
-            # Extract standard DOI (e.g. 10.1007/...) from URL if needed
             doi_clean = re.search(r'(10\.\d{4,9}/[-._;()/:A-Za-z0-9]+)', doi_raw)
             if doi_clean:
                 doi = doi_clean.group(1)
@@ -81,35 +142,21 @@ class ResearchPaperExtractor:
                 title_hash = hashlib.md5(title.encode('utf-8')).hexdigest()[:8]
                 doi = f"10.1016/j.promptflow.{publication_year}.{title_hash}"
 
-            # Authors List parsing (split by comma, semicolon, "and", or newline, filtering out designations and affiliations)
-            authors_list = []
-            for part in re.split(r'[\n,;]|\band\b', authors_raw):
-                part_clean = part.strip("*_ \t\r\n")
-                if not part_clean:
-                    continue
-                # Strip common academic prefixes and suffixes
-                part_clean = re.sub(r'(?i)(?:Dr\.|Prof\.|Assistant\s+Professor|Associate\s+Professor|Professor|Department\s+of\s+.*|Lecturer|Researcher|Scholar|PhD|Mr\.|Ms\.|Mrs\.)', '', part_clean).strip("*_ \t\r\n")
-                # Remove parentheses contents (e.g. PhD Scholar)
-                part_clean = re.sub(r'\(.*?\)', '', part_clean).strip("*_ \t\r\n")
-                if len(part_clean) > 3 and not any(aff in part_clean.lower() for aff in ["university", "institute", "engineering", "science", "department", "research", "associate", "professor"]):
-                    authors_list.append(part_clean)
-            if not authors_list:
-                authors_list = ["Faculty Research Team"]
+            # Clean authors list
+            authors_list = parse_authors_from_raw_string(authors_raw)
+            clean_raw_authors = ", ".join(authors_list)
 
-            # Abstract: For announcements, the email text contains details, or we use title
             abstract_match = re.search(r'(?i)abstract[\s*\:\-]+([\s\S]+)', full_text)
             abstract = abstract_match.group(1).strip() if abstract_match else f"This publication outlines research on '{title}', accepted at '{journal}'."
             if if_q_val:
                 abstract += f"\n\n[Impact Factor & Quartile: {if_q_val}]"
 
-            # Predict department & categories
             ml_dept_res = ml_classifier.predict_department(f"{title} {abstract}")
             predicted_dept = ml_dept_res["department"]
             ml_confidence = ml_dept_res["confidence"]
             
             categories = ml_classifier.auto_categorize(abstract, title)
 
-            # Heuristics for publication type
             pub_type = "Journal"
             combined_text = f"{title} {abstract} {journal}".lower()
             if "patent" in combined_text or "inventor" in combined_text or "assignee" in combined_text:
@@ -121,7 +168,6 @@ class ResearchPaperExtractor:
 
             references = self.extract_references_list(full_text)
 
-            # Extract external paper URLs (filtering out Google Scholar, SRM domain, etc.)
             urls = re.findall(r'https?://[^\s<>"]+|www\.[^\s<>"]+', full_text)
             paper_url = ""
             for url in urls:
@@ -134,7 +180,7 @@ class ResearchPaperExtractor:
             return {
                 "title": title,
                 "abstract": abstract,
-                "authors_raw": authors_raw,
+                "authors_raw": clean_raw_authors,
                 "authors_list": authors_list,
                 "department": predicted_dept,
                 "journal_or_conference": journal,
@@ -150,10 +196,9 @@ class ResearchPaperExtractor:
                 "references": references
             }
 
-        # Otherwise, fall back to standard PDF layout parsing
+        # PDF layout fallback
         lines = [line.strip() for line in first_page_text.split('\n') if line.strip()]
         
-        # 1. Title Extraction: Usually first 1-3 lines before Author or Abstract
         title = "Untitled Research Publication"
         if lines:
             valid_title_lines = []
@@ -165,7 +210,6 @@ class ResearchPaperExtractor:
                 if len(title) > 200:
                     title = title[:197] + "..."
 
-        # 2. Abstract Extraction
         abstract = ""
         abs_match = re.search(r'(?i)(?:abstract|summary)[\s:\.\-]+([\s\S]{100,1500}?)(?:\n\s*(?:keywords|index terms|introduction|1\s*\.\s*introduction|\n\n))', full_text)
         if abs_match:
@@ -173,26 +217,22 @@ class ResearchPaperExtractor:
         else:
             abstract = re.sub(r'\s+', ' ', full_text[200:800]).strip()
 
-        # 3. Authors Extraction
         authors_list = []
         auth_section = first_page_text[:1200]
         name_matches = re.findall(r'(?i)(?:Dr\.|Prof\.)?\s*([A-Z][a-z]+(?: [A-Z]\.?)* [A-Z][a-z]+)', auth_section)
         for name in name_matches:
-            clean_name = name.strip()
-            if clean_name.lower() not in ["abstract", "introduction", "university", "department", "college", "journal", "proceedings"]:
-                if clean_name not in authors_list and len(clean_name) > 4:
-                    authors_list.append(clean_name)
+            clean_n = clean_single_author_name(name)
+            if clean_n and clean_n not in authors_list:
+                authors_list.append(clean_n)
         if not authors_list:
             authors_list = ["Faculty Research Team"]
 
-        authors_raw = ", ".join(authors_list[:5])
+        clean_raw_authors = ", ".join(authors_list[:5])
 
-        # 4. Publication Year & Date
         year_matches = re.findall(r'\b(19\d\d|20[0-2]\d)\b', first_page_text)
         publication_year = int(year_matches[0]) if year_matches else 2026
         publication_date = f"{publication_year}-01-01"
 
-        # 5. DOI Extraction
         doi_match = re.search(r'(?i)doi:\s*(10\.\d{4,9}/[-._;()/:A-Za-z0-9]+)', full_text)
         if doi_match:
             doi = doi_match.group(1)
@@ -201,27 +241,23 @@ class ResearchPaperExtractor:
             title_hash = hashlib.md5(title.encode('utf-8')).hexdigest()[:8]
             doi = f"10.1016/j.promptflow.{publication_year}.{title_hash}"
 
-        # 6. Journal / Conference
         journal = "International Journal of College Research"
         journal_match = re.search(r'(?i)(?:published in|journal of|proceedings of|ieee transactions on|acm conference on)\s+([A-Za-z\s]{10,80})', first_page_text)
         if journal_match:
             journal = journal_match.group(0).strip().title()
 
-        # 7. ML Department Prediction & Categorization
         ml_dept_res = ml_classifier.predict_department(f"{title} {abstract}")
         predicted_dept = ml_dept_res["department"]
         ml_confidence = ml_dept_res["confidence"]
         
         categories = ml_classifier.auto_categorize(abstract, title)
         
-        # 8. Keywords
         kw_match = re.search(r'(?i)(?:keywords|index terms)[\s:\.\-]+([^\n\r]+)', full_text)
         if kw_match:
             keywords_list = [k.strip().title() for k in re.split(r'[,;]', kw_match.group(1)) if len(k.strip()) > 2][:6]
         else:
             keywords_list = categories.copy()
 
-        # 9. Determine Publication Type Heuristic
         pub_type = "Journal"
         combined_text = f"{title} {abstract} {journal}".lower()
         if "patent" in combined_text or "inventor" in combined_text or "assignee" in combined_text:
@@ -231,10 +267,8 @@ class ResearchPaperExtractor:
         elif any(p in combined_text for p in ["preprint", "arxiv", "biorxiv", "ssrn"]):
             pub_type = "Preprint"
 
-        # 10. Extract references list
         references = self.extract_references_list(full_text)
 
-        # Extract external paper URLs (filtering out Google Scholar, SRM domain, etc.)
         urls = re.findall(r'https?://[^\s<>"]+|www\.[^\s<>"]+', full_text)
         paper_url = ""
         for url in urls:
@@ -247,7 +281,7 @@ class ResearchPaperExtractor:
         return {
             "title": title,
             "abstract": abstract,
-            "authors_raw": authors_raw,
+            "authors_raw": clean_raw_authors,
             "authors_list": authors_list,
             "department": predicted_dept,
             "journal_or_conference": journal,
@@ -264,18 +298,16 @@ class ResearchPaperExtractor:
         }
 
     def extract_references_list(self, full_text: str) -> List[str]:
-        """Tries to find the references section and split it into individual citations."""
         ref_section_match = re.search(r'(?i)(?:references|bibliography|works cited)\s*[\n\r]+([\s\S]+)', full_text)
         if not ref_section_match:
             return []
         
         section_text = ref_section_match.group(1).strip()
-        # Split references by standard numbering e.g. [1] or 1. or empty lines
         ref_items = re.split(r'\[\d+\]|\b\d+\.\s', section_text)
         cleaned_refs = []
         for item in ref_items:
             clean = re.sub(r'\s+', ' ', item).strip()
-            if len(clean) > 20: # skip very short fragments
+            if len(clean) > 20:
                 cleaned_refs.append(clean)
         return cleaned_refs
 

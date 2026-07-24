@@ -83,12 +83,31 @@ class EmailIngestionService:
                 if req.subject and len(req.subject) > 5 and meta.get("title", "Untitled Research Publication") == "Untitled Research Publication":
                     meta["title"] = req.subject
 
+            # Validate extracted title
+            title = meta.get("title", "").strip()
+            if not title or title.lower() == "untitled research publication" or len(title) < 5:
+                log_entry.status = "rejected_spam"
+                log_entry.error_message = "Could not extract a valid research publication title from email body."
+                db.commit()
+                return log_entry
+
             # Check for duplicates before creating a new entry
+            import re
+            def norm_title_str(s: str) -> str:
+                if not s: return ""
+                return re.sub(r'[^a-zA-Z0-9]', '', s.lower())
+
+            target_norm = norm_title_str(title)
             existing_paper = None
             if meta.get("doi"):
                 existing_paper = db.query(ResearchPaper).filter(ResearchPaper.doi == meta["doi"]).first()
-            if not existing_paper and meta.get("title"):
-                existing_paper = db.query(ResearchPaper).filter(ResearchPaper.title == meta["title"]).first()
+
+            if not existing_paper and target_norm:
+                all_papers = db.query(ResearchPaper).all()
+                for p in all_papers:
+                    if norm_title_str(p.title) == target_norm:
+                        existing_paper = p
+                        break
 
             if existing_paper:
                 log_entry.extracted_paper_id = existing_paper.id
@@ -96,6 +115,7 @@ class EmailIngestionService:
                 log_entry.error_message = "Paper already exists in repository."
                 db.commit()
                 return log_entry
+
 
             # 3. Generate AI summary
             ai_sum = summarizer.summarize(meta["abstract"], max_sentences=3)

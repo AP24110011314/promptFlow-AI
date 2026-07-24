@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
-import { X, Users, CheckCircle2, Sparkles, Trash2, ExternalLink, Edit } from 'lucide-react';
+import { X, Users, CheckCircle2, Sparkles, Trash2, ExternalLink, Edit, Quote } from 'lucide-react';
 import type { ResearchPaper, User } from '../types';
 import { paperService, SERVER_BASE_URL } from '../services/api';
+import { CitationModal } from './CitationModal';
+
 
 interface PaperDetailModalProps {
   paper: ResearchPaper;
   user: User | null;
   onClose: () => void;
   onDeleteSuccess?: () => void;
+  onSelectAuthor?: (authorName: string) => void;
 }
 
 export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
@@ -15,9 +18,13 @@ export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
   user,
   onClose,
   onDeleteSuccess,
+  onSelectAuthor,
 }) => {
+
   const [currentPaper, setCurrentPaper] = useState<ResearchPaper>(paper);
   const [isEditing, setIsEditing] = useState(false);
+  const [showCitationModal, setShowCitationModal] = useState(false);
+
   
   // Edit Form Fields
   const [editTitle, setEditTitle] = useState(paper.title);
@@ -242,13 +249,28 @@ export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
             </h2>
 
             {/* Author List */}
-            <div className="mt-5 p-4 rounded-2xl bg-brand-bg border border-brand-border flex items-center space-x-3">
-              <Users className="w-5 h-5 text-brand-cyan shrink-0" />
-              <div className="text-xs">
+            <div className="mt-5 p-4 rounded-2xl bg-brand-bg border border-brand-border flex items-start space-x-3">
+              <Users className="w-5 h-5 text-brand-cyan shrink-0 mt-0.5" />
+              <div className="text-xs space-y-1.5 flex-1">
                 <span className="text-brand-gray block font-bold uppercase text-[10px] tracking-wider">Authors &amp; Affiliation</span>
-                <span className="text-white font-semibold mt-0.5 block">{currentPaper.authors_raw || currentPaper.authors_list.join(", ")}</span>
+                <div className="flex flex-wrap gap-2 pt-0.5">
+                  {((currentPaper.authors_list && currentPaper.authors_list.length > 0)
+                    ? currentPaper.authors_list
+                    : (currentPaper.authors_raw ? currentPaper.authors_raw.split(',').map(s => s.trim()) : ['Faculty Author'])
+                  ).map((author, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => { if (onSelectAuthor) onSelectAuthor(author); }}
+                      className="px-2.5 py-1 rounded-xl bg-brand-card hover:bg-brand-cyan/15 text-white hover:text-brand-cyan border border-brand-border hover:border-brand-cyan/40 text-xs font-semibold transition-all cursor-pointer flex items-center space-x-1.5"
+                      title={`View ${author}'s Profile & Analytics`}
+                    >
+                      <span>{author}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
+
 
             {/* AI Summary */}
             <div className="mt-5 p-5 rounded-2xl bg-brand-bg border-l-4 border-brand-cyan shadow-sm">
@@ -326,7 +348,16 @@ export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
                 </button>
               ) : <div />}
 
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-2.5">
+                <button
+                  onClick={() => setShowCitationModal(true)}
+                  className="px-4 py-2.5 rounded-xl bg-purple-500/10 text-purple-400 hover:bg-purple-500/20 border border-purple-500/30 text-xs font-semibold transition-all flex items-center space-x-1.5 cursor-pointer"
+                  title="Generate APA, IEEE, MLA, or BibTeX citation"
+                >
+                  <Quote className="w-4 h-4 text-purple-400" />
+                  <span>Cite Paper</span>
+                </button>
+
                 <button
                   onClick={() => setIsEditing(true)}
                   className="px-4 py-2.5 rounded-xl bg-brand-cyan/10 text-brand-cyan hover:bg-brand-cyan/20 border border-brand-cyan/30 text-xs font-semibold transition-all flex items-center space-x-1.5 cursor-pointer"
@@ -336,7 +367,7 @@ export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
                 </button>
                 <button
                   onClick={onClose}
-                  className="px-5 py-2.5 rounded-xl bg-brand-bg hover:bg-brand-hover text-white border border-brand-border font-semibold text-xs sm:text-sm transition-all cursor-pointer"
+                  className="px-4 py-2.5 rounded-xl bg-brand-bg hover:bg-brand-hover text-white border border-brand-border font-semibold text-xs transition-all cursor-pointer"
                 >
                   Close
                 </button>
@@ -345,7 +376,7 @@ export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
                     href={`${SERVER_BASE_URL}${currentPaper.pdf_url}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="px-5 py-2.5 rounded-xl bg-brand-cyan text-brand-bg font-bold text-xs sm:text-sm shadow-lg hover:brightness-110 transition-all flex items-center space-x-2 cursor-pointer"
+                    className="px-4 py-2.5 rounded-xl bg-brand-cyan text-brand-bg font-bold text-xs shadow-lg hover:brightness-110 transition-all flex items-center space-x-2 cursor-pointer"
                   >
                     <span>View Full PDF</span>
                     <ExternalLink className="w-4 h-4 text-brand-bg stroke-[3]" />
@@ -353,8 +384,17 @@ export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
                 )}
               </div>
             </div>
+
+            {/* Citation Exporter Modal */}
+            {showCitationModal && (
+              <CitationModal
+                paper={currentPaper}
+                onClose={() => setShowCitationModal(false)}
+              />
+            )}
           </>
         )}
+
 
       </div>
     </div>

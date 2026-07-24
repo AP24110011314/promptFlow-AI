@@ -7,8 +7,9 @@ class Settings(BaseSettings):
     SECRET_KEY: str = os.getenv("SECRET_KEY", "promptflow_ai_super_secret_jwt_key_2026")
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7  # 7 days
     
-    # Database
-    DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./promptflow_database.db")
+    # Database (Standardized on PostgreSQL)
+    DATABASE_URL: str = os.getenv("DATABASE_URL", "postgresql://promptflow_user:promptflow_password@localhost:5432/promptflow_database")
+
     
     # Paths
     BASE_DIR: str = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

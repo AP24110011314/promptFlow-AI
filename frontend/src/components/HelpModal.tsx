@@ -365,9 +365,10 @@ export const HelpModal: React.FC<HelpModalProps> = ({
                   </div>
                   <div>
                     <p className="text-[10px] text-brand-gray font-bold uppercase tracking-wider">Database Storage</p>
-                    <p className="font-bold text-white text-xs mt-0.5">SQLite / PostgreSQL Connected</p>
+                    <p className="font-bold text-white text-xs mt-0.5">PostgreSQL Enterprise Engine</p>
                   </div>
                 </div>
+
 
                 <div className="p-4 rounded-2xl bg-brand-bg/60 border border-brand-border flex items-center space-x-3">
                   <div className="w-9 h-9 rounded-xl bg-amber-500/15 text-amber-400 flex items-center justify-center shrink-0">

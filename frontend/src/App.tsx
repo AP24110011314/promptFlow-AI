@@ -8,6 +8,7 @@ import { AnalyticsView } from './components/AnalyticsView';
 import { AdminPanelView } from './components/AdminPanelView';
 import { ChatView } from './components/ChatView';
 import { PaperDetailModal } from './components/PaperDetailModal';
+import { AuthorProfileDrawer } from './components/AuthorProfileDrawer';
 import { authService, paperService, categoryService, emailService, analyticsService } from './services/api';
 import type { User, ResearchPaper, Category, EmailLog, DashboardAnalytics } from './types';
 import { ShieldAlert } from 'lucide-react';
@@ -26,6 +27,8 @@ export default function App() {
   const [logs, setLogs] = useState<EmailLog[]>([]);
   const [analytics, setAnalytics] = useState<DashboardAnalytics | null>(null);
   const [selectedPaper, setSelectedPaper] = useState<ResearchPaper | null>(null);
+  const [selectedAuthor, setSelectedAuthor] = useState<string | null>(null);
+
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('promptflow_theme') as 'dark' | 'light' | null;
@@ -157,6 +160,7 @@ export default function App() {
               onNavigateToRepo={() => setActiveTab('repository')}
               user={user}
               onRefresh={fetchAllData}
+              onSelectAuthor={(author) => setSelectedAuthor(author)}
             />
           )}
 
@@ -171,9 +175,11 @@ export default function App() {
                 onSelectPaper={(p) => setSelectedPaper(p)}
                 selectedPaper={selectedPaper}
                 onCloseModal={() => setSelectedPaper(null)}
+                onSelectAuthor={(author) => setSelectedAuthor(author)}
               />
             </div>
           )}
+
 
           {/* AI Assistant Chat View */}
           {activeTab === 'chat' && (
@@ -238,13 +244,27 @@ export default function App() {
           user={user}
           onClose={() => setSelectedPaper(null)}
           onDeleteSuccess={fetchAllData}
+          onSelectAuthor={(author) => setSelectedAuthor(author)}
         />
       )}
+
+      {/* Faculty Author Profile Drawer */}
+      {selectedAuthor && (
+        <AuthorProfileDrawer
+          authorName={selectedAuthor}
+          allPapers={papers}
+          onClose={() => setSelectedAuthor(null)}
+          onSelectPaper={(p) => setSelectedPaper(p)}
+          onSelectAuthor={(author) => setSelectedAuthor(author)}
+        />
+      )}
+
 
       {/* Login Modal */}
       {showLoginModal && (
         <LoginModal onLoginSuccess={handleLoginSuccess} />
       )}
+
 
     </div>
   );

@@ -14,6 +14,7 @@ interface DashboardViewProps {
   onNavigateToRepo: () => void;
   user?: User | null;
   onRefresh?: () => void;
+  onSelectAuthor?: (authorName: string) => void;
 }
 
 export const DashboardView: React.FC<DashboardViewProps> = ({
@@ -23,7 +24,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   onNavigateToRepo,
   user,
   onRefresh,
+  onSelectAuthor,
 }) => {
+
   const [dateRange, setDateRange] = useState('30d');
   const [syncing, setSyncing] = useState(false);
   const [syncMessage, setSyncMessage] = useState<string | null>(null);
@@ -382,7 +385,19 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                         </div>
                         <div className="truncate max-w-xs sm:max-w-md">
                           <p className="truncate text-sm font-bold text-white">{paper.title}</p>
-                          <p className="text-[11px] text-brand-gray truncate font-normal">{paper.authors_raw || 'College Faculty'}</p>
+                          <p 
+                            onClick={(e) => {
+                              if (onSelectAuthor && paper.authors_raw) {
+                                e.stopPropagation();
+                                const firstAuthor = paper.authors_raw.split(',')[0].trim();
+                                onSelectAuthor(firstAuthor);
+                              }
+                            }}
+                            className="text-[11px] text-brand-gray hover:text-brand-cyan truncate font-normal transition-colors cursor-pointer"
+                          >
+                            {paper.authors_raw || 'College Faculty'}
+                          </p>
+
                         </div>
                       </div>
                     </td>

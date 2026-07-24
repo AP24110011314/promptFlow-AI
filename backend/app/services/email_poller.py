@@ -120,9 +120,9 @@ class EmailPoller:
             mail.select("inbox")
             print("Email Poller: Connected and authenticated successfully.", flush=True)
 
-            # Search for messages since search_date with subject containing target keywords
+            # Search for messages since search_date with subject containing target publication keywords
             mail_ids = set()
-            keywords_to_search = ["published", "paper", "research", "digest", "publication"]
+            keywords_to_search = ["published", "paper", "publication"]
             for keyword in keywords_to_search:
                 try:
                     status, messages = mail.search(None, 'SINCE', search_date, 'SUBJECT', keyword)
@@ -154,13 +154,35 @@ class EmailPoller:
                     subject = self.decode_header_value(msg_hdr.get("Subject"))
                     sender = self.decode_header_value(msg_hdr.get("From"))
 
+                    sender_lower = sender.lower()
+                    subject_lower = subject.lower()
+
+                    # Blacklist newsletter/promo senders
+                    promo_senders = [
+                        "leetcode", "linkedin", "medium", "glassdoor", "coursera", 
+                        "udemy", "hackerrank", "geeksforgeeks", "eventbrite", "substack", 
+                        "github", "no-reply", "noreply", "promotions", "newsletter", "marketing"
+                    ]
+                    if any(ps in sender_lower for ps in promo_senders):
+                        print(f"Email Poller: Skipping newsletter/promo sender - From: '{sender}'", flush=True)
+                        continue
+
+                    # Blacklist non-academic promo subjects
+                    promo_subjects = [
+                        "leetcoder", "leetcode", "career trajectory", "pay raise", 
+                        "salesforce", "job alert", "hiring", "webinar", "discount", 
+                        "sale", "weekly digest", "daily digest", "medium digest"
+                    ]
+                    if any(ps in subject_lower for ps in promo_subjects):
+                        print(f"Email Poller: Skipping newsletter/promo subject - Subject: '{subject}'", flush=True)
+                        continue
+
                     print(f"Email Poller: Found target email - Subject: '{subject}' | From: '{sender}'", flush=True)
 
-                    subject_lower = subject.lower()
-                    allowed_keywords = ["paper", "published", "publish", "research", "digest", "publication"]
+                    allowed_keywords = ["paper", "published", "publish", "publication"]
                     if not any(kw in subject_lower for kw in allowed_keywords):
-                        # Skip if it doesn't match our target keywords
                         continue
+
 
                     # Deduplication check: only process if we don't already have a processed/rejected log for this sender & subject
                     from app.models.email_log import EmailIngestionLog

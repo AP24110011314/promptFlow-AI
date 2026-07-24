@@ -261,12 +261,30 @@ class ResearchMLClassifier:
             self._initialize_models()
         
         text_lower = text.lower()
-        # Heuristic check for direct publication announcements in text
-        if any(phrase in text_lower for phrase in [
+
+        # 1. Hard check for non-research administrative chatter and spam
+        spam_keywords = [
+            "faculty meeting", "department meeting", "office supplies", 
+            "printer toner", "stationery", "wi-fi outage", "wifi outage", 
+            "server maintenance", "sports day", "grading sheets", "attendance records", 
+            "invoice attached", "leave application", "holiday list", "payroll", "fee payment"
+        ]
+        has_spam_kw = any(kw in text_lower for kw in spam_keywords)
+        has_pub_kw = any(pub_kw in text_lower for pub_kw in ["title of the paper", "title of paper", "paper published", "papers published", "doi:"])
+
+        if has_spam_kw and not has_pub_kw:
+            return {
+                "predicted_class": "general_email",
+                "confidence": 0.99,
+                "is_research": False
+            }
+
+        # 2. Check for explicit publication announcement signatures
+        publication_signatures = [
             "paper published", "papers published", "article published", 
-            "title of the paper", "title of paper",
-            "doi:", "doi :", "accepted for publication"
-        ]):
+            "title of the paper", "title of paper", "accepted for publication"
+        ]
+        if any(sig in text_lower for sig in publication_signatures):
             return {
                 "predicted_class": "research_paper",
                 "confidence": 1.0,
@@ -277,13 +295,16 @@ class ResearchMLClassifier:
         classes = self.email_pipeline.classes_
         res_idx = list(classes).index("research_paper") if "research_paper" in classes else 0
         confidence = float(prob[res_idx])
-        predicted_class = "research_paper" if confidence >= 0.55 else "general_email"
+        
+        # Require 0.65 threshold for unlabeled email text
+        predicted_class = "research_paper" if confidence >= 0.65 else "general_email"
         
         return {
             "predicted_class": predicted_class,
             "confidence": round(confidence, 4),
             "is_research": predicted_class == "research_paper"
         }
+
 
     def predict_department(self, text: str) -> dict:
         """Predicts the academic department and returns confidence score."""

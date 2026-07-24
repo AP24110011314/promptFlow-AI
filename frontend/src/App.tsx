@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
 import { LoginModal } from './components/LoginModal';
+import { LandingPageView } from './components/LandingPageView';
 import { DashboardView } from './components/DashboardView';
 import { RepositoryView } from './components/RepositoryView';
 import { EmailSimulationView } from './components/EmailSimulationView';
@@ -16,7 +17,7 @@ import { ShieldAlert } from 'lucide-react';
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [activeTab, setActiveTab] = useState<string>('dashboard');
-  const [showLoginModal, setShowLoginModal] = useState<boolean>(true);
+  const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
   const [theme, setTheme] = useState<'dark' | 'light'>('light');
   // Sidebar collapsed state removed for horizontal navigation layout
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -39,8 +40,40 @@ export default function App() {
     } else {
       document.documentElement.classList.remove('dark-theme');
     }
+
+    // Handle deep link refresh on /login route
+    if (window.location.pathname === '/login') {
+      setShowLoginModal(true);
+      window.history.replaceState({ page: 'login' }, '', '/login');
+    } else {
+      window.history.replaceState({ page: 'landing' }, '', window.location.pathname + window.location.search);
+    }
+
     initAuthAndData();
   }, []);
+
+  // Handle browser back/forward buttons (popstate events)
+  useEffect(() => {
+    const handlePopState = (event: PopStateEvent) => {
+      const state = event.state;
+      if (state && state.page === 'login') {
+        setShowLoginModal(true);
+      } else {
+        setShowLoginModal(false);
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  // Clear URL hash fragment when navigating away from the landing page
+  useEffect(() => {
+    if (user || showLoginModal) {
+      if (window.location.hash) {
+        window.history.replaceState(window.history.state, '', window.location.pathname + window.location.search);
+      }
+    }
+  }, [user, showLoginModal]);
 
   const handleToggleTheme = () => {
     const nextTheme = theme === 'dark' ? 'light' : 'dark';
@@ -62,10 +95,10 @@ export default function App() {
         setShowLoginModal(false);
       } catch (err) {
         localStorage.removeItem('promptflow_token');
-        setShowLoginModal(true);
+        setShowLoginModal(false);
       }
     } else {
-      setShowLoginModal(true);
+      setShowLoginModal(false);
     }
     fetchAllData();
   };
@@ -88,6 +121,7 @@ export default function App() {
   };
 
   const handleLoginSuccess = (u: User, _token: string) => {
+    window.history.replaceState({ page: 'landing' }, '', '/');
     setUser(u);
     setShowLoginModal(false);
     fetchAllData();
@@ -95,8 +129,9 @@ export default function App() {
 
   const handleLogout = () => {
     localStorage.removeItem('promptflow_token');
+    window.history.replaceState({ page: 'landing' }, '', '/');
     setUser(null);
-    setShowLoginModal(true);
+    setShowLoginModal(false);
   };
 
   const handleSwitchRole = async () => {
@@ -125,8 +160,22 @@ export default function App() {
       )
     : papers;
 
-  if (showLoginModal) {
-    return <LoginModal onLoginSuccess={handleLoginSuccess} />;
+  if (!user) {
+    if (showLoginModal) {
+      return <LoginModal onLoginSuccess={handleLoginSuccess} />;
+    }
+    return (
+      <LandingPageView 
+        papers={papers}
+        analytics={analytics}
+        onSignInClick={() => {
+          window.history.pushState({ page: 'login' }, '', '/login');
+          setShowLoginModal(true);
+        }} 
+        onGoToConsoleClick={() => {}} 
+        isLoggedIn={user !== null} 
+      />
+    );
   }
 
   return (

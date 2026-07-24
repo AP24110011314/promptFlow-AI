@@ -59,7 +59,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
               onClick={() => setPreset('admin')}
               className={`p-2 rounded-xl text-xs font-bold flex items-center justify-center space-x-1.5 transition-all cursor-pointer ${
                 selectedRole === 'admin'
-                  ? 'bg-amber-500/15 text-amber-500 border border-amber-500/30 shadow-2xs'
+                  ? 'bg-[#F4F0EB] text-[#1E1E1E] border border-amber-500/30 shadow-2xs'
                   : 'bg-brand-card text-brand-gray hover:bg-brand-hover border border-brand-border'
               }`}
             >

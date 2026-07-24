@@ -45,7 +45,14 @@ def mark_notification_read(
     notif = db.query(Notification).filter(Notification.id == notification_id).first()
     if not notif:
         raise HTTPException(status_code=404, detail="Notification not found")
-        
+
+    if current_user is None:
+        raise HTTPException(status_code=401, detail="Authentication required")
+
+    # Only allow modifying global notifications or notifications owned by the current user
+    if notif.user_id is not None and notif.user_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Not authorized to modify this notification")
+
     notif.is_read = True
     db.commit()
     db.refresh(notif)

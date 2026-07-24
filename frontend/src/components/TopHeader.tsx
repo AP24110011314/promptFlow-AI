@@ -43,11 +43,8 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
     fetchUnreadCount();
   }, []);
 
-  const fetchUnreadCount = async () => {
-    try {
-      const notifs = await notificationService.list(true);
+      const notifs = await notificationService.list(true, 100);
       setUnreadCount(notifs.length);
-    } catch (err) {
       // Ignore background error
     }
   };

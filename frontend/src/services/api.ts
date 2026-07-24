@@ -170,5 +170,13 @@ export const notificationService = {
   }
 };
 
+export const healthService = {
+  check: async (): Promise<{ status: string; system: string; version: string; ml_engine: string }> => {
+    const res = await api.get('/health');
+    return res.data;
+  }
+};
+
 export default api;
+
 

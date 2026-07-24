@@ -12,4 +12,14 @@ api_router.include_router(export.router, prefix="/export", tags=["Data Export (.
 api_router.include_router(admin.router, prefix="/admin", tags=["Admin Control Panel"])
 api_router.include_router(chat.router, prefix="/chat", tags=["Research Chat Assistant"])
 
+@api_router.get("/health", tags=["Health Check"])
+def health_check():
+    return {
+        "status": "online",
+        "system": "promptFlow-AI",
+        "version": "1.0.0",
+        "ml_engine": "active"
+    }
+
+
 

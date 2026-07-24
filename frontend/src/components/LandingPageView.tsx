@@ -201,7 +201,7 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({
               className="h-full w-full relative"
             >
               <img
-                src="/laptop-in-library-with-books-free-photo.jpeg"
+                src="/Laptop-background-image.jpeg"
                 alt="Library Background"
                 className="h-full w-full object-cover"
               />
@@ -615,7 +615,7 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({
           </div>
         </div>
         <div
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-15 bg-gradient-to-b from-transparent to-real-white"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-15 bg-linear-to-b from-transparent to-real-white"
           aria-hidden="true"
         />
       </motion.section>

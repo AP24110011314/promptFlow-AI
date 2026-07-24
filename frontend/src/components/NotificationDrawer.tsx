@@ -217,13 +217,7 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
         )}
       </div>
 
-      {/* Footer */}
-      <div className="px-4 py-2 border-t border-brand-border bg-brand-bg/40 text-center">
-        <p className="text-[10px] text-brand-gray">
-          Persistent User Notifications • promptFlow-AI Realtime Engine
-        </p>
-      </div>
-
     </div>
   );
 };
+

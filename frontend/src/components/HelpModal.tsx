@@ -378,10 +378,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t border-brand-border bg-brand-bg/50 flex items-center justify-between shrink-0">
-          <p className="text-[11px] text-brand-gray">
-            College Research Digest • promptFlow-AI Technical Support
-          </p>
+        <div className="px-6 py-4 border-t border-brand-border bg-brand-bg/50 flex items-center justify-end shrink-0">
           <button
             onClick={onClose}
             className="px-4 py-2 rounded-xl bg-brand-cyan hover:brightness-110 text-real-white font-bold text-xs transition-all cursor-pointer"
@@ -389,6 +386,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({
             Got it, thanks!
           </button>
         </div>
+
 
       </div>
     </div>

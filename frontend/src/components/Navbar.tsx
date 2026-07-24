@@ -59,12 +59,13 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   const fetchUnreadCount = async () => {
     try {
-      const notifs = await notificationService.list(true);
-      setUnreadCount(notifs.length);
+      const count = await notificationService.getUnreadCount();
+      setUnreadCount(count);
     } catch (err) {
       // Ignore background errors
     }
   };
+
 
 
   const navItems = [

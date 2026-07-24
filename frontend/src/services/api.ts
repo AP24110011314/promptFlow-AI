@@ -148,10 +148,15 @@ export const chatService = {
 };
 
 export const notificationService = {
+  getUnreadCount: async (): Promise<number> => {
+    const res = await api.get('/notifications/unread-count');
+    return res.data.unread_count ?? 0;
+  },
   list: async (unreadOnly: boolean = false, limit: number = 20): Promise<AppNotification[]> => {
     const res = await api.get('/notifications', { params: { unread_only: unreadOnly, limit } });
     return res.data;
   },
+
   markRead: async (id: number): Promise<AppNotification> => {
     const res = await api.patch(`/notifications/${id}/read`);
     return res.data;

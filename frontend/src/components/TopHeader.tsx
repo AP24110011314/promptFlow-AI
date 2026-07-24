@@ -43,11 +43,15 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
     fetchUnreadCount();
   }, []);
 
-      const notifs = await notificationService.list(true, 100);
-      setUnreadCount(notifs.length);
+  const fetchUnreadCount = async () => {
+    try {
+      const count = await notificationService.getUnreadCount();
+      setUnreadCount(count);
+    } catch (err) {
       // Ignore background error
     }
   };
+
 
 
   // Edit Profile Form State

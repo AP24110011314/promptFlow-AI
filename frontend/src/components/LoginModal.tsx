@@ -8,8 +8,9 @@ interface LoginModalProps {
 }
 
 export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
-  const [email, setEmail] = useState('admin@college.edu');
-  const [password, setPassword] = useState('admin123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [selectedRole, setSelectedRole] = useState<'admin' | 'faculty'>('admin');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -28,14 +29,13 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
     }
   };
 
-  const setPreset = (presetEmail: string, presetPass: string) => {
-    setEmail(presetEmail);
-    setPassword(presetPass);
+  const setPreset = (role: 'admin' | 'faculty') => {
+    setSelectedRole(role);
     setError(null);
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-bg">
       <div className="w-full max-w-md bg-brand-card rounded-3xl p-8 relative overflow-hidden border border-brand-border shadow-2xl">
         
         <div className="text-center mb-6">
@@ -56,9 +56,9 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
           <div className="grid grid-cols-2 gap-2">
             <button
               type="button"
-              onClick={() => setPreset('admin@college.edu', 'admin123')}
+              onClick={() => setPreset('admin')}
               className={`p-2 rounded-xl text-xs font-bold flex items-center justify-center space-x-1.5 transition-all cursor-pointer ${
-                email === 'admin@college.edu'
+                selectedRole === 'admin'
                   ? 'bg-amber-500/15 text-amber-500 border border-amber-500/30 shadow-2xs'
                   : 'bg-brand-card text-brand-gray hover:bg-brand-hover border border-brand-border'
               }`}
@@ -69,9 +69,9 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
             <button
               type="button"
-              onClick={() => setPreset('faculty@college.edu', 'faculty123')}
+              onClick={() => setPreset('faculty')}
               className={`p-2 rounded-xl text-xs font-bold flex items-center justify-center space-x-1.5 transition-all cursor-pointer ${
-                email === 'faculty@college.edu'
+                selectedRole === 'faculty'
                   ? 'bg-brand-green/15 text-brand-green border border-brand-green/30 shadow-2xs'
                   : 'bg-brand-card text-brand-gray hover:bg-brand-hover border border-brand-border'
               }`}

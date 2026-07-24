@@ -125,6 +125,10 @@ export default function App() {
       )
     : papers;
 
+  if (showLoginModal) {
+    return <LoginModal onLoginSuccess={handleLoginSuccess} />;
+  }
+
   return (
     <div className="h-screen flex flex-col bg-brand-bg text-white selection:bg-brand-cyan selection:text-white font-sans overflow-hidden">
       
@@ -258,13 +262,6 @@ export default function App() {
           onSelectAuthor={(author) => setSelectedAuthor(author)}
         />
       )}
-
-
-      {/* Login Modal */}
-      {showLoginModal && (
-        <LoginModal onLoginSuccess={handleLoginSuccess} />
-      )}
-
 
     </div>
   );

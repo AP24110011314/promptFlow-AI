@@ -9,7 +9,9 @@ from app.api.api import api_router
 from app.models.user import User
 from app.models.paper import ResearchPaper
 from app.models.category import Category
+from app.models.notification import Notification
 from app.core.security import get_password_hash
+
 from app.ml_engine.classifier import ml_classifier
 from app.ml_engine.summarizer import summarizer
 
@@ -65,6 +67,38 @@ def seed_initial_data():
             for name, desc in default_cats:
                 db.add(Category(name=name, description=desc, is_custom=False))
             db.commit()
+
+        # 3. Seed Initial Notifications
+        if db.query(Notification).count() == 0:
+            sample_notifs = [
+                Notification(
+                    title="New Research Paper Ingested",
+                    message="Paper 'SEF-QIM: Scale-based Embedding Factor' was ingested into Computer Science (96.4% ML confidence).",
+                    type="ingestion",
+                    is_read=False
+                ),
+                Notification(
+                    title="ML Classifier Retrained",
+                    message="Scikit-Learn Naive Bayes department predictor successfully updated with high corpus coverage.",
+                    type="ml_retrain",
+                    is_read=False
+                ),
+                Notification(
+                    title="Quarterly Report Generated",
+                    message="Quartile Q1-Q4 publication statistics and Excel summary exports are ready for download.",
+                    type="export",
+                    is_read=True
+                ),
+                Notification(
+                    title="System Health Check Clean",
+                    message="All background email pollers and database connections operating at optimal latency.",
+                    type="system",
+                    is_read=True
+                )
+            ]
+            db.add_all(sample_notifs)
+            db.commit()
+
 
         # Seed Research Papers
         if db.query(ResearchPaper).count() == 0:

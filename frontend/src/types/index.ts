@@ -47,6 +47,18 @@ export interface Category {
   created_at?: string;
 }
 
+export interface AppNotification {
+  id: number;
+  user_id?: number | null;
+  title: string;
+  message: string;
+  type: 'ingestion' | 'system' | 'ml_retrain' | 'export' | 'alert';
+  link_paper_id?: number | null;
+  is_read: boolean;
+  created_at?: string;
+}
+
+
 export interface EmailLog {
   id: number;
   sender: string;

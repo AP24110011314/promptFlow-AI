@@ -55,3 +55,21 @@ def get_current_admin_user(current_user: User = Depends(get_current_user)) -> Us
             detail="The user does not have administrative privileges"
         )
     return current_user
+
+oauth2_scheme_optional = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/auth/login", auto_error=False)
+
+def get_optional_current_user(token: Optional[str] = Depends(oauth2_scheme_optional), db: Session = Depends(get_db)) -> Optional[User]:
+    if not token:
+        return None
+    try:
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+        user_id: str = payload.get("sub")
+        if user_id is None:
+            return None
+        user = db.query(User).filter(User.id == int(user_id)).first()
+        if user and user.is_active:
+            return user
+        return None
+    except Exception:
+        return None
+

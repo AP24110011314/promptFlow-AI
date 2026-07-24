@@ -22,6 +22,8 @@ build/
 
 # AI / Local Docs
 GEMINI.md
+session.md
+
 
 # ML Models & Local Databases
 *.pkl

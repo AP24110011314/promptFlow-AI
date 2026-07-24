@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, Bell, HelpCircle, Sun, Moon, RefreshCw, User as UserIcon, LogOut, UserCheck, X, Check, PanelLeft, PanelLeftClose } from 'lucide-react';
 import type { User } from '../types';
-import { authService } from '../services/api';
+import { authService, notificationService } from '../services/api';
+import { HelpModal } from './HelpModal';
+import { NotificationDrawer } from './NotificationDrawer';
 
 interface TopHeaderProps {
   user: User | null;
@@ -14,6 +16,7 @@ interface TopHeaderProps {
   onUserUpdate?: (updatedUser: User) => void;
   sidebarCollapsed: boolean;
   onToggleSidebar: () => void;
+  onSelectPaperId?: (paperId: number) => void;
 }
 
 export const TopHeader: React.FC<TopHeaderProps> = ({
@@ -27,10 +30,29 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
   onUserUpdate,
   sidebarCollapsed,
   onToggleSidebar,
+  onSelectPaperId,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [showHelpModal, setShowHelpModal] = useState(false);
+  const [unreadCount, setUnreadCount] = useState<number>(0);
+
+  useEffect(() => {
+    fetchUnreadCount();
+  }, []);
+
+  const fetchUnreadCount = async () => {
+    try {
+      const count = await notificationService.getUnreadCount();
+      setUnreadCount(count);
+    } catch (err) {
+      // Ignore background error
+    }
+  };
+
+
 
   // Edit Profile Form State
   const [editName, setEditName] = useState(user?.full_name || '');
@@ -126,14 +148,32 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
         )}
 
         {/* Notifications & Help */}
-        <button className="p-2 rounded-xl bg-brand-card hover:bg-brand-hover border border-brand-border text-brand-gray hover:text-white transition-colors cursor-pointer relative">
-          <Bell className="w-4 h-4" />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-brand-cyan" />
+        <div className="relative">
+          <button
+            onClick={() => { setShowNotifications(!showNotifications); fetchUnreadCount(); }}
+            title="Notifications"
+            className="p-2 rounded-xl bg-brand-card hover:bg-brand-hover border border-brand-border text-brand-gray hover:text-white transition-colors cursor-pointer relative"
+          >
+            <Bell className="w-4 h-4" />
+            {unreadCount > 0 && (
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-brand-cyan animate-pulse" />
+            )}
+          </button>
+          <NotificationDrawer
+            isOpen={showNotifications}
+            onClose={() => setShowNotifications(false)}
+            onSelectPaperId={onSelectPaperId}
+          />
+        </div>
+
+        <button
+          onClick={() => setShowHelpModal(true)}
+          title="Help & Platform Documentation"
+          className="p-2 rounded-xl bg-brand-card hover:bg-brand-hover border border-brand-border text-brand-gray hover:text-white transition-colors cursor-pointer"
+        >
+          <HelpCircle className="w-4 h-4 text-brand-gray hover:text-brand-cyan transition-colors" />
         </button>
 
-        <button className="p-2 rounded-xl bg-brand-card hover:bg-brand-hover border border-brand-border text-brand-gray hover:text-white transition-colors cursor-pointer">
-          <HelpCircle className="w-4 h-4" />
-        </button>
 
         {/* User Profile Badge & Dropdown */}
         {user ? (
@@ -293,11 +333,21 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
                 </button>
               </div>
             </form>
-
           </div>
         </div>
+      )}
+
+
+      {/* Help Modal */}
+      {showHelpModal && (
+        <HelpModal
+          onClose={() => setShowHelpModal(false)}
+          userRole={user?.role}
+        />
       )}
 
     </header>
   );
 };
+
+

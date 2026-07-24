@@ -12,6 +12,7 @@ interface RepositoryViewProps {
   onSelectPaper: (paper: ResearchPaper) => void;
   selectedPaper: ResearchPaper | null;
   onCloseModal: () => void;
+  onSelectAuthor?: (authorName: string) => void;
 }
 
 export const RepositoryView: React.FC<RepositoryViewProps> = ({
@@ -22,6 +23,7 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
   onSelectPaper,
   selectedPaper,
   onCloseModal,
+  onSelectAuthor,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDept, setSelectedDept] = useState('All');
@@ -37,6 +39,15 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
 
+  // Multi-PDF Batch Upload State
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [uploadFiles, setUploadFiles] = useState<File[]>([]);
+  const [uploadDeptHint, setUploadDeptHint] = useState('Computer Science');
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [batchProgress, setBatchProgress] = useState<{ current: number; total: number; currentFileName: string } | null>(null);
+
   // Helpers to update filter and reset page
   const handleSetSearchQuery = (val: string) => { setSearchQuery(val); setCurrentPage(1); };
   const handleSetSelectedDept = (val: string) => { setSelectedDept(val); setCurrentPage(1); };
@@ -48,12 +59,6 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
   const handleSetEndYear = (val: string) => { setEndYear(val); setCurrentPage(1); };
   const handleSetSelectedQuartile = (val: string) => { setSelectedQuartile(val); setCurrentPage(1); };
 
-  // Upload modal state
-  const [showUploadModal, setShowUploadModal] = useState(false);
-  const [uploadFile, setUploadFile] = useState<File | null>(null);
-  const [uploadDeptHint, setUploadDeptHint] = useState('Computer Science');
-  const [uploading, setUploading] = useState(false);
-  const [uploadError, setUploadError] = useState<string | null>(null);
 
   const departments = ['All', 'Computer Science', 'Physics', 'Chemistry', 'Biotechnology', 'Mechanical Engineering', 'Electrical Engineering', 'Mathematics', 'Economics & Finance'];
   const years = ['All', '2026', '2025', '2024', '2023'];
@@ -110,23 +115,54 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
     });
   };
 
-  const handleUploadSubmit = async (e: React.FormEvent) => {
+  const handleFileDrop = (e: React.DragEvent) => {
     e.preventDefault();
-    if (!uploadFile) return;
-    setUploading(true);
-    setUploadError(null);
-    try {
-      const newPaper = await paperService.uploadPdf(uploadFile, uploadDeptHint);
-      setShowUploadModal(false);
-      setUploadFile(null);
-      onRefresh();
-      onSelectPaper(newPaper);
-    } catch (err: any) {
-      setUploadError(err.response?.data?.detail || 'Failed to upload and parse PDF file.');
-    } finally {
-      setUploading(false);
+    setIsDragging(false);
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      const droppedFiles = Array.from(e.dataTransfer.files).filter(
+        (f) => f.type === 'application/pdf' || f.name.toLowerCase().endsWith('.pdf')
+      );
+      if (droppedFiles.length > 0) {
+        setUploadFiles((prev) => [...prev, ...droppedFiles]);
+      }
     }
   };
+
+  const handleRemoveFile = (index: number) => {
+    setUploadFiles((prev) => prev.filter((_, idx) => idx !== index));
+  };
+
+  const handleBatchUploadSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (uploadFiles.length === 0) return;
+    setUploading(true);
+    setUploadError(null);
+
+    let lastIngestedPaper: ResearchPaper | null = null;
+
+    for (let i = 0; i < uploadFiles.length; i++) {
+      const file = uploadFiles[i];
+      setBatchProgress({ current: i + 1, total: uploadFiles.length, currentFileName: file.name });
+      try {
+        const newPaper = await paperService.uploadPdf(file, uploadDeptHint);
+        lastIngestedPaper = newPaper;
+      } catch (err: any) {
+        console.error(`Error uploading ${file.name}:`, err);
+        setUploadError(err.response?.data?.detail || `Failed to process ${file.name}`);
+      }
+    }
+
+    setUploading(false);
+    setBatchProgress(null);
+    setShowUploadModal(false);
+    setUploadFiles([]);
+    onRefresh();
+
+    if (lastIngestedPaper) {
+      onSelectPaper(lastIngestedPaper);
+    }
+  };
+
 
   return (
     <div className="space-y-6 pb-12">
@@ -386,10 +422,21 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
                   </div>
 
                   <div className="mt-4 pt-3 border-t border-brand-border flex items-center justify-between text-xs text-brand-gray">
-                    <div className="flex items-center space-x-1.5 truncate max-w-[65%]">
-                      <Users className="w-3.5 h-3.5 text-brand-gray shrink-0" />
-                      <span className="truncate">{paper.authors_raw || 'College Faculty'}</span>
+                    <div 
+                      onClick={(e) => {
+                        if (onSelectAuthor && paper.authors_raw) {
+                          e.stopPropagation();
+                          const firstAuthor = paper.authors_raw.split(',')[0].trim();
+                          onSelectAuthor(firstAuthor);
+                        }
+                      }}
+                      className="flex items-center space-x-1.5 truncate max-w-[65%] hover:text-brand-cyan transition-colors cursor-pointer"
+                      title="View Author Profile & Analytics"
+                    >
+                      <Users className="w-3.5 h-3.5 text-brand-cyan shrink-0" />
+                      <span className="truncate hover:underline">{paper.authors_raw || 'College Faculty'}</span>
                     </div>
+
                     <div className="flex items-center space-x-1 text-brand-cyan font-bold shrink-0">
                       <span>View Details</span>
                     </div>
@@ -449,32 +496,108 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
               <X className="w-5 h-5" />
             </button>
 
-            <h3 className="text-lg font-bold text-white flex items-center space-x-2 mb-2">
+            <h3 className="text-lg font-bold text-white flex items-center space-x-2 mb-1">
               <Upload className="w-5 h-5 text-brand-cyan" />
-              <span>Upload Research Publication PDF</span>
+              <span>Multi-PDF Batch Research Ingestion</span>
             </h3>
-            <p className="text-xs text-brand-gray mb-6">
-              Our backend ML & PyMuPDF extractor will automatically parse Title, Authors, Abstract, Year, and auto-tag categories!
+            <p className="text-xs text-brand-gray mb-5">
+              Drag &amp; drop multiple research paper PDFs. PyMuPDF &amp; Scikit-Learn will extract metadata in batch!
             </p>
 
             {uploadError && (
-              <div className="mb-4 watt-alert shadow-lg flex items-center space-x-2">
+              <div className="mb-4 watt-alert shadow-lg flex items-center space-x-2 text-xs">
                 <AlertCircle className="w-4 h-4 shrink-0" />
                 <span>{uploadError}</span>
               </div>
             )}
 
-            <form onSubmit={handleUploadSubmit} className="space-y-4">
-              <div>
-                <label className="block text-xs font-medium text-brand-gray mb-1">Select PDF File</label>
+            <form onSubmit={handleBatchUploadSubmit} className="space-y-4">
+              
+              {/* Drag & Drop Zone */}
+              <div
+                onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+                onDragLeave={(e) => { e.preventDefault(); setIsDragging(false); }}
+                onDrop={handleFileDrop}
+                className={`p-6 rounded-2xl border-2 border-dashed text-center transition-all cursor-pointer relative ${
+                  isDragging
+                    ? 'border-brand-cyan bg-brand-cyan/10'
+                    : 'border-brand-border bg-brand-bg/60 hover:border-brand-cyan/50'
+                }`}
+              >
                 <input
                   type="file"
-                  required
+                  multiple
                   accept=".pdf"
-                  onChange={(e) => setUploadFile(e.target.files ? e.target.files[0] : null)}
-                  className="w-full p-3 rounded-xl bg-brand-bg border border-brand-border text-white text-xs file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-brand-cyan/20 file:text-brand-cyan hover:file:bg-brand-cyan/30 transition-all cursor-pointer"
+                  onChange={(e) => {
+                    if (e.target.files) {
+                      const selected = Array.from(e.target.files).filter(
+                        (f) => f.type === 'application/pdf' || f.name.toLowerCase().endsWith('.pdf')
+                      );
+                      setUploadFiles((prev) => [...prev, ...selected]);
+                    }
+                  }}
+                  className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
                 />
+
+                <div className="space-y-2 pointer-events-none">
+                  <div className="w-10 h-10 rounded-2xl bg-brand-cyan/15 text-brand-cyan flex items-center justify-center mx-auto">
+                    <Upload className="w-5 h-5" />
+                  </div>
+                  <p className="text-xs font-bold text-white">
+                    Drag &amp; Drop Research PDFs Here or <span className="text-brand-cyan underline">Browse</span>
+                  </p>
+                  <p className="text-[10px] text-brand-gray">Select one or multiple PDF papers simultaneously</p>
+                </div>
               </div>
+
+              {/* Selected Files Queue List */}
+              {uploadFiles.length > 0 && (
+                <div className="space-y-2 max-h-40 overflow-y-auto pr-1">
+                  <div className="flex items-center justify-between text-xs font-bold text-white">
+                    <span>Batch Queue ({uploadFiles.length} files)</span>
+                    <button
+                      type="button"
+                      onClick={() => setUploadFiles([])}
+                      className="text-[10px] text-brand-gray hover:text-brand-red cursor-pointer"
+                    >
+                      Clear All
+                    </button>
+                  </div>
+
+                  {uploadFiles.map((file, idx) => (
+                    <div key={idx} className="p-2.5 rounded-xl bg-brand-bg border border-brand-border flex items-center justify-between text-xs">
+                      <div className="flex items-center space-x-2 truncate">
+                        <FileText className="w-3.5 h-3.5 text-brand-cyan shrink-0" />
+                        <span className="text-white truncate font-medium">{file.name}</span>
+                        <span className="text-[10px] text-brand-gray">({(file.size / 1024 / 1024).toFixed(2)} MB)</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveFile(idx)}
+                        className="p-1 text-brand-gray hover:text-brand-red transition-colors cursor-pointer shrink-0"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Batch Processing Progress Bar */}
+              {batchProgress && (
+                <div className="p-3.5 rounded-2xl bg-brand-cyan/10 border border-brand-cyan/30 space-y-2">
+                  <div className="flex items-center justify-between text-xs font-bold text-white">
+                    <span className="truncate">Processing {batchProgress.currentFileName}...</span>
+                    <span className="text-brand-cyan">{batchProgress.current} / {batchProgress.total}</span>
+                  </div>
+                  <div className="w-full h-2 rounded-full bg-brand-bg overflow-hidden">
+                    <div
+                      className="h-full bg-brand-cyan transition-all duration-300"
+                      style={{ width: `${(batchProgress.current / batchProgress.total) * 100}%` }}
+                    />
+                  </div>
+                </div>
+              )}
 
               <div>
                 <label className="block text-xs font-medium text-brand-gray mb-1">Academic Department Hint</label>
@@ -489,23 +612,28 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
                 </select>
               </div>
 
-              <div className="pt-4 flex justify-end space-x-3">
+              <div className="pt-3 flex justify-end space-x-3">
                 <button
                   type="button"
-                  onClick={() => setShowUploadModal(false)}
+                  onClick={() => { setShowUploadModal(false); setUploadFiles([]); }}
                   className="px-4 py-2.5 rounded-xl bg-brand-bg hover:bg-brand-hover text-white border border-brand-border font-semibold text-xs cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  disabled={uploading || !uploadFile}
-                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-cyan to-brand-cyan/80 text-brand-bg font-bold text-xs shadow-lg hover:brightness-110 disabled:opacity-50 transition-all flex items-center space-x-2 cursor-pointer"
+                  disabled={uploading || uploadFiles.length === 0}
+                  className="px-5 py-2.5 rounded-xl bg-brand-cyan text-real-white font-bold text-xs shadow-md hover:brightness-110 disabled:opacity-50 transition-all flex items-center space-x-2 cursor-pointer"
                 >
-                  <span>{uploading ? 'Extracting & Parsing with ML...' : 'Upload & Parse PDF'}</span>
+                  <span>
+                    {uploading
+                      ? `Batch Ingesting (${batchProgress?.current || 1}/${uploadFiles.length})...`
+                      : `Ingest ${uploadFiles.length} PDF${uploadFiles.length === 1 ? '' : 's'}`}
+                  </span>
                 </button>
               </div>
             </form>
+
 
           </div>
         </div>

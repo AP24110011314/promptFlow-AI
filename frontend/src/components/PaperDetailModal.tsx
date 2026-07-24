@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { X, Users, CheckCircle2, Sparkles, Trash2, ExternalLink, Edit } from 'lucide-react';
+import { X, Users, CheckCircle2, Sparkles, Trash2, ExternalLink, Edit, Quote } from 'lucide-react';
 import type { ResearchPaper, User } from '../types';
 import { paperService, SERVER_BASE_URL } from '../services/api';
+import { CitationModal } from './CitationModal';
+
 
 interface PaperDetailModalProps {
   paper: ResearchPaper;
@@ -18,6 +20,8 @@ export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
 }) => {
   const [currentPaper, setCurrentPaper] = useState<ResearchPaper>(paper);
   const [isEditing, setIsEditing] = useState(false);
+  const [showCitationModal, setShowCitationModal] = useState(false);
+
   
   // Edit Form Fields
   const [editTitle, setEditTitle] = useState(paper.title);
@@ -326,7 +330,16 @@ export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
                 </button>
               ) : <div />}
 
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-2.5">
+                <button
+                  onClick={() => setShowCitationModal(true)}
+                  className="px-4 py-2.5 rounded-xl bg-purple-500/10 text-purple-400 hover:bg-purple-500/20 border border-purple-500/30 text-xs font-semibold transition-all flex items-center space-x-1.5 cursor-pointer"
+                  title="Generate APA, IEEE, MLA, or BibTeX citation"
+                >
+                  <Quote className="w-4 h-4 text-purple-400" />
+                  <span>Cite Paper</span>
+                </button>
+
                 <button
                   onClick={() => setIsEditing(true)}
                   className="px-4 py-2.5 rounded-xl bg-brand-cyan/10 text-brand-cyan hover:bg-brand-cyan/20 border border-brand-cyan/30 text-xs font-semibold transition-all flex items-center space-x-1.5 cursor-pointer"
@@ -336,7 +349,7 @@ export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
                 </button>
                 <button
                   onClick={onClose}
-                  className="px-5 py-2.5 rounded-xl bg-brand-bg hover:bg-brand-hover text-white border border-brand-border font-semibold text-xs sm:text-sm transition-all cursor-pointer"
+                  className="px-4 py-2.5 rounded-xl bg-brand-bg hover:bg-brand-hover text-white border border-brand-border font-semibold text-xs transition-all cursor-pointer"
                 >
                   Close
                 </button>
@@ -345,7 +358,7 @@ export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
                     href={`${SERVER_BASE_URL}${currentPaper.pdf_url}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="px-5 py-2.5 rounded-xl bg-brand-cyan text-brand-bg font-bold text-xs sm:text-sm shadow-lg hover:brightness-110 transition-all flex items-center space-x-2 cursor-pointer"
+                    className="px-4 py-2.5 rounded-xl bg-brand-cyan text-brand-bg font-bold text-xs shadow-lg hover:brightness-110 transition-all flex items-center space-x-2 cursor-pointer"
                   >
                     <span>View Full PDF</span>
                     <ExternalLink className="w-4 h-4 text-brand-bg stroke-[3]" />
@@ -353,8 +366,17 @@ export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
                 )}
               </div>
             </div>
+
+            {/* Citation Exporter Modal */}
+            {showCitationModal && (
+              <CitationModal
+                paper={currentPaper}
+                onClose={() => setShowCitationModal(false)}
+              />
+            )}
           </>
         )}
+
 
       </div>
     </div>

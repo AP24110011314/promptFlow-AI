@@ -19,13 +19,51 @@ export const AuthorProfileDrawer: React.FC<AuthorProfileDrawerProps> = ({
   onSelectAuthor,
 }) => {
 
-  // Filter papers authored by authorName (fuzzy match case-insensitive)
+  // Normalize author names by stripping honorific titles and special chars
+  const normalizeAuthorName = (name: string): string => {
+    if (!name) return '';
+    return name
+      .replace(/\b(dr|prof|professor|doctor|phd|ph\.d|mr|mrs|ms|er|eng|sir)\b\.?/gi, '')
+      .replace(/[^a-zA-Z0-9\s]/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .toLowerCase();
+  };
+
   const cleanAuthorName = authorName.trim();
+  const normSearchName = normalizeAuthorName(authorName);
+  const searchTokens = normSearchName.split(' ').filter((t) => t.length > 1);
+
+  // Filter papers authored by authorName
   const authorPapers = allPapers.filter((p) => {
+    const candidates: string[] = [];
     if (p.authors_list && p.authors_list.length > 0) {
-      return p.authors_list.some((a) => a.toLowerCase().includes(cleanAuthorName.toLowerCase()));
+      candidates.push(...p.authors_list);
     }
-    return p.authors_raw?.toLowerCase().includes(cleanAuthorName.toLowerCase());
+    if (p.authors_raw) {
+      candidates.push(...p.authors_raw.split(/[,;&]/));
+    }
+
+    return candidates.some((cand) => {
+      const normCand = normalizeAuthorName(cand);
+      if (!normCand || !normSearchName) return false;
+
+      // 1. Direct bidirectional substring match
+      if (normCand.includes(normSearchName) || normSearchName.includes(normCand)) {
+        return true;
+      }
+
+      // 2. Token-level overlap matching (e.g. Sangeeta Saha)
+      const candTokens = normCand.split(' ').filter((t) => t.length > 1);
+      if (searchTokens.length > 0 && candTokens.length > 0) {
+        const matches = searchTokens.filter((t) => candTokens.includes(t));
+        if (matches.length >= Math.min(2, searchTokens.length)) {
+          return true;
+        }
+      }
+
+      return false;
+    });
   });
 
   // Calculate dynamic metrics
@@ -60,7 +98,8 @@ export const AuthorProfileDrawer: React.FC<AuthorProfileDrawerProps> = ({
       : (p.authors_raw ? p.authors_raw.split(',').map((s) => s.trim()) : []);
 
     list.forEach((co) => {
-      if (!co.toLowerCase().includes(cleanAuthorName.toLowerCase()) && co.length > 2) {
+      const normCo = normalizeAuthorName(co);
+      if (normCo && normCo !== normSearchName && !normSearchName.includes(normCo) && !normCo.includes(normSearchName) && co.length > 2) {
         coAuthorMap[co] = (coAuthorMap[co] || 0) + 1;
       }
     });
@@ -68,6 +107,7 @@ export const AuthorProfileDrawer: React.FC<AuthorProfileDrawerProps> = ({
   const topCoAuthors = Object.entries(coAuthorMap)
     .sort((a, b) => b[1] - a[1])
     .slice(0, 6);
+
 
   // Top publication venues
   const venueMap: Record<string, number> = {};

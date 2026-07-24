@@ -1,5 +1,6 @@
 import axios from 'axios';
-import type { AuthResponse, ResearchPaper, Category, EmailLog, DashboardAnalytics, User, ChatResponse } from '../types';
+import type { AuthResponse, ResearchPaper, Category, EmailLog, DashboardAnalytics, User, ChatResponse, AppNotification } from '../types';
+
 
 export const SERVER_BASE_URL = import.meta.env.VITE_SERVER_URL || (import.meta.env.DEV ? 'http://localhost:8000' : '');
 const API_BASE_URL = import.meta.env.VITE_API_URL || `${SERVER_BASE_URL}/api/v1`;
@@ -146,4 +147,28 @@ export const chatService = {
   }
 };
 
+export const notificationService = {
+  list: async (unreadOnly: boolean = false, limit: number = 20): Promise<AppNotification[]> => {
+    const res = await api.get('/notifications', { params: { unread_only: unreadOnly, limit } });
+    return res.data;
+  },
+  markRead: async (id: number): Promise<AppNotification> => {
+    const res = await api.patch(`/notifications/${id}/read`);
+    return res.data;
+  },
+  markAllRead: async (): Promise<any> => {
+    const res = await api.post('/notifications/mark-all-read');
+    return res.data;
+  },
+  create: async (data: { title: string; message: string; type?: string; link_paper_id?: number }): Promise<AppNotification> => {
+    const res = await api.post('/notifications', data);
+    return res.data;
+  },
+  delete: async (id: number): Promise<any> => {
+    const res = await api.delete(`/notifications/${id}`);
+    return res.data;
+  }
+};
+
 export default api;
+

@@ -5,7 +5,9 @@ import {
   LogOut, UserCheck, X, Check, Menu
 } from 'lucide-react';
 import type { User } from '../types';
-import { authService } from '../services/api';
+import { authService, notificationService } from '../services/api';
+import { HelpModal } from './HelpModal';
+import { NotificationDrawer } from './NotificationDrawer';
 
 interface NavbarProps {
   user: User | null;
@@ -18,6 +20,7 @@ interface NavbarProps {
   searchPlaceholder?: string;
   onLogout: () => void;
   onUserUpdate?: (updatedUser: User) => void;
+  onSelectPaperId?: (paperId: number) => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -31,17 +34,38 @@ export const Navbar: React.FC<NavbarProps> = ({
   searchPlaceholder = 'Search papers...',
   onLogout,
   onUserUpdate,
+  onSelectPaperId,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [showHelpModal, setShowHelpModal] = useState(false);
+  const [unreadCount, setUnreadCount] = useState<number>(0);
 
   // Edit Profile Form State
   const [editName, setEditName] = useState(user?.full_name || '');
   const [editDept, setEditDept] = useState(user?.department || 'Computer Science');
   const [saving, setSaving] = useState(false);
   const [editError, setEditError] = useState<string | null>(null);
+
+  // Fetch unread notifications count
+  useEffect(() => {
+    fetchUnreadCount();
+    const interval = setInterval(fetchUnreadCount, 15000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const fetchUnreadCount = async () => {
+    try {
+      const notifs = await notificationService.list(true);
+      setUnreadCount(notifs.length);
+    } catch (err) {
+      // Ignore background errors
+    }
+  };
+
 
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: Layers },
@@ -183,18 +207,34 @@ export const Navbar: React.FC<NavbarProps> = ({
             )}
 
             {/* Notification Bell */}
-            <button className="hidden sm:flex p-2 rounded-xl hover:bg-brand-hover text-brand-gray hover:text-white transition-all cursor-pointer relative">
-              <Bell className="w-4 h-4" />
-              <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-brand-cyan" />
-            </button>
+            <div className="relative">
+              <button
+                onClick={() => { setShowNotifications(!showNotifications); fetchUnreadCount(); }}
+                title="Notifications"
+                className="hidden sm:flex p-2 rounded-xl hover:bg-brand-hover text-brand-gray hover:text-white transition-all cursor-pointer relative"
+              >
+                <Bell className="w-4 h-4" />
+                {unreadCount > 0 && (
+                  <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-brand-cyan animate-pulse" />
+                )}
+              </button>
+
+              <NotificationDrawer
+                isOpen={showNotifications}
+                onClose={() => setShowNotifications(false)}
+                onSelectPaperId={onSelectPaperId}
+              />
+            </div>
 
             {/* Help Icon */}
             <button 
-              title="Help & Docs" 
+              onClick={() => setShowHelpModal(true)}
+              title="Help & Platform Documentation" 
               className="hidden sm:flex p-2 rounded-xl hover:bg-brand-hover text-brand-gray hover:text-white transition-all cursor-pointer"
             >
-              <HelpCircle className="w-4 h-4" />
+              <HelpCircle className="w-4 h-4 text-brand-gray hover:text-brand-cyan transition-colors" />
             </button>
+
 
             {/* User Dropdown */}
             {user ? (
@@ -440,6 +480,17 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
         </div>
       )}
+
+      {/* Help & Documentation Modal */}
+      {showHelpModal && (
+        <HelpModal
+          onClose={() => setShowHelpModal(false)}
+          userRole={user?.role}
+          onNavigateTab={setActiveTab}
+        />
+      )}
     </>
   );
 };
+
+

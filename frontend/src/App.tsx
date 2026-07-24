@@ -136,7 +136,12 @@ export default function App() {
         onSearch={(q) => setSearchQuery(q)}
         onLogout={handleLogout}
         onUserUpdate={(u) => setUser(u)}
+        onSelectPaperId={(id) => {
+          const p = papers.find((paper) => paper.id === id);
+          if (p) setSelectedPaper(p);
+        }}
       />
+
 
       {/* Main Content Area */}
       <div className="flex-1 min-h-0 flex flex-col overflow-hidden">

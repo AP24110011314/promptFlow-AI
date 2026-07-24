@@ -482,8 +482,10 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
           user={user}
           onClose={onCloseModal}
           onDeleteSuccess={onRefresh}
+          onSelectAuthor={onSelectAuthor}
         />
       )}
+
 
       {/* Upload PDF Modal */}
       {showUploadModal && (

@@ -8,6 +8,7 @@ interface AuthorProfileDrawerProps {
   allPapers: ResearchPaper[];
   onClose: () => void;
   onSelectPaper: (paper: ResearchPaper) => void;
+  onSelectAuthor?: (authorName: string) => void;
 }
 
 export const AuthorProfileDrawer: React.FC<AuthorProfileDrawerProps> = ({
@@ -15,7 +16,9 @@ export const AuthorProfileDrawer: React.FC<AuthorProfileDrawerProps> = ({
   allPapers,
   onClose,
   onSelectPaper,
+  onSelectAuthor,
 }) => {
+
   // Filter papers authored by authorName (fuzzy match case-insensitive)
   const cleanAuthorName = authorName.trim();
   const authorPapers = allPapers.filter((p) => {
@@ -78,7 +81,8 @@ export const AuthorProfileDrawer: React.FC<AuthorProfileDrawerProps> = ({
     .slice(0, 4);
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-[100] flex justify-end bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
+
       <div className="w-full max-w-2xl bg-brand-card border-l border-brand-border h-full shadow-2xl overflow-y-auto flex flex-col">
         
         {/* Drawer Header */}
@@ -155,16 +159,22 @@ export const AuthorProfileDrawer: React.FC<AuthorProfileDrawerProps> = ({
               </h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {topCoAuthors.map(([coAuthor, count], idx) => (
-                  <div key={idx} className="p-3 rounded-xl bg-brand-bg/50 border border-brand-border flex items-center justify-between">
+                  <div 
+                    key={idx}
+                    onClick={() => { if (onSelectAuthor) onSelectAuthor(coAuthor); }}
+                    className="p-3 rounded-xl bg-brand-bg/50 border border-brand-border hover:border-purple-500/50 flex items-center justify-between transition-all cursor-pointer group"
+                    title={`View ${coAuthor}'s author profile`}
+                  >
                     <div className="flex items-center space-x-2 truncate">
                       <div className="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold text-[10px] shrink-0">
                         {coAuthor.charAt(0)}
                       </div>
-                      <span className="text-white font-medium truncate">{coAuthor}</span>
+                      <span className="text-white font-medium truncate group-hover:text-purple-400 transition-colors">{coAuthor}</span>
                     </div>
                     <span className="text-brand-gray text-[11px] shrink-0">{count} papers</span>
                   </div>
                 ))}
+
               </div>
             </div>
           )}

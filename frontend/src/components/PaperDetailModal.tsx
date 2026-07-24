@@ -10,6 +10,7 @@ interface PaperDetailModalProps {
   user: User | null;
   onClose: () => void;
   onDeleteSuccess?: () => void;
+  onSelectAuthor?: (authorName: string) => void;
 }
 
 export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
@@ -17,7 +18,9 @@ export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
   user,
   onClose,
   onDeleteSuccess,
+  onSelectAuthor,
 }) => {
+
   const [currentPaper, setCurrentPaper] = useState<ResearchPaper>(paper);
   const [isEditing, setIsEditing] = useState(false);
   const [showCitationModal, setShowCitationModal] = useState(false);
@@ -246,13 +249,28 @@ export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
             </h2>
 
             {/* Author List */}
-            <div className="mt-5 p-4 rounded-2xl bg-brand-bg border border-brand-border flex items-center space-x-3">
-              <Users className="w-5 h-5 text-brand-cyan shrink-0" />
-              <div className="text-xs">
+            <div className="mt-5 p-4 rounded-2xl bg-brand-bg border border-brand-border flex items-start space-x-3">
+              <Users className="w-5 h-5 text-brand-cyan shrink-0 mt-0.5" />
+              <div className="text-xs space-y-1.5 flex-1">
                 <span className="text-brand-gray block font-bold uppercase text-[10px] tracking-wider">Authors &amp; Affiliation</span>
-                <span className="text-white font-semibold mt-0.5 block">{currentPaper.authors_raw || currentPaper.authors_list.join(", ")}</span>
+                <div className="flex flex-wrap gap-2 pt-0.5">
+                  {((currentPaper.authors_list && currentPaper.authors_list.length > 0)
+                    ? currentPaper.authors_list
+                    : (currentPaper.authors_raw ? currentPaper.authors_raw.split(',').map(s => s.trim()) : ['Faculty Author'])
+                  ).map((author, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => { if (onSelectAuthor) onSelectAuthor(author); }}
+                      className="px-2.5 py-1 rounded-xl bg-brand-card hover:bg-brand-cyan/15 text-white hover:text-brand-cyan border border-brand-border hover:border-brand-cyan/40 text-xs font-semibold transition-all cursor-pointer flex items-center space-x-1.5"
+                      title={`View ${author}'s Profile & Analytics`}
+                    >
+                      <span>{author}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
+
 
             {/* AI Summary */}
             <div className="mt-5 p-5 rounded-2xl bg-brand-bg border-l-4 border-brand-cyan shadow-sm">

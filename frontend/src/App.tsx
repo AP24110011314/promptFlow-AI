@@ -244,6 +244,7 @@ export default function App() {
           user={user}
           onClose={() => setSelectedPaper(null)}
           onDeleteSuccess={fetchAllData}
+          onSelectAuthor={(author) => setSelectedAuthor(author)}
         />
       )}
 
@@ -254,8 +255,10 @@ export default function App() {
           allPapers={papers}
           onClose={() => setSelectedAuthor(null)}
           onSelectPaper={(p) => setSelectedPaper(p)}
+          onSelectAuthor={(author) => setSelectedAuthor(author)}
         />
       )}
+
 
       {/* Login Modal */}
       {showLoginModal && (

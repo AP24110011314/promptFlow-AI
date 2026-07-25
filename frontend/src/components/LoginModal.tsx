@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import { Lock, Mail, ShieldAlert, UserCheck, ArrowRight, Zap } from 'lucide-react';
+import { Lock, Mail, ShieldAlert, UserCheck, ArrowRight, Zap, X } from 'lucide-react';
 import { authService } from '../services/api';
 import type { User } from '../types';
 
 interface LoginModalProps {
   onLoginSuccess: (user: User, token: string) => void;
+  onClose?: () => void;
 }
 
-export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
+export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess, onClose }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [selectedRole, setSelectedRole] = useState<'admin' | 'faculty'>('admin');
@@ -35,8 +36,24 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-bg">
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+      onClick={(e) => {
+        if (e.target === e.currentTarget && onClose) {
+          onClose();
+        }
+      }}
+    >
       <div className="w-full max-w-md bg-brand-card rounded-3xl p-8 relative overflow-hidden border border-brand-border shadow-2xl">
+        {onClose && (
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 p-2 rounded-full text-brand-gray hover:text-white hover:bg-brand-hover transition-colors cursor-pointer"
+            title="Back to Landing Page"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        )}
         
         <div className="text-center mb-6">
           <div className="w-12 h-12 mx-auto rounded-2xl bg-brand-cyan text-real-white flex items-center justify-center shadow-md mb-3 font-bold">

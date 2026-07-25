@@ -137,53 +137,46 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({
     <div className="min-h-screen bg-real-white text-[#1E1E1E] font-sans overflow-x-hidden relative selection:bg-[#F4F0EB] selection:text-[#1E1E1E]">
 
       {/* 1. FLOATING NAVBAR (AVON STYLE PILL) */}
-      <motion.header 
-        initial={{ y: -50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className={`fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-4xl rounded-full border border-black/5 transition-all duration-300 ${
-          scrolled 
-            ? "py-2 px-4 bg-real-white/90 backdrop-blur-[18px] shadow-[0_4px_24px_rgba(0,0,0,0.04)]" 
-            : "py-3 px-6 bg-real-white/45 backdrop-blur-sm"
-        }`}
-      >
-        <div className="flex items-center justify-between">
-          {/* Logo on Left */}
-          <div className="flex items-center space-x-2">
-            <div className="w-6.5 h-6.5 rounded-full bg-[#1E1E1E] text-real-white flex items-center justify-center font-bold text-xs shadow-sm">
-              p
+      {!isLoggedIn && (
+        <motion.header 
+          initial={{ y: -50, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className={`fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-4xl rounded-full border border-black/5 transition-all duration-300 ${
+            scrolled 
+              ? "py-2 px-4 bg-real-white/90 backdrop-blur-[18px] shadow-[0_4px_24px_rgba(0,0,0,0.04)]" 
+              : "py-3 px-6 bg-real-white/45 backdrop-blur-sm"
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            {/* Logo on Left */}
+            <div className="flex items-center space-x-2">
+              <div className="w-6.5 h-6.5 rounded-full bg-[#1E1E1E] text-real-white flex items-center justify-center font-bold text-xs shadow-sm">
+                p
+              </div>
+              <span className="font-display font-bold text-sm tracking-tight text-[#1E1E1E]">promptflow</span>
             </div>
-            <span className="font-display font-bold text-sm tracking-tight text-[#1E1E1E]">promptflow</span>
-          </div>
 
-          {/* Navigation Links centered */}
-          <nav className="hidden md:flex items-center space-x-7 text-[11px] font-bold text-[#6E6E73] tracking-wider uppercase">
-            <a href="#benefits" onClick={(e) => handleNavLinkClick(e, 'benefits')} className="hover:text-black transition-colors">Benefits</a>
-            <a href="#pipeline" onClick={(e) => handleNavLinkClick(e, 'pipeline')} className="hover:text-black transition-colors">How it works</a>
-            <a href="#roles" onClick={(e) => handleNavLinkClick(e, 'roles')} className="hover:text-black transition-colors">Security</a>
-            <a href="#faqs" onClick={(e) => handleNavLinkClick(e, 'faqs')} className="hover:text-black transition-colors">FAQ</a>
-          </nav>
+            {/* Navigation Links centered */}
+            <nav className="hidden md:flex items-center space-x-7 text-[11px] font-bold text-[#6E6E73] tracking-wider uppercase">
+              <a href="#benefits" onClick={(e) => handleNavLinkClick(e, 'benefits')} className="hover:text-black transition-colors">Benefits</a>
+              <a href="#pipeline" onClick={(e) => handleNavLinkClick(e, 'pipeline')} className="hover:text-black transition-colors">How it works</a>
+              <a href="#roles" onClick={(e) => handleNavLinkClick(e, 'roles')} className="hover:text-black transition-colors">Security</a>
+              <a href="#faqs" onClick={(e) => handleNavLinkClick(e, 'faqs')} className="hover:text-black transition-colors">FAQ</a>
+            </nav>
 
-          {/* CTA on Right */}
-          <div className="flex items-center">
-            {isLoggedIn ? (
-              <button 
-                onClick={onGoToConsoleClick}
-                className="px-4.5 py-1.5 rounded-full bg-[#F4F0EB] text-[#1E1E1E] border border-black/5 text-[11px] font-bold hover:bg-[#eae6e1] transition-all duration-200 cursor-pointer"
-              >
-                Go to Console
-              </button>
-            ) : (
+            {/* CTA on Right */}
+            <div className="flex items-center">
               <button 
                 onClick={onSignInClick}
                 className="px-4.5 py-1.5 rounded-full bg-[#F4F0EB] text-[#1E1E1E] border border-black/5 text-[11px] font-bold hover:bg-[#eae6e1] transition-all duration-200 cursor-pointer"
               >
                 Get Started
               </button>
-            )}
+            </div>
           </div>
-        </div>
-      </motion.header>
+        </motion.header>
+      )}
 
       {/*
         2. INTRODUCTION SCROLL SEQUENCE

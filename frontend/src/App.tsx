@@ -123,6 +123,7 @@ export default function App() {
   const handleLoginSuccess = (u: User, _token: string) => {
     window.history.replaceState({ page: 'landing' }, '', '/');
     setUser(u);
+    setActiveTab('dashboard');
     setShowLoginModal(false);
     fetchAllData();
   };
@@ -131,6 +132,7 @@ export default function App() {
     localStorage.removeItem('promptflow_token');
     window.history.replaceState({ page: 'landing' }, '', '/');
     setUser(null);
+    setActiveTab('landing');
     setShowLoginModal(false);
   };
 
@@ -161,20 +163,31 @@ export default function App() {
     : papers;
 
   if (!user) {
-    if (showLoginModal) {
-      return <LoginModal onLoginSuccess={handleLoginSuccess} />;
-    }
     return (
-      <LandingPageView 
-        papers={papers}
-        analytics={analytics}
-        onSignInClick={() => {
-          window.history.pushState({ page: 'login' }, '', '/login');
-          setShowLoginModal(true);
-        }} 
-        onGoToConsoleClick={() => {}} 
-        isLoggedIn={user !== null} 
-      />
+      <div className="relative min-h-screen bg-brand-bg">
+        <LandingPageView 
+          papers={papers}
+          analytics={analytics}
+          onSignInClick={() => {
+            window.history.pushState({ page: 'login' }, '', '/login');
+            setShowLoginModal(true);
+          }} 
+          onGoToConsoleClick={() => {
+            window.history.pushState({ page: 'login' }, '', '/login');
+            setShowLoginModal(true);
+          }} 
+          isLoggedIn={false} 
+        />
+        {showLoginModal && (
+          <LoginModal 
+            onLoginSuccess={handleLoginSuccess}
+            onClose={() => {
+              window.history.replaceState({ page: 'landing' }, '', '/');
+              setShowLoginModal(false);
+            }}
+          />
+        )}
+      </div>
     );
   }
 

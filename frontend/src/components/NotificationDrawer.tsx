@@ -159,7 +159,7 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
       </div>
 
       {/* Notification List */}
-      <div className="divide-y divide-brand-border overflow-y-auto max-h-[360px] text-xs">
+      <div className="divide-y divide-brand-border overflow-y-auto max-h-90 text-xs">
         {loading && notifications.length === 0 ? (
           <div className="p-8 text-center text-brand-gray space-y-2">
             <RefreshCw className="w-5 h-5 animate-spin text-brand-cyan mx-auto" />

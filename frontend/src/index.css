@@ -5,9 +5,11 @@
   /* Premium Light Mode variables (Default) */
   --bg-primary: #f8fafc;
   --card-bg: #ffffff;
-  --card-border: #e2e8f0;
+  --card-elevated: #f1f5f9;
+  --card-border: rgba(15, 23, 42, 0.08);
   --text-primary: #0f172a;
   --text-secondary: #475569;
+  --text-muted: #64748b;
   --accent-primary: #4f46e5; /* Premium Indigo Blue */
   --accent-secondary: #0ea5e9; /* Sky Blue */
   --accent-success: #10b981; /* Emerald Green */
@@ -18,17 +20,19 @@
 
 .dark-theme {
   /* Premium Dark Mode variables */
-  --bg-primary: #090d16;
-  --card-bg: #111827;
-  --card-border: #1f2937;
-  --text-primary: #f9fafb;
-  --text-secondary: #9ca3af;
-  --accent-primary: #6366f1; /* Bright Indigo */
-  --accent-secondary: #38bdf8;
+  --bg-primary: #090D16;
+  --card-bg: #101827;
+  --card-elevated: #151C2E;
+  --card-border: rgba(255, 255, 255, 0.08);
+  --text-primary: #F8FAFC;
+  --text-secondary: #CBD5E1;
+  --text-muted: #94A3B8;
+  --accent-primary: #6366F1; /* Primary Accent */
+  --accent-secondary: #38BDF8; /* Secondary Accent */
   --accent-success: #34d399;
   --accent-warning: #fbbf24;
   --alert-bg: #2d2010;
-  --hover-bg: #1f2937;
+  --hover-bg: #1B2438;
 }
 
 @theme {
@@ -37,13 +41,20 @@
   --color-brand-green: var(--accent-success);
   --color-brand-red: var(--accent-warning);
   --color-brand-gray: var(--text-secondary);
+  --color-brand-muted: var(--text-muted);
   --color-brand-bg: var(--bg-primary);
   --color-brand-card: var(--card-bg);
+  --color-brand-elevated: var(--card-elevated);
   --color-brand-border: var(--card-border);
   --color-brand-hover: var(--hover-bg);
   --color-brand-alert-bg: var(--alert-bg);
   
   --color-real-white: #ffffff;
+  
+  --radius-btn: 18px;
+  --radius-input: 16px;
+  --radius-card: 24px;
+  --radius-panel: 32px;
   
   --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
   --font-display: 'Outfit', sans-serif;

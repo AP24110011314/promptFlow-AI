@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
-import { LoginModal } from './components/LoginModal';
+import { LoginPage } from './components/LoginPage';
+import { motion, AnimatePresence } from 'framer-motion';
 import { LandingPageView } from './components/LandingPageView';
 import { DashboardView } from './components/DashboardView';
 import { RepositoryView } from './components/RepositoryView';
@@ -17,7 +18,7 @@ import { ShieldAlert } from 'lucide-react';
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [activeTab, setActiveTab] = useState<string>('dashboard');
-  const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
+  const [currentRoute, setCurrentRoute] = useState<string>(window.location.pathname);
   const [theme, setTheme] = useState<'dark' | 'light'>('light');
   // Sidebar collapsed state removed for horizontal navigation layout
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -43,10 +44,11 @@ export default function App() {
 
     // Handle deep link refresh on /login route
     if (window.location.pathname === '/login') {
-      setShowLoginModal(true);
+      setCurrentRoute('/login');
       window.history.replaceState({ page: 'login' }, '', '/login');
     } else {
-      window.history.replaceState({ page: 'landing' }, '', window.location.pathname + window.location.search);
+      setCurrentRoute('/');
+      window.history.replaceState({ page: 'landing' }, '', '/');
     }
 
     initAuthAndData();
@@ -54,13 +56,8 @@ export default function App() {
 
   // Handle browser back/forward buttons (popstate events)
   useEffect(() => {
-    const handlePopState = (event: PopStateEvent) => {
-      const state = event.state;
-      if (state && state.page === 'login') {
-        setShowLoginModal(true);
-      } else {
-        setShowLoginModal(false);
-      }
+    const handlePopState = () => {
+      setCurrentRoute(window.location.pathname);
     };
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
@@ -68,12 +65,12 @@ export default function App() {
 
   // Clear URL hash fragment when navigating away from the landing page
   useEffect(() => {
-    if (user || showLoginModal) {
+    if (user || currentRoute === '/login') {
       if (window.location.hash) {
         window.history.replaceState(window.history.state, '', window.location.pathname + window.location.search);
       }
     }
-  }, [user, showLoginModal]);
+  }, [user, currentRoute]);
 
   const handleToggleTheme = () => {
     const nextTheme = theme === 'dark' ? 'light' : 'dark';
@@ -92,13 +89,13 @@ export default function App() {
       try {
         const u = await authService.getMe();
         setUser(u);
-        setShowLoginModal(false);
+        if (window.location.pathname === '/login') {
+          window.history.replaceState({ page: 'landing' }, '', '/');
+          setCurrentRoute('/');
+        }
       } catch (err) {
         localStorage.removeItem('promptflow_token');
-        setShowLoginModal(false);
       }
-    } else {
-      setShowLoginModal(false);
     }
     fetchAllData();
   };
@@ -124,7 +121,7 @@ export default function App() {
     window.history.replaceState({ page: 'landing' }, '', '/');
     setUser(u);
     setActiveTab('dashboard');
-    setShowLoginModal(false);
+    setCurrentRoute('/');
     fetchAllData();
   };
 
@@ -133,7 +130,7 @@ export default function App() {
     window.history.replaceState({ page: 'landing' }, '', '/');
     setUser(null);
     setActiveTab('landing');
-    setShowLoginModal(false);
+    setCurrentRoute('/');
   };
 
   const handleSwitchRole = async () => {
@@ -148,8 +145,9 @@ export default function App() {
       }
       fetchAllData();
     } catch (err) {
-      alert("Could not switch role. Please sign in via modal.");
-      setShowLoginModal(true);
+      alert("Could not switch role. Please sign in.");
+      window.history.pushState({ page: 'login' }, '', '/login');
+      setCurrentRoute('/login');
     }
   };
 
@@ -164,30 +162,49 @@ export default function App() {
 
   if (!user) {
     return (
-      <div className="relative min-h-screen bg-brand-bg">
-        <LandingPageView 
-          papers={papers}
-          analytics={analytics}
-          onSignInClick={() => {
-            window.history.pushState({ page: 'login' }, '', '/login');
-            setShowLoginModal(true);
-          }} 
-          onGoToConsoleClick={() => {
-            window.history.pushState({ page: 'login' }, '', '/login');
-            setShowLoginModal(true);
-          }} 
-          isLoggedIn={false} 
-        />
-        {showLoginModal && (
-          <LoginModal 
-            onLoginSuccess={handleLoginSuccess}
-            onClose={() => {
-              window.history.replaceState({ page: 'landing' }, '', '/');
-              setShowLoginModal(false);
-            }}
-          />
+      <AnimatePresence mode="wait">
+        {currentRoute === '/login' ? (
+          <motion.div
+            key="login-page"
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -15 }}
+            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+            className="w-full min-h-screen"
+          >
+            <LoginPage
+              onLoginSuccess={handleLoginSuccess}
+              onBackToLanding={() => {
+                window.history.pushState({ page: 'landing' }, '', '/');
+                setCurrentRoute('/');
+              }}
+            />
+          </motion.div>
+        ) : (
+          <motion.div
+            key="landing-page"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, y: -15 }}
+            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+            className="w-full min-h-screen"
+          >
+            <LandingPageView 
+              papers={papers}
+              analytics={analytics}
+              onSignInClick={() => {
+                window.history.pushState({ page: 'login' }, '', '/login');
+                setCurrentRoute('/login');
+              }} 
+              onGoToConsoleClick={() => {
+                window.history.pushState({ page: 'login' }, '', '/login');
+                setCurrentRoute('/login');
+              }} 
+              isLoggedIn={false} 
+            />
+          </motion.div>
         )}
-      </div>
+      </AnimatePresence>
     );
   }
 

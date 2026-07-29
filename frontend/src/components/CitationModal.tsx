@@ -135,7 +135,7 @@ ${doiField}  department = {${paper.department}}
             >
               {copiedStyle === activeStyle ? (
                 <>
-                  <Check className="w-3.5 h-3.5 stroke-[3]" />
+                  <Check className="w-3.5 h-3.5 stroke-3" />
                   <span>Copied to Clipboard!</span>
                 </>
               ) : (

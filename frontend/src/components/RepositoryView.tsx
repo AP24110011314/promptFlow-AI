@@ -104,7 +104,12 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
       department: selectedDept,
       category: selectedCat,
       year: selectedYear === 'All' ? undefined : parseInt(selectedYear),
-      query: searchQuery || authorQuery || undefined
+      start_year: startYear === 'All' ? undefined : parseInt(startYear),
+      end_year: endYear === 'All' ? undefined : parseInt(endYear),
+      publication_type: selectedType,
+      author: authorQuery,
+      quartile: selectedQuartile,
+      query: searchQuery
     });
   };
 
@@ -113,7 +118,12 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
       department: selectedDept,
       category: selectedCat,
       year: selectedYear === 'All' ? undefined : parseInt(selectedYear),
-      query: searchQuery || authorQuery || undefined
+      start_year: startYear === 'All' ? undefined : parseInt(startYear),
+      end_year: endYear === 'All' ? undefined : parseInt(endYear),
+      publication_type: selectedType,
+      author: authorQuery,
+      quartile: selectedQuartile,
+      query: searchQuery
     });
   };
 

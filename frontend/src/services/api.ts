@@ -112,25 +112,54 @@ export const analyticsService = {
   }
 };
 
+export interface ExportFilters {
+  department?: string;
+  category?: string;
+  year?: number;
+  start_year?: number;
+  end_year?: number;
+  publication_type?: string;
+  author?: string;
+  quartile?: string;
+  query?: string;
+}
+
 const buildExportFilename = (
   prefix: string,
   ext: string,
-  filters?: { department?: string; category?: string; year?: number; query?: string }
+  filters?: ExportFilters
 ): string => {
   const parts: string[] = [prefix];
 
   if (filters?.department && filters.department !== 'All') {
-    parts.push(filters.department.trim().replace(/[^a-zA-Z0-9]+/g, '_'));
+    parts.push(`dept_${filters.department.trim().replace(/[^a-zA-Z0-9]+/g, '_')}`);
   }
   if (filters?.category && filters.category !== 'All') {
-    parts.push(filters.category.trim().replace(/[^a-zA-Z0-9]+/g, '_'));
+    parts.push(`cat_${filters.category.trim().replace(/[^a-zA-Z0-9]+/g, '_')}`);
+  }
+  if (filters?.publication_type && filters.publication_type !== 'All') {
+    parts.push(`type_${filters.publication_type.trim().replace(/[^a-zA-Z0-9]+/g, '_')}`);
+  }
+  if (filters?.author && filters.author.trim()) {
+    parts.push(`author_${filters.author.trim().slice(0, 15).replace(/[^a-zA-Z0-9]+/g, '_')}`);
   }
   if (filters?.year) {
-    parts.push(filters.year.toString());
+    parts.push(`year_${filters.year}`);
+  } else {
+    if (filters?.start_year && filters?.end_year) {
+      parts.push(`years_${filters.start_year}_to_${filters.end_year}`);
+    } else if (filters?.start_year) {
+      parts.push(`from_${filters.start_year}`);
+    } else if (filters?.end_year) {
+      parts.push(`until_${filters.end_year}`);
+    }
+  }
+  if (filters?.quartile && filters.quartile !== 'All') {
+    parts.push(`quartile_${filters.quartile.trim().replace(/[^a-zA-Z0-9]+/g, '_')}`);
   }
   if (filters?.query && filters.query.trim()) {
     const cleanQuery = filters.query.trim().slice(0, 15).replace(/[^a-zA-Z0-9]+/g, '_');
-    parts.push(`q_${cleanQuery}`);
+    parts.push(`search_${cleanQuery}`);
   }
 
   if (parts.length === 1) {
@@ -140,18 +169,23 @@ const buildExportFilename = (
   const now = new Date();
   const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
   const timeStr = now.toTimeString().slice(0, 8).replace(/:/g, '');
-  const randId = Math.floor(100 + Math.random() * 900);
+  const randId = Math.floor(1000 + Math.random() * 9000);
 
   parts.push(`${dateStr}_${timeStr}_${randId}`);
   return `${parts.join('_')}.${ext}`;
 };
 
 export const exportService = {
-  downloadExcel: async (filters?: { department?: string; category?: string; year?: number; query?: string }) => {
+  downloadExcel: async (filters?: ExportFilters) => {
     const params = new URLSearchParams();
     if (filters?.department && filters.department !== 'All') params.append('department', filters.department);
     if (filters?.category && filters.category !== 'All') params.append('category', filters.category);
     if (filters?.year) params.append('year', filters.year.toString());
+    if (filters?.start_year) params.append('start_year', filters.start_year.toString());
+    if (filters?.end_year) params.append('end_year', filters.end_year.toString());
+    if (filters?.publication_type && filters.publication_type !== 'All') params.append('publication_type', filters.publication_type);
+    if (filters?.author && filters.author.trim()) params.append('author', filters.author.trim());
+    if (filters?.quartile && filters.quartile !== 'All') params.append('quartile', filters.quartile);
     if (filters?.query && filters.query.trim()) params.append('query', filters.query.trim());
 
     const res = await api.get(`/export/excel?${params.toString()}`, { responseType: 'blob' });
@@ -165,11 +199,16 @@ export const exportService = {
     link.remove();
     window.URL.revokeObjectURL(url);
   },
-  downloadPdf: async (filters?: { department?: string; category?: string; year?: number; query?: string }) => {
+  downloadPdf: async (filters?: ExportFilters) => {
     const params = new URLSearchParams();
     if (filters?.department && filters.department !== 'All') params.append('department', filters.department);
     if (filters?.category && filters.category !== 'All') params.append('category', filters.category);
     if (filters?.year) params.append('year', filters.year.toString());
+    if (filters?.start_year) params.append('start_year', filters.start_year.toString());
+    if (filters?.end_year) params.append('end_year', filters.end_year.toString());
+    if (filters?.publication_type && filters.publication_type !== 'All') params.append('publication_type', filters.publication_type);
+    if (filters?.author && filters.author.trim()) params.append('author', filters.author.trim());
+    if (filters?.quartile && filters.quartile !== 'All') params.append('quartile', filters.quartile);
     if (filters?.query && filters.query.trim()) params.append('query', filters.query.trim());
 
     const res = await api.get(`/export/pdf?${params.toString()}`, { responseType: 'blob' });

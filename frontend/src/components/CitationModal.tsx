@@ -80,15 +80,15 @@ ${doiField}  department = {${paper.department}}
         
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-200 pb-4">
-          <div className="flex items-center space-x-3">
-            <div className="w-9 h-9 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold border border-blue-100">
-              <Quote className="w-4 h-4" />
+          <div className="flex items-center space-x-3.5">
+            <div className="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold border border-blue-100">
+              <Quote className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+              <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
                 <span>Cite Research Paper</span>
               </h3>
-              <p className="text-xs text-slate-500 truncate max-w-md">{paper.title}</p>
+              <p className="text-xs sm:text-sm text-slate-500 truncate max-w-md">{paper.title}</p>
             </div>
           </div>
 
@@ -96,7 +96,7 @@ ${doiField}  department = {${paper.department}}
             onClick={onClose}
             className="p-2 rounded-lg bg-slate-50 text-slate-500 hover:text-slate-900 border border-slate-200 transition-colors cursor-pointer"
           >
-            <X className="w-4 h-4" />
+            <X className="w-5 h-5" />
           </button>
         </div>
 
@@ -106,7 +106,7 @@ ${doiField}  department = {${paper.department}}
             <button
               key={style}
               onClick={() => setActiveStyle(style)}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+              className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all cursor-pointer ${
                 activeStyle === style
                   ? 'bg-blue-600 text-white shadow-2xs'
                   : 'bg-slate-50 text-slate-600 hover:text-slate-900 border border-slate-200'
@@ -117,17 +117,17 @@ ${doiField}  department = {${paper.department}}
           ))}
         </div>
 
-        {/* Citation Text Box - Pure White, Clean Neutral Border */}
+        {/* Citation Text Box */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
-              <BookOpen className="w-3.5 h-3.5 text-blue-600" />
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
+              <BookOpen className="w-4 h-4 text-blue-600" />
               <span>{activeStyle} Citation String</span>
             </span>
 
             <button
               onClick={() => handleCopy(activeStyle)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1.5 transition-all cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1.5 transition-all cursor-pointer ${
                 copiedStyle === activeStyle
                   ? 'bg-emerald-600 text-white'
                   : 'watt-btn-secondary'
@@ -135,19 +135,19 @@ ${doiField}  department = {${paper.department}}
             >
               {copiedStyle === activeStyle ? (
                 <>
-                  <Check className="w-3.5 h-3.5 stroke-3" />
+                  <Check className="w-4 h-4 stroke-3" />
                   <span>Copied!</span>
                 </>
               ) : (
                 <>
-                  <Copy className="w-3.5 h-3.5" />
+                  <Copy className="w-4 h-4" />
                   <span>Copy {activeStyle}</span>
                 </>
               )}
             </button>
           </div>
 
-          <pre className="w-full p-4 rounded-lg bg-white border border-slate-200 text-xs text-slate-800 whitespace-pre-wrap font-mono leading-relaxed overflow-x-auto selection:bg-blue-600 selection:text-white shadow-2xs">
+          <pre className="w-full p-4.5 rounded-lg bg-white border border-slate-200 text-sm text-slate-800 whitespace-pre-wrap font-mono leading-relaxed overflow-x-auto selection:bg-blue-600 selection:text-white shadow-2xs">
             {getCitationText(activeStyle)}
           </pre>
         </div>

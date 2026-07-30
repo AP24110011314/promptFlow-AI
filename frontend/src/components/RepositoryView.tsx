@@ -195,19 +195,19 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
           <button
             onClick={handleExportExcel}
             title="Download Excel (.xlsx) Spreadsheet"
-            className="watt-btn-secondary"
+            className="px-3.5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs transition-all shadow-2xs cursor-pointer flex items-center gap-1.5"
           >
-            <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-600" />
-            <span>Excel</span>
+            <FileSpreadsheet className="w-4 h-4 text-white stroke-[2.5]" />
+            <span>Excel Export</span>
           </button>
 
           <button
             onClick={handleExportPdf}
             title="Download Formatted PDF Report"
-            className="watt-btn-secondary"
+            className="px-3.5 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs transition-all shadow-2xs cursor-pointer flex items-center gap-1.5"
           >
-            <FileText className="w-3.5 h-3.5 text-blue-600" />
-            <span>PDF</span>
+            <FileText className="w-4 h-4 text-white stroke-[2.5]" />
+            <span>PDF Export</span>
           </button>
 
           <button
@@ -230,13 +230,13 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
             
             {/* Search Bar */}
             <div className="relative">
-              <Search className="absolute left-3 top-2.5 w-4 h-4 text-slate-400" />
+              <Search className="absolute left-3 top-3 w-4 h-4 text-slate-400" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => handleSetSearchQuery(e.target.value)}
                 placeholder="Search title, abstract..."
-                className="w-full pl-9 pr-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 placeholder-slate-400 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all"
+                className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all"
               />
             </div>
 
@@ -245,7 +245,7 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
               <select
                 value={selectedDept}
                 onChange={(e) => handleSetSelectedDept(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all cursor-pointer"
+                className="w-full px-3 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all cursor-pointer"
               >
                 {departments.map((dept) => (
                   <option key={dept} value={dept}>Dept: {dept}</option>
@@ -258,7 +258,7 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
               <select
                 value={selectedCat}
                 onChange={(e) => handleSetSelectedCat(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all cursor-pointer"
+                className="w-full px-3 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all cursor-pointer"
               >
                 <option value="All">Category: All Topics</option>
                 {categories.map((cat) => (
@@ -272,7 +272,7 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
               <select
                 value={selectedType}
                 onChange={(e) => handleSetSelectedType(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all cursor-pointer"
+                className="w-full px-3 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all cursor-pointer"
               >
                 {pubTypes.map((type) => (
                   <option key={type} value={type}>Type: {type}</option>
@@ -285,7 +285,7 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
               <select
                 value={selectedQuartile}
                 onChange={(e) => handleSetSelectedQuartile(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all cursor-pointer"
+                className="w-full px-3 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all cursor-pointer"
               >
                 <option value="All">Quartile: All</option>
                 <option value="Q1">Quartile: Q1</option>
@@ -301,13 +301,13 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-4 gap-3.5 pt-2 border-t border-slate-200">
             {/* Author Specific Search */}
             <div className="relative">
-              <Users className="absolute left-3 top-2.5 w-4 h-4 text-slate-400" />
+              <Users className="absolute left-3 top-3 w-4 h-4 text-slate-400" />
               <input
                 type="text"
                 value={authorQuery}
                 onChange={(e) => handleSetAuthorQuery(e.target.value)}
                 placeholder="Search by Author Name..."
-                className="w-full pl-9 pr-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 placeholder-slate-400 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all"
+                className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all"
               />
             </div>
 
@@ -316,7 +316,7 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
               <select
                 value={selectedYear}
                 onChange={(e) => handleSetSelectedYear(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all cursor-pointer"
+                className="w-full px-3 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all cursor-pointer"
               >
                 <option value="All">Specific Year: All</option>
                 {years.filter(y => y !== 'All').map((year) => (
@@ -331,7 +331,7 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
                 disabled={selectedYear !== 'All'}
                 value={startYear}
                 onChange={(e) => handleSetStartYear(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all cursor-pointer disabled:opacity-40"
+                className="w-full px-3 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all cursor-pointer disabled:opacity-40"
               >
                 <option value="All">Start Year: All</option>
                 {years.filter(y => y !== 'All').slice().reverse().map((year) => (
@@ -346,7 +346,7 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
                 disabled={selectedYear !== 'All'}
                 value={endYear}
                 onChange={(e) => handleSetEndYear(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all cursor-pointer disabled:opacity-40"
+                className="w-full px-3 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all cursor-pointer disabled:opacity-40"
               >
                 <option value="All">End Year: All</option>
                 {years.filter(y => y !== 'All').map((year) => (
@@ -357,7 +357,7 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
           </div>
 
           {/* Clear / Showing stats */}
-          <div className="flex items-center justify-between text-xs text-slate-500 pt-2 border-t border-slate-200">
+          <div className="flex items-center justify-between text-sm text-slate-500 pt-2 border-t border-slate-200">
             <span>Showing <strong className="text-slate-900 font-mono">{filteredPapers.length}</strong> research publications</span>
             {(searchQuery || authorQuery || selectedDept !== 'All' || selectedCat !== 'All' || selectedYear !== 'All' || selectedType !== 'All' || startYear !== 'All' || endYear !== 'All' || selectedQuartile !== 'All') && (
               <button
@@ -373,7 +373,7 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
                   setSelectedQuartile('All');
                   setCurrentPage(1);
                 }}
-                className="text-blue-600 hover:underline font-semibold cursor-pointer text-xs"
+                className="text-blue-600 hover:underline font-semibold cursor-pointer text-sm"
               >
                 Reset All Filters
               </button>
@@ -390,48 +390,48 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
             <div className="py-12 text-center">
               <BookOpen className="w-12 h-12 text-slate-400 mx-auto mb-3" />
               <h3 className="text-base font-semibold text-slate-900">No research papers match your query</h3>
-              <p className="text-xs text-slate-500 mt-1">Try adjusting your filters or search terms.</p>
+              <p className="text-sm text-slate-500 mt-1">Try adjusting your filters or search terms.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4.5">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
               {filteredPapers.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((paper) => (
                 <div
                   key={paper.id}
                   onClick={() => onSelectPaper(paper)}
-                  className="watt-card p-5 cursor-pointer flex flex-col justify-between group bg-white border border-slate-200/80 hover:border-slate-300 hover:shadow-md transition-all"
+                  className="watt-card p-6 cursor-pointer flex flex-col justify-between group bg-white border border-slate-200/80 hover:border-slate-300 hover:shadow-md transition-all"
                 >
                   <div>
                     {/* Header Metadata Row: Clean Flat Text (No Pills) */}
-                    <div className="flex items-center justify-between gap-2 text-xs">
-                      <div className="flex items-center space-x-1.5 truncate text-slate-700 font-semibold">
+                    <div className="flex items-center justify-between gap-2 text-sm">
+                      <div className="flex items-center space-x-2 truncate text-slate-700 font-semibold">
                         <span>{paper.department || 'General'}</span>
                         <span className="text-slate-300">•</span>
                         <span className="text-slate-500 font-normal">{paper.publication_type || 'Journal'}</span>
                       </div>
-                      <span className="text-xs font-mono text-slate-500 font-semibold shrink-0">
+                      <span className="text-sm font-mono text-slate-500 font-semibold shrink-0">
                         {paper.publication_year}
                       </span>
                     </div>
 
-                    <h3 className="text-xs sm:text-sm font-bold text-slate-900 mt-3 group-hover:text-blue-600 transition-colors line-clamp-2 leading-snug">
+                    <h3 className="text-sm sm:text-base font-bold text-slate-900 mt-3 group-hover:text-blue-600 transition-colors line-clamp-2 leading-snug">
                       {paper.title}
                     </h3>
 
-                    <p className="text-xs text-slate-600 mt-2 line-clamp-3 bg-slate-50 p-2.5 rounded-lg border border-slate-200/80 leading-relaxed font-normal">
+                    <p className="text-sm text-slate-600 mt-2.5 line-clamp-3 bg-slate-50 p-3 rounded-lg border border-slate-200/80 leading-relaxed font-normal">
                       {paper.ai_summary || paper.abstract || 'No summary available.'}
                     </p>
 
                     {/* Category Tags: Clean Flat Metadata (No Pills) */}
                     <div className="flex flex-wrap gap-2 mt-3 text-xs text-slate-500 font-medium">
                       {(paper.categories_list || []).slice(0, 3).map((tag, idx) => (
-                        <span key={idx} className="text-slate-500 font-normal">
+                        <span key={idx} className="text-slate-500 font-medium border border-slate-200 px-2 py-0.5 rounded-md">
                           #{tag}
                         </span>
                       ))}
                     </div>
                   </div>
 
-                  <div className="mt-4 pt-3 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500">
+                  <div className="mt-4 pt-3.5 border-t border-slate-200 flex items-center justify-between text-sm text-slate-500">
                     <div 
                       onClick={(e) => {
                         if (onSelectAuthor && paper.authors_raw) {
@@ -443,11 +443,11 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
                       className="flex items-center space-x-1.5 truncate max-w-[65%] hover:text-blue-600 transition-colors cursor-pointer"
                       title="View Author Profile & Analytics"
                     >
-                      <Users className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                      <Users className="w-4 h-4 text-blue-600 shrink-0" />
                       <span className="truncate hover:underline text-slate-700 font-medium">{paper.authors_raw || 'College Faculty'}</span>
                     </div>
 
-                    <div className="flex items-center space-x-1 text-blue-600 font-semibold text-xs shrink-0 group-hover:translate-x-0.5 transition-transform">
+                    <div className="flex items-center space-x-1 text-blue-600 font-semibold text-sm shrink-0 group-hover:translate-x-0.5 transition-transform">
                       <span>View Details</span>
                     </div>
                   </div>

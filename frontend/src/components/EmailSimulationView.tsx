@@ -25,21 +25,21 @@ export const EmailSimulationView: React.FC<EmailSimulationViewProps> = ({
 
   const presets = [
     {
-      title: '🧪 Preset 1: Nanotechnology Paper (High Confidence)',
+      title: 'Preset 1: Nanotechnology Paper (High Confidence)',
       sender: 'prof.curie@college.edu',
       subject: 'Publication: Novel Graphene Oxide Nanosheets for Targeted Drug Delivery',
       body: "Abstract: We report the synthesis of functionalized graphene oxide nanosheets conjugated with biocompatible polymers for targeted oncology drug delivery. Our in-vitro assay demonstrates 98% encapsulation efficiency and pH-triggered controlled release, minimizing cytotoxicity in healthy tissue cultures.\n\nKeywords: Nanotechnology, Biomaterials, Drug Delivery, Oncology\nAuthors: Dr. Marie Curie, Prof. Robert Langdon",
       dept: 'Chemistry'
     },
     {
-      title: '🤖 Preset 2: AI & LLM Paper (High Confidence)',
+      title: 'Preset 2: AI & LLM Paper (High Confidence)',
       sender: 'dr.vance@college.edu',
       subject: 'Research Submission: Reinforcement Learning in Multi-Agent Transformer Architectures',
       body: "Abstract: We propose an asynchronous reinforcement learning algorithm for coordinating multi-agent transformer networks in complex simulation environments. Experimental benchmarks reveal a 40% gain in task completion speed and zero communication bottlenecks compared to decentralized baselines.\n\nKeywords: Artificial Intelligence, Deep Learning, Reinforcement Learning, Multi-Agent\nAuthors: Dr. Eleanor Vance, Dr. Aravind Patel",
       dept: 'Computer Science'
     },
     {
-      title: '🚫 Preset 3: Routine Meeting Spam (Rejected by ML Classifier)',
+      title: 'Preset 3: Routine Meeting Spam (Rejected by ML Classifier)',
       sender: 'hr.admin@college.edu',
       subject: 'Reminder: Mandatory Faculty Department Meeting Tomorrow at 3 PM',
       body: "Please note that our monthly general faculty assembly is scheduled for tomorrow afternoon in Conference Room B. We will discuss semester grading deadlines, campus Wi-Fi maintenance schedules, and budget allocations for printer stationery supplies. Attendance is required.",
@@ -83,13 +83,13 @@ export const EmailSimulationView: React.FC<EmailSimulationViewProps> = ({
             <Mail className="w-6 h-6 text-blue-600" />
             <span>Email Ingestion &amp; Classification Sandbox</span>
           </h1>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-sm text-slate-500 mt-1">
             Simulate incoming professor publication emails to test TF-IDF + Multinomial Naive Bayes classification.
           </p>
         </div>
 
         <div className="flex items-center space-x-2 shrink-0">
-          <span className="text-blue-600 font-bold uppercase tracking-wider text-[10px]">
+          <span className="text-blue-600 font-bold uppercase tracking-wider text-xs border border-blue-200 bg-blue-50 px-2.5 py-1 rounded-md">
             ML PIPELINE ONLINE
           </span>
         </div>
@@ -106,24 +106,24 @@ export const EmailSimulationView: React.FC<EmailSimulationViewProps> = ({
                 <Send className="w-4 h-4 text-blue-600" />
                 <span>Compose Inbound Email Payload</span>
               </h2>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <p className="text-sm text-slate-500 mt-0.5">
                 Pick a preset or type custom text to test our scikit-learn relevance classifier in real-time.
               </p>
             </div>
 
             {/* Presets */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
               {presets.map((p, idx) => (
                 <button
                   key={idx}
                   type="button"
                   onClick={() => loadPreset(p)}
-                  className="p-2.5 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 text-left transition-all group cursor-pointer"
+                  className="p-3 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 text-left transition-all group cursor-pointer"
                 >
-                  <span className="text-[11px] font-semibold text-slate-900 group-hover:text-blue-600 block truncate">
+                  <span className="text-xs font-bold text-slate-900 group-hover:text-blue-600 block truncate">
                     {p.title}
                   </span>
-                  <span className="text-[10px] text-slate-500 block truncate mt-0.5">{p.dept}</span>
+                  <span className="text-xs text-slate-500 block truncate mt-0.5">{p.dept}</span>
                 </button>
               ))}
             </div>
@@ -131,13 +131,13 @@ export const EmailSimulationView: React.FC<EmailSimulationViewProps> = ({
             <form onSubmit={handleSimulate} className="space-y-3.5 pt-2 border-t border-slate-200">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 <div>
-                  <label className="block text-xs font-medium text-slate-600 mb-1">Sender Email</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Sender Email</label>
                   <input
                     type="email"
                     required
                     value={sender}
                     onChange={(e) => setSender(e.target.value)}
-                    className="w-full px-3.5 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20"
+                    className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20"
                   />
                 </div>
                 <div>

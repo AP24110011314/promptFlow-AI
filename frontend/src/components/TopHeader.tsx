@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Bell, HelpCircle, Sun, Moon, RefreshCw, User as UserIcon, LogOut, UserCheck, X, Check, PanelLeft, PanelLeftClose } from 'lucide-react';
+import { Search, Bell, HelpCircle, Sun, Moon, User as UserIcon, LogOut, UserCheck, X, Check, PanelLeft, PanelLeftClose } from 'lucide-react';
 import type { User } from '../types';
 import { authService, notificationService } from '../services/api';
 import { HelpModal } from './HelpModal';
@@ -9,7 +9,6 @@ interface TopHeaderProps {
   user: User | null;
   theme: 'dark' | 'light';
   onToggleTheme: () => void;
-  onSwitchRole: () => void;
   onSearch?: (query: string) => void;
   searchPlaceholder?: string;
   onLogout?: () => void;
@@ -23,7 +22,6 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
   user,
   theme,
   onToggleTheme,
-  onSwitchRole,
   onSearch,
   searchPlaceholder = 'Search research papers, authors, departments...',
   onLogout,
@@ -135,18 +133,6 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
           )}
         </button>
 
-        {/* Quick RBAC Switcher */}
-        {user && (
-          <button
-            onClick={onSwitchRole}
-            title="Switch Role (Test Admin vs Faculty)"
-            className="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 text-xs font-medium text-slate-700 hover:text-slate-900 transition-colors cursor-pointer"
-          >
-            <RefreshCw className="w-3.5 h-3.5 text-blue-600" />
-            <span>Switch Role</span>
-          </button>
-        )}
-
         {/* Notifications & Help */}
         <div className="relative">
           <button
@@ -173,7 +159,6 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
         >
           <HelpCircle className="w-4 h-4 text-slate-500 hover:text-blue-600 transition-colors" />
         </button>
-
 
         {/* User Profile Badge & Dropdown */}
         {user ? (
@@ -214,13 +199,6 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
                   >
                     <UserCheck className="w-4 h-4 text-blue-600 shrink-0" />
                     <span>Edit Profile Settings</span>
-                  </button>
-                  <button
-                    onClick={() => { setShowDropdown(false); onSwitchRole(); }}
-                    className="w-full px-4 py-2 text-left text-xs font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-50 flex items-center space-x-2.5 transition-colors cursor-pointer"
-                  >
-                    <RefreshCw className="w-4 h-4 text-emerald-600 shrink-0" />
-                    <span>Switch Role ({user.role === 'admin' ? 'Faculty' : 'Admin'})</span>
                   </button>
                 </div>
 

@@ -268,13 +268,13 @@ export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
             </div>
 
 
-            {/* AI Summary - Clean Box (No Left Glow Border) */}
+            {/* AI Summary */}
             <div className="mt-5 p-4.5 rounded-lg bg-white border border-slate-200">
               <div className="flex items-center space-x-2 text-xs font-bold text-blue-600 mb-2">
                 <Sparkles className="w-4 h-4 text-blue-600" />
                 <span>AI Extractive Summary (NLP Sentence Scoring)</span>
               </div>
-              <p className="text-xs sm:text-sm text-slate-800 leading-relaxed italic font-sans">
+              <p className="text-sm text-slate-800 leading-relaxed italic font-sans">
                 “{currentPaper.ai_summary || currentPaper.abstract}”
               </p>
             </div>
@@ -282,23 +282,23 @@ export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
             {/* Full Abstract */}
             <div className="mt-5">
               <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Full Abstract</h4>
-              <p className="text-xs sm:text-sm text-slate-700 leading-relaxed bg-slate-50 p-4 rounded-lg border border-slate-200 font-sans">
+              <p className="text-sm text-slate-700 leading-relaxed bg-slate-50 p-4 rounded-lg border border-slate-200 font-sans">
                 {currentPaper.abstract || 'No abstract text available for this paper.'}
               </p>
             </div>
 
             {/* Metadata Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-5 text-xs">
-              <div className="p-3 rounded-lg bg-slate-50 border border-slate-200">
-                <span className="text-slate-500 block text-[10px] uppercase font-bold tracking-wider">Journal / Conference</span>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3.5 mt-5 text-sm">
+              <div className="p-3.5 rounded-lg bg-slate-50 border border-slate-200">
+                <span className="text-slate-500 block text-xs uppercase font-bold tracking-wider">Journal / Conference</span>
                 <span className="text-slate-900 font-semibold truncate block mt-1">{currentPaper.journal_or_conference || 'N/A'}</span>
               </div>
-              <div className="p-3 rounded-lg bg-slate-50 border border-slate-200">
-                <span className="text-slate-500 block text-[10px] uppercase font-bold tracking-wider">DOI / Identifier</span>
+              <div className="p-3.5 rounded-lg bg-slate-50 border border-slate-200">
+                <span className="text-slate-500 block text-xs uppercase font-bold tracking-wider">DOI / Identifier</span>
                 <span className="text-slate-900 font-semibold truncate block mt-1">{currentPaper.doi || 'N/A'}</span>
               </div>
-              <div className="p-3 rounded-lg bg-slate-50 border border-slate-200">
-                <span className="text-slate-500 block text-[10px] uppercase font-bold tracking-wider">External Link</span>
+              <div className="p-3.5 rounded-lg bg-slate-50 border border-slate-200">
+                <span className="text-slate-500 block text-xs uppercase font-bold tracking-wider">External Link</span>
                 {currentPaper.paper_url ? (
                   <a
                     href={currentPaper.paper_url}
@@ -307,7 +307,7 @@ export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
                     className="text-blue-600 hover:underline font-semibold truncate block mt-1 flex items-center space-x-1"
                   >
                     <span>Visit Publication</span>
-                    <ExternalLink className="w-3.5 h-3.5 shrink-0" />
+                    <ExternalLink className="w-4 h-4 shrink-0" />
                   </a>
                 ) : (
                   <button
@@ -322,10 +322,10 @@ export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
 
             {/* Tags - Flat Metadata Text (No Pills) */}
             <div className="mt-5">
-              <span className="text-xs font-semibold text-slate-500 block mb-2">Assigned Research Categories:</span>
+              <span className="text-xs font-bold text-slate-600 uppercase tracking-wider block mb-2">Assigned Research Categories:</span>
               <div className="flex flex-wrap gap-2 text-xs">
                 {(currentPaper.categories_list || []).map((tag, idx) => (
-                  <span key={idx} className="text-slate-600 font-normal">
+                  <span key={idx} className="text-slate-600 font-medium border border-slate-200 px-2 py-0.5 rounded-md">
                     #{tag}
                   </span>
                 ))}

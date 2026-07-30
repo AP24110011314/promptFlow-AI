@@ -126,27 +126,27 @@ export const AdminPanelView: React.FC<AdminPanelViewProps> = ({
               </div>
             )}
 
-            <form onSubmit={handleCreateCategory} className="space-y-3 pt-2 border-t border-slate-200">
+            <form onSubmit={handleCreateCategory} className="space-y-3.5 pt-2 border-t border-slate-200">
               <div>
-                <label className="block text-xs font-medium text-slate-600 mb-1">New Category Name</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">New Category Name</label>
                 <input
                   type="text"
                   required
                   value={newCatName}
                   onChange={(e) => setNewCatName(e.target.value)}
                   placeholder="e.g., Space Robotics, Astrobiology, 7G Networks..."
-                  className="w-full px-3.5 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 placeholder:text-slate-400 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20"
+                  className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 placeholder:text-slate-400 text-sm focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-600 mb-1">Description / Keywords Hint</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Description / Keywords Hint</label>
                 <input
                   type="text"
                   value={newCatDesc}
                   onChange={(e) => setNewCatDesc(e.target.value)}
                   placeholder="Brief description of this research area..."
-                  className="w-full px-3.5 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 placeholder:text-slate-400 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20"
+                  className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 placeholder:text-slate-400 text-sm focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20"
                 />
               </div>
 
@@ -162,20 +162,20 @@ export const AdminPanelView: React.FC<AdminPanelViewProps> = ({
 
             {/* List of Custom & Default Categories */}
             <div className="pt-3 border-t border-slate-200">
-              <span className="text-xs font-semibold text-slate-500 block mb-2.5">Active System Categories ({categories.length}):</span>
+              <span className="text-xs font-bold text-slate-600 uppercase tracking-wider block mb-2.5">Active System Categories ({categories.length}):</span>
               <div className="max-h-52 overflow-y-auto space-y-1.5 pr-1">
                 {categories.map((cat) => (
-                  <div key={cat.id} className="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 border border-slate-200 text-xs">
+                  <div key={cat.id} className="flex items-center justify-between p-3 rounded-lg bg-slate-50 border border-slate-200 text-sm">
                     <div>
-                      <span className="font-semibold text-slate-900 flex items-center space-x-1.5">
+                      <span className="font-semibold text-slate-900 flex items-center space-x-2">
                         <span>#{cat.name}</span>
                         {cat.is_custom && (
-                          <span className="text-[10px] font-semibold text-blue-600 font-mono">
+                          <span className="text-xs font-semibold text-blue-600 font-mono border border-blue-200 bg-blue-50 px-1.5 py-0.2 rounded-md">
                             Custom
                           </span>
                         )}
                       </span>
-                      {cat.description && <span className="text-slate-500 text-[11px] block mt-0.5">{cat.description}</span>}
+                      {cat.description && <span className="text-slate-500 text-xs block mt-0.5">{cat.description}</span>}
                     </div>
                     {cat.is_custom && (
                       <button
@@ -183,7 +183,7 @@ export const AdminPanelView: React.FC<AdminPanelViewProps> = ({
                         className="p-1 rounded-md text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
                         title="Remove custom category"
                       >
-                        <Trash2 className="w-3.5 h-3.5" />
+                        <Trash2 className="w-4 h-4" />
                       </button>
                     )}
                   </div>
@@ -204,22 +204,22 @@ export const AdminPanelView: React.FC<AdminPanelViewProps> = ({
                 <Cpu className="w-4 h-4 text-blue-600" />
                 <span>Classification Engine Control</span>
               </h2>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <p className="text-sm text-slate-500 mt-0.5">
                 Retrain categorization and relevance predictors on current database publications.
               </p>
             </div>
 
-            <div className="p-3.5 rounded-lg bg-slate-50 border border-slate-200 space-y-2 text-xs">
+            <div className="p-3.5 rounded-lg bg-slate-50 border border-slate-200 space-y-2 text-sm">
               <div className="flex items-center justify-between">
                 <span className="text-slate-500">Relevance Filter:</span>
                 <span className="text-emerald-600 font-semibold flex items-center">
-                  <CheckCircle2 className="w-3.5 h-3.5 mr-1" /> Active
+                  <CheckCircle2 className="w-4 h-4 mr-1" /> Active
                 </span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-slate-500">Department Predictor:</span>
                 <span className="text-emerald-600 font-semibold flex items-center">
-                  <CheckCircle2 className="w-3.5 h-3.5 mr-1" /> Active
+                  <CheckCircle2 className="w-4 h-4 mr-1" /> Active
                 </span>
               </div>
               <div className="flex items-center justify-between">
@@ -229,7 +229,7 @@ export const AdminPanelView: React.FC<AdminPanelViewProps> = ({
             </div>
 
             {retrainMsg && (
-              <div className="bg-emerald-50 text-emerald-800 border border-emerald-200 p-3 rounded-lg flex items-center space-x-2 text-xs">
+              <div className="bg-emerald-50 text-emerald-800 border border-emerald-200 p-3.5 rounded-lg flex items-center space-x-2 text-sm font-medium">
                 <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600" />
                 <span>{retrainMsg}</span>
               </div>
@@ -241,7 +241,7 @@ export const AdminPanelView: React.FC<AdminPanelViewProps> = ({
               disabled={retraining}
               className="w-full watt-btn-secondary"
             >
-              <RefreshCw className={`w-3.5 h-3.5 text-blue-600 ${retraining ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`w-4 h-4 text-blue-600 ${retraining ? 'animate-spin' : ''}`} />
               <span>{retraining ? 'Retraining Models on Database Corpus...' : 'Retrain Scikit-Learn ML Models Now'}</span>
             </button>
           </div>
@@ -254,43 +254,43 @@ export const AdminPanelView: React.FC<AdminPanelViewProps> = ({
                   <Users className="w-4 h-4 text-blue-600" />
                   <span>Registered College Users &amp; Roles</span>
                 </h2>
-                <p className="text-xs text-slate-500 mt-0.5">
+                <p className="text-sm text-slate-500 mt-0.5">
                   RBAC overview of faculty and administrative staff accounts
                 </p>
               </div>
               <button
                 onClick={fetchUsers}
-                className="p-1.5 rounded-lg bg-slate-50 text-slate-500 hover:text-slate-900 border border-slate-200 cursor-pointer"
+                className="p-2 rounded-lg bg-slate-50 text-slate-500 hover:text-slate-900 border border-slate-200 cursor-pointer"
                 title="Refresh Users"
               >
-                <RefreshCw className={`w-3.5 h-3.5 ${loadingUsers ? 'animate-spin' : ''}`} />
+                <RefreshCw className={`w-4 h-4 ${loadingUsers ? 'animate-spin' : ''}`} />
               </button>
             </div>
 
             <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse text-xs">
+              <table className="w-full text-left border-collapse text-sm">
                 <thead>
-                  <tr className="border-b border-slate-200 text-slate-500 uppercase font-semibold text-[10px]">
-                    <th className="py-2.5 px-3">Name &amp; Email</th>
-                    <th className="py-2.5 px-3">Role</th>
-                    <th className="py-2.5 px-3">Department</th>
-                    <th className="py-2.5 px-3">Status</th>
+                  <tr className="border-b border-slate-200 text-slate-600 uppercase font-bold text-xs">
+                    <th className="py-3 px-3">Name &amp; Email</th>
+                    <th className="py-3 px-3">Role</th>
+                    <th className="py-3 px-3">Department</th>
+                    <th className="py-3 px-3">Status</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 text-slate-900">
                   {users.map((u) => (
                     <tr key={u.id} className="hover:bg-slate-50/80 transition-colors">
-                      <td className="py-2.5 px-3">
+                      <td className="py-3.5 px-3">
                         <span className="font-bold text-slate-900 block">{u.full_name}</span>
-                        <span className="text-[11px] text-slate-500">{u.email}</span>
+                        <span className="text-xs text-slate-500">{u.email}</span>
                       </td>
-                      <td className="py-2.5 px-3">
+                      <td className="py-3.5 px-3">
                         <span className="uppercase font-semibold text-slate-700 text-xs tracking-wider">
                           {u.role}
                         </span>
                       </td>
-                      <td className="py-2.5 px-3 text-slate-500">{u.department}</td>
-                      <td className="py-2.5 px-3">
+                      <td className="py-3.5 px-3 text-slate-600">{u.department}</td>
+                      <td className="py-3.5 px-3">
                         <span className="font-semibold text-emerald-600 text-xs">
                           Active
                         </span>

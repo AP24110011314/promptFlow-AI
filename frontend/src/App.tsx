@@ -19,8 +19,6 @@ export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [currentRoute, setCurrentRoute] = useState<string>(window.location.pathname);
-  const [theme, setTheme] = useState<'dark' | 'light'>('light');
-  // Sidebar collapsed state removed for horizontal navigation layout
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   // Data state
@@ -31,17 +29,7 @@ export default function App() {
   const [selectedPaper, setSelectedPaper] = useState<ResearchPaper | null>(null);
   const [selectedAuthor, setSelectedAuthor] = useState<string | null>(null);
 
-
   useEffect(() => {
-    const savedTheme = localStorage.getItem('promptflow_theme') as 'dark' | 'light' | null;
-    const initialTheme = savedTheme || 'light';
-    setTheme(initialTheme);
-    if (initialTheme === 'dark') {
-      document.documentElement.classList.add('dark-theme');
-    } else {
-      document.documentElement.classList.remove('dark-theme');
-    }
-
     // Handle deep link refresh on /login route
     if (window.location.pathname === '/login') {
       setCurrentRoute('/login');
@@ -53,35 +41,6 @@ export default function App() {
 
     initAuthAndData();
   }, []);
-
-  // Handle browser back/forward buttons (popstate events)
-  useEffect(() => {
-    const handlePopState = () => {
-      setCurrentRoute(window.location.pathname);
-    };
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, []);
-
-  // Clear URL hash fragment when navigating away from the landing page
-  useEffect(() => {
-    if (user || currentRoute === '/login') {
-      if (window.location.hash) {
-        window.history.replaceState(window.history.state, '', window.location.pathname + window.location.search);
-      }
-    }
-  }, [user, currentRoute]);
-
-  const handleToggleTheme = () => {
-    const nextTheme = theme === 'dark' ? 'light' : 'dark';
-    setTheme(nextTheme);
-    localStorage.setItem('promptflow_theme', nextTheme);
-    if (nextTheme === 'dark') {
-      document.documentElement.classList.add('dark-theme');
-    } else {
-      document.documentElement.classList.remove('dark-theme');
-    }
-  };
 
   const initAuthAndData = async () => {
     const token = localStorage.getItem('promptflow_token');
@@ -131,24 +90,6 @@ export default function App() {
     setUser(null);
     setActiveTab('landing');
     setCurrentRoute('/');
-  };
-
-  const handleSwitchRole = async () => {
-    const targetEmail = user?.role === 'admin' ? 'faculty@college.edu' : 'admin@college.edu';
-    const targetPass = user?.role === 'admin' ? 'faculty123' : 'admin123';
-    try {
-      const res = await authService.login(targetEmail, targetPass);
-      localStorage.setItem('promptflow_token', res.access_token);
-      setUser(res.user);
-      if (res.user.role !== 'admin' && (activeTab === 'admin' || activeTab === 'simulation')) {
-        setActiveTab('dashboard');
-      }
-      fetchAllData();
-    } catch (err) {
-      alert("Could not switch role. Please sign in.");
-      window.history.pushState({ page: 'login' }, '', '/login');
-      setCurrentRoute('/login');
-    }
   };
 
   // Filter papers if searchQuery is entered
@@ -216,9 +157,6 @@ export default function App() {
         user={user}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
-        theme={theme}
-        onToggleTheme={handleToggleTheme}
-        onSwitchRole={handleSwitchRole}
         onSearch={(q) => setSearchQuery(q)}
         onLogout={handleLogout}
         onUserUpdate={(u) => setUser(u)}
@@ -289,7 +227,10 @@ export default function App() {
           {/* Analytics View */}
           {activeTab === 'analytics' && (
             <div className="p-6 sm:p-8 max-w-7xl mx-auto">
-              <AnalyticsView analytics={analytics} />
+              <AnalyticsView
+                analytics={analytics}
+                onSelectAuthor={(author) => setSelectedAuthor(author)}
+              />
             </div>
           )}
 
@@ -311,7 +252,7 @@ export default function App() {
                 </div>
                 <h3 className="text-lg font-bold text-slate-900">Access Denied (RBAC Protected)</h3>
                 <p className="text-xs text-slate-500 mt-2 leading-relaxed">
-                  You are currently signed in as a Faculty member without administrative privileges. Use the "Switch Role" button in the top header to switch to the Admin account.
+                  You are currently signed in as a Faculty member without administrative privileges. To access administrative settings, please log in with an Administrator account.
                 </p>
               </div>
             </div>

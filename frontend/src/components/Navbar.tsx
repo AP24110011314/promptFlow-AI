@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Zap, Layers, BookOpen, MessageSquare, BarChart3, Mail, ShieldAlert,
-  Search, Bell, HelpCircle, Sun, Moon, RefreshCw, User as UserIcon, 
+  Search, Bell, HelpCircle, User as UserIcon, 
   LogOut, UserCheck, X, Check, Menu
 } from 'lucide-react';
 import type { User } from '../types';
@@ -13,9 +13,6 @@ interface NavbarProps {
   user: User | null;
   activeTab: string;
   setActiveTab: (tab: string) => void;
-  theme: 'dark' | 'light';
-  onToggleTheme: () => void;
-  onSwitchRole: () => void;
   onSearch?: (query: string) => void;
   searchPlaceholder?: string;
   onLogout: () => void;
@@ -27,9 +24,6 @@ export const Navbar: React.FC<NavbarProps> = ({
   user,
   activeTab,
   setActiveTab,
-  theme,
-  onToggleTheme,
-  onSwitchRole,
   onSearch,
   searchPlaceholder = 'Search papers...',
   onLogout,
@@ -44,11 +38,32 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [showHelpModal, setShowHelpModal] = useState(false);
   const [unreadCount, setUnreadCount] = useState<number>(0);
 
+  const profileDropdownRef = useRef<HTMLDivElement>(null);
+
   // Edit Profile Form State
   const [editName, setEditName] = useState(user?.full_name || '');
   const [editDept, setEditDept] = useState(user?.department || 'Computer Science');
   const [saving, setSaving] = useState(false);
   const [editError, setEditError] = useState<string | null>(null);
+
+  // Collapse profile dropdown when clicking anywhere outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target as Node)) {
+        setShowDropdown(false);
+      }
+    };
+
+    if (showDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showDropdown]);
 
   // Fetch unread notifications count
   useEffect(() => {
@@ -127,35 +142,35 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <>
-      <nav className="h-14 border-b border-slate-200 bg-white sticky top-0 z-40 select-none shadow-2xs">
+      <nav className="h-16 border-b border-slate-200 bg-white sticky top-0 z-40 select-none shadow-2xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between gap-4">
           
           {/* Left: Logo */}
           <div className="flex items-center space-x-2 shrink-0">
             <div 
-              className="flex items-center space-x-2 cursor-pointer"
+              className="flex items-center space-x-2.5 cursor-pointer"
               onClick={() => { setActiveTab('dashboard'); setShowMobileMenu(false); }}
             >
-              <div className="w-7 h-7 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-sm shrink-0 shadow-2xs">
-                <Zap className="w-4 h-4 fill-white text-white" />
+              <div className="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-base shrink-0 shadow-2xs">
+                <Zap className="w-4.5 h-4.5 fill-white text-white" />
               </div>
-              <span className="text-xs font-bold text-slate-900 tracking-tight font-display">
+              <span className="text-sm sm:text-base font-bold text-slate-900 tracking-tight font-display">
                 promptFlow-AI
               </span>
             </div>
           </div>
 
           {/* Center: Vercel-style Flat Navigation Tabs */}
-          <div className="hidden md:flex items-center h-full space-x-1">
+          <div className="hidden md:flex items-center h-full space-x-1.5">
             {navItems.map((item) => {
               const isActive = activeTab === item.id;
               return (
                 <button
                   key={item.id}
                   onClick={() => setActiveTab(item.id)}
-                  className={`relative h-full px-3.5 flex items-center text-xs font-semibold transition-all cursor-pointer ${
+                  className={`relative h-full px-4 flex items-center text-sm font-semibold transition-all cursor-pointer ${
                     isActive
-                      ? 'text-blue-600 font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-blue-600'
+                      ? 'text-blue-600 font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2.5px] after:bg-blue-600'
                       : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
@@ -166,46 +181,24 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           {/* Right: Search & Actions */}
-          <div className="flex items-center space-x-2 shrink-0">
+          <div className="flex items-center space-x-3 shrink-0">
             {/* Minimal Search bar with Ctrl+K shortcut */}
             <div className="hidden lg:block relative">
-              <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 id="navbar-search"
                 type="text"
                 value={searchQuery}
                 onChange={handleSearchChange}
                 placeholder={searchPlaceholder}
-                className="w-48 pl-8 pr-12 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all duration-200"
+                className="w-52 pl-9 pr-12 py-2 rounded-lg bg-slate-50 border border-slate-200 text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all duration-200"
               />
-              <kbd className="absolute right-2 top-1/2 -translate-y-1/2 px-1.5 py-0.5 rounded bg-slate-100 border border-slate-200 text-[9px] font-mono text-slate-500 pointer-events-none select-none">
+              <kbd className="absolute right-2.5 top-1/2 -translate-y-1/2 px-1.5 py-0.5 rounded bg-slate-100 border border-slate-200 text-[10px] font-mono text-slate-500 pointer-events-none select-none">
                 ⌘K
               </kbd>
             </div>
 
-            {/* Theme Toggle */}
-            <button
-              onClick={onToggleTheme}
-              title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
-              className="p-2 rounded-xl hover:bg-slate-100 text-slate-600 hover:text-slate-900 transition-all cursor-pointer flex items-center justify-center"
-            >
-              {theme === 'dark' ? (
-                <Sun className="w-4 h-4 text-blue-600" />
-              ) : (
-                <Moon className="w-4 h-4 text-blue-600" />
-              )}
-            </button>
 
-            {/* Switch Role Button */}
-            {user && (
-              <button
-                onClick={onSwitchRole}
-                title={`Switch Role (Current: ${user.role})`}
-                className="hidden sm:flex p-2 rounded-xl hover:bg-slate-100 text-slate-600 hover:text-slate-900 transition-all cursor-pointer"
-              >
-                <RefreshCw className="w-4 h-4 text-blue-600" />
-              </button>
-            )}
 
             {/* Notification Bell */}
             <div className="relative">
@@ -238,7 +231,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             {/* User Profile Avatar with Dropdown */}
             {user ? (
-              <div className="relative">
+              <div ref={profileDropdownRef} className="relative">
                 <div
                   onClick={() => setShowDropdown(!showDropdown)}
                   className="flex items-center space-x-2 p-1 rounded-xl hover:bg-slate-100 transition-all cursor-pointer group"
@@ -253,42 +246,40 @@ export const Navbar: React.FC<NavbarProps> = ({
 
                 {/* Dropdown Menu */}
                 {showDropdown && (
-                  <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-white border border-slate-200 shadow-xl py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
-                    <div className="px-4 py-2 border-b border-slate-200">
-                      <p className="text-xs font-bold text-slate-900 truncate">{user.full_name}</p>
-                      <p className="text-[10px] text-slate-500 truncate mt-0.5">{user.email}</p>
-                      <div className="mt-1.5 flex items-center space-x-1">
-                        <span className="px-1.5 py-0.5 rounded bg-blue-50 text-blue-600 text-[8px] font-bold uppercase tracking-wider border border-blue-100">
-                          {user.role}
-                        </span>
-                        <span className="text-[10px] text-slate-400">•</span>
-                        <span className="text-[10px] text-slate-500 truncate">{user.department || 'General'}</span>
+                  <div className="absolute right-0 mt-3 w-72 sm:w-80 rounded-xl bg-white border border-slate-200 shadow-xl p-4 z-50 animate-in fade-in slide-in-from-top-2 duration-150 space-y-3.5">
+                    <div className="flex items-center space-x-3.5 pb-3 border-b border-slate-200">
+                      <div className="w-11 h-11 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-lg shadow-2xs shrink-0">
+                        {user.full_name.charAt(0)}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-bold text-slate-900 truncate leading-snug">{user.full_name}</p>
+                        <p className="text-xs text-slate-500 truncate mt-0.5">{user.email}</p>
                       </div>
                     </div>
 
-                    <div className="py-1">
+                    <div className="flex items-center gap-2">
+                      <span className="px-2.5 py-1 rounded-md bg-blue-50 text-blue-700 text-xs font-bold uppercase tracking-wider border border-blue-200">
+                        {user.role}
+                      </span>
+                      <span className="px-2.5 py-1 rounded-md bg-slate-50 text-slate-700 text-xs font-semibold border border-slate-200 truncate">
+                        {user.department || 'General'}
+                      </span>
+                    </div>
+
+                    <div className="space-y-1 pt-1 border-t border-slate-200">
                       <button
                         onClick={handleOpenEdit}
-                        className="w-full px-4 py-2 text-left text-xs font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-50 flex items-center space-x-2 transition-colors cursor-pointer"
+                        className="w-full px-3 py-2.5 rounded-lg text-left text-sm font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-50 flex items-center space-x-2.5 transition-colors cursor-pointer"
                       >
                         <UserCheck className="w-4 h-4 text-blue-600 shrink-0" />
                         <span>Edit Profile</span>
                       </button>
-                      {onSwitchRole && (
-                        <button
-                          onClick={() => { setShowDropdown(false); onSwitchRole(); }}
-                          className="w-full px-4 py-2 text-left text-xs font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-50 flex items-center space-x-2 transition-colors cursor-pointer"
-                        >
-                          <RefreshCw className="w-4 h-4 text-emerald-600 shrink-0" />
-                          <span>Switch to {user.role === 'admin' ? 'Faculty' : 'Admin'}</span>
-                        </button>
-                      )}
                     </div>
 
-                    <div className="border-t border-slate-200 pt-1">
+                    <div className="border-t border-slate-200 pt-2">
                       <button
                         onClick={() => { setShowDropdown(false); onLogout(); }}
-                        className="w-full px-4 py-2 text-left text-xs font-semibold text-red-600 hover:bg-red-50 flex items-center space-x-2 transition-colors cursor-pointer"
+                        className="w-full px-3 py-2.5 rounded-lg text-left text-sm font-semibold text-red-600 hover:bg-red-50 flex items-center space-x-2.5 transition-colors cursor-pointer"
                       >
                         <LogOut className="w-4 h-4 text-red-600 shrink-0" />
                         <span>Log Out</span>
@@ -353,129 +344,93 @@ export const Navbar: React.FC<NavbarProps> = ({
               );
             })}
           </div>
-
-          {/* Quick Mobile Settings */}
-          <div className="pt-3 border-t border-brand-border space-y-2 text-xs">
-            <div className="flex items-center justify-between">
-              <span className="text-brand-gray font-semibold">Theme</span>
-              <button
-                onClick={onToggleTheme}
-                className="px-3 py-1.5 rounded-xl bg-brand-bg border border-brand-border flex items-center space-x-1.5 font-semibold text-white"
-              >
-                {theme === 'dark' ? (
-                  <>
-                    <Sun className="w-3.5 h-3.5 text-brand-cyan" />
-                    <span>Light Mode</span>
-                  </>
-                ) : (
-                  <>
-                    <Moon className="w-3.5 h-3.5 text-brand-cyan" />
-                    <span>Dark Mode</span>
-                  </>
-                )}
-              </button>
-            </div>
-
-            {user && (
-              <div className="flex items-center justify-between">
-                <span className="text-brand-gray font-semibold">Active: {user.role}</span>
-                <button
-                  onClick={() => { setShowMobileMenu(false); onSwitchRole(); }}
-                  className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-brand-bg border border-brand-border text-brand-gray font-semibold"
-                >
-                  <RefreshCw className="w-3.5 h-3.5 text-brand-cyan" />
-                  <span>Switch Role</span>
-                </button>
-              </div>
-            )}
-          </div>
         </div>
       )}
 
       {/* Edit Profile Modal */}
       {showEditModal && user && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
-          <div className="w-full max-w-md bg-brand-card border border-brand-border rounded-2xl p-6 sm:p-8 relative shadow-xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs animate-in fade-in duration-200">
+          <div className="w-full max-w-md bg-white border border-slate-200 rounded-xl p-6 sm:p-8 relative shadow-2xl space-y-4">
             
             <button
               onClick={() => setShowEditModal(false)}
-              className="absolute right-6 top-6 p-1.5 rounded-xl bg-brand-bg text-brand-gray hover:text-white border border-brand-border transition-colors cursor-pointer"
+              className="absolute right-6 top-6 p-2 rounded-lg bg-slate-50 text-slate-500 hover:text-slate-900 border border-slate-200 transition-colors cursor-pointer"
             >
-              <X className="w-4 h-4" />
+              <X className="w-5 h-5" />
             </button>
 
-            <div className="flex items-center space-x-3 mb-6">
-              <div className="w-9 h-9 rounded-xl bg-brand-cyan/10 text-brand-cyan flex items-center justify-center font-bold">
-                <UserCheck className="w-4.5 h-4.5" />
+            <div className="flex items-center space-x-3.5 mb-5">
+              <div className="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center font-bold">
+                <UserCheck className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-base font-bold text-white">Profile Settings</h3>
-                <p className="text-xs text-brand-gray">Update your academic department and credentials</p>
+                <h3 className="text-base font-bold text-slate-900">Profile Settings</h3>
+                <p className="text-xs sm:text-sm text-slate-500">Update your academic department and credentials</p>
               </div>
             </div>
 
             {editError && (
-              <div className="mb-4 bg-brand-red/10 text-brand-red border border-brand-red/25 p-3 rounded-xl text-xs font-semibold">
+              <div className="mb-4 bg-amber-50 text-amber-800 border border-amber-200 p-3.5 rounded-lg text-xs font-semibold">
                 {editError}
               </div>
             )}
 
             <form onSubmit={handleSaveProfile} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-brand-gray mb-1.5">Email Address (Read Only)</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">Email Address (Read Only)</label>
                 <input
                   type="email"
                   disabled
                   value={user.email}
-                  className="w-full px-3 py-2 rounded-xl bg-brand-bg/50 border border-brand-border text-brand-gray text-xs cursor-not-allowed"
+                  className="w-full px-3.5 py-2.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-600 text-sm cursor-not-allowed font-medium"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-brand-gray mb-1.5">Full Name</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">Full Name</label>
                 <input
                   type="text"
                   required
                   value={editName}
                   onChange={(e) => setEditName(e.target.value)}
-                  className="w-full px-3.5 py-2 rounded-xl bg-brand-bg border border-brand-border text-white text-xs sm:text-sm focus:outline-none focus:border-brand-cyan transition-all"
+                  className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all font-medium placeholder:text-slate-400"
                   placeholder="Dr. Jane Doe"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-brand-gray mb-1.5">Academic Department</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">Academic Department</label>
                 <select
                   value={editDept}
                   onChange={(e) => setEditDept(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-brand-bg border border-brand-border text-white text-xs sm:text-sm focus:outline-none focus:border-brand-cyan transition-all cursor-pointer"
+                  className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all cursor-pointer font-medium"
                 >
-                  <option value="Computer Science">Computer Science</option>
-                  <option value="Physics">Physics</option>
-                  <option value="Chemistry">Chemistry</option>
-                  <option value="Biotechnology">Biotechnology</option>
-                  <option value="Mechanical Engineering">Mechanical Engineering</option>
-                  <option value="Electrical Engineering">Electrical Engineering</option>
-                  <option value="Mathematics">Mathematics</option>
-                  <option value="Economics & Finance">Economics &amp; Finance</option>
-                  <option value="General">General / Administration</option>
+                  <option value="Computer Science" className="bg-white text-slate-900">Computer Science</option>
+                  <option value="Physics" className="bg-white text-slate-900">Physics</option>
+                  <option value="Chemistry" className="bg-white text-slate-900">Chemistry</option>
+                  <option value="Biotechnology" className="bg-white text-slate-900">Biotechnology</option>
+                  <option value="Mechanical Engineering" className="bg-white text-slate-900">Mechanical Engineering</option>
+                  <option value="Electrical Engineering" className="bg-white text-slate-900">Electrical Engineering</option>
+                  <option value="Mathematics" className="bg-white text-slate-900">Mathematics</option>
+                  <option value="Economics & Finance" className="bg-white text-slate-900">Economics &amp; Finance</option>
+                  <option value="General" className="bg-white text-slate-900">General / Administration</option>
                 </select>
               </div>
 
-              <div className="pt-2 flex items-center justify-end space-x-2.5">
+              <div className="pt-3 flex items-center justify-end space-x-3">
                 <button
                   type="button"
                   onClick={() => setShowEditModal(false)}
-                  className="px-4 py-2 rounded-xl bg-brand-bg hover:bg-brand-hover text-brand-gray hover:text-white border border-brand-border text-xs font-semibold transition-all cursor-pointer"
+                  className="watt-btn-secondary"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-4 py-2 rounded-xl bg-brand-cyan hover:brightness-105 text-real-white font-bold text-xs shadow-xs transition-all flex items-center space-x-1.5 cursor-pointer disabled:opacity-50"
+                  className="watt-btn-primary"
                 >
-                  <Check className="w-3.5 h-3.5 stroke-[3]" />
+                  <Check className="w-4 h-4 stroke-[3]" />
                   <span>{saving ? 'Saving...' : 'Save Changes'}</span>
                 </button>
               </div>

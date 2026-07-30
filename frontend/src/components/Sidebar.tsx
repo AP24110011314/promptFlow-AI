@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   Layers, BookOpen, MessageSquare, Mail, BarChart3, ShieldAlert, Zap, 
-  LogOut, UserCheck, RefreshCw, X, Check 
+  LogOut, UserCheck, X, Check 
 } from 'lucide-react';
 import type { User } from '../types';
 import { authService } from '../services/api';
@@ -11,7 +11,6 @@ interface SidebarProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
   onLogout: () => void;
-  onSwitchRole?: () => void;
   onUserUpdate?: (updatedUser: User) => void;
   collapsed: boolean;
 }
@@ -21,7 +20,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
   activeTab,
   setActiveTab,
   onLogout,
-  onSwitchRole,
   onUserUpdate,
   collapsed,
 }) => {
@@ -183,15 +181,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     <UserCheck className="w-4 h-4 text-blue-600 shrink-0" />
                     <span>Edit Profile Settings</span>
                   </button>
-                  {onSwitchRole && (
-                    <button
-                      onClick={() => { setShowDropdown(false); onSwitchRole(); }}
-                      className="w-full px-4 py-2 text-left text-xs font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-50 flex items-center space-x-2.5 transition-colors cursor-pointer"
-                    >
-                      <RefreshCw className="w-4 h-4 text-emerald-600 shrink-0" />
-                      <span>Switch Role ({user.role === 'admin' ? 'Faculty' : 'Admin'})</span>
-                    </button>
-                  )}
                 </div>
 
                 <div className="border-t border-slate-200 pt-1 mt-1">

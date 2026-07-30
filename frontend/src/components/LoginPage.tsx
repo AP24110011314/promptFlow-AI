@@ -198,7 +198,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBackToLa
             {/* Login Inputs form */}
             <form onSubmit={handleLogin} className="space-y-4">
               <div>
-                <label className="block text-[10px] font-bold text-[#8E8E93] tracking-widest uppercase mb-1.5">
+                <label className="block text-xs font-bold text-[#8E8E93] tracking-widest uppercase mb-1.5">
                   Email Address
                 </label>
                 <div className="relative">
@@ -208,14 +208,14 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBackToLa
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full h-11 pl-10 pr-4 rounded-lg bg-[#F5F5F7]/80 hover:bg-[#F5F5F7] focus:bg-real-white border border-transparent focus:border-black/10 text-[#1E1E1E] placeholder-[#8E8E93] text-xs focus:outline-none transition-all duration-200"
+                    className="w-full h-11 pl-10 pr-4 rounded-lg bg-[#F5F5F7]/80 hover:bg-[#F5F5F7] focus:bg-real-white border border-transparent focus:border-black/10 text-[#1E1E1E] placeholder-[#8E8E93] text-sm focus:outline-none transition-all duration-200"
                     placeholder="you@college.edu"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-[10px] font-bold text-[#8E8E93] tracking-widest uppercase mb-1.5">
+                <label className="block text-xs font-bold text-[#8E8E93] tracking-widest uppercase mb-1.5">
                   Password
                 </label>
                 <div className="relative">
@@ -225,7 +225,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBackToLa
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full h-11 pl-10 pr-4 rounded-lg bg-[#F5F5F7]/80 hover:bg-[#F5F5F7] focus:bg-real-white border border-transparent focus:border-black/10 text-[#1E1E1E] placeholder-[#8E8E93] text-xs focus:outline-none transition-all duration-200"
+                    className="w-full h-full h-11 pl-10 pr-4 rounded-lg bg-[#F5F5F7]/80 hover:bg-[#F5F5F7] focus:bg-real-white border border-transparent focus:border-black/10 text-[#1E1E1E] placeholder-[#8E8E93] text-sm focus:outline-none transition-all duration-200"
                     placeholder="••••••••"
                   />
                 </div>
@@ -235,7 +235,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBackToLa
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full h-11 mt-2 rounded-lg bg-[#1E1E1E] hover:bg-[#2E2E2E] text-real-white font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:pointer-events-none cursor-pointer group"
+                className="w-full h-11 mt-2 rounded-lg bg-[#1E1E1E] hover:bg-[#2E2E2E] text-real-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:pointer-events-none cursor-pointer group"
               >
                 {loading ? (
                   <>

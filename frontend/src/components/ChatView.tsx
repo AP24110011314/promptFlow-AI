@@ -7,7 +7,6 @@ import {
   FileText, 
   ChevronRight, 
   ChevronDown, 
-  HelpCircle, 
   Trash2, 
   Plus, 
   MessageCircle, 
@@ -18,7 +17,6 @@ import {
   User, 
   BookOpen, 
   Compass, 
-  X, 
   Database,
   ArrowUpRight
 } from 'lucide-react';
@@ -56,7 +54,6 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper, onSelec
   const [loading, setLoading] = useState(false);
   const [expandedPaperId, setExpandedPaperId] = useState<number | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [showGuardrailModal, setShowGuardrailModal] = useState(false);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -457,15 +454,6 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper, onSelec
             </div>
           </div>
 
-          <div className="flex items-center space-x-2">
-            <button
-              onClick={() => setShowGuardrailModal(true)}
-              className="px-2.5 py-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 hover:text-slate-900 text-xs font-medium transition-all flex items-center space-x-1.5 cursor-pointer"
-            >
-              <HelpCircle className="w-3.5 h-3.5 text-blue-600" />
-              <span className="hidden sm:inline">Scope & Policy</span>
-            </button>
-          </div>
         </div>
 
         {/* WORKSPACE AREA: Conditional rendering based on hasUserMessages */}
@@ -774,69 +762,6 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper, onSelec
         )}
 
       </div>
-
-      {/* GUARDRAIL & SCOPE MODAL */}
-      {showGuardrailModal && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-xs z-50 flex items-center justify-center p-4 animate-fadeIn">
-          <div className="bg-white border border-slate-200 rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-5">
-            
-            <div className="flex items-center justify-between pb-3 border-b border-slate-200">
-              <div className="flex items-center space-x-2.5">
-                <div className="w-9 h-9 rounded-xl bg-red-50 border border-red-100 flex items-center justify-center text-red-600">
-                  <AlertTriangle className="w-5 h-5" />
-                </div>
-                <div>
-                  <h3 className="text-base font-bold text-slate-900 leading-tight">Assistant Guardrails &amp; Policy</h3>
-                  <p className="text-[11px] text-slate-500">Strict academic filtering engine</p>
-                </div>
-              </div>
-              <button
-                onClick={() => setShowGuardrailModal(false)}
-                className="p-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-500 hover:text-slate-900 transition-colors cursor-pointer"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            <p className="text-xs text-slate-600 leading-relaxed">
-              This chat interface is explicitly designed to query the College Research Digest database. It operates under strict academic and departmental parameters to maintain high signal-to-noise ratio:
-            </p>
-
-            <div className="space-y-3 text-xs">
-              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-slate-800 space-y-1">
-                <strong className="text-blue-600 font-bold flex items-center text-xs">
-                  ✅ Supported Topics &amp; Scope
-                </strong>
-                <p className="text-[11px] text-slate-600 leading-normal">
-                  Searching for faculty papers, looking up specific author publication history, summarizing abstracts, filtering by academic department, year, or citation count.
-                </p>
-              </div>
-
-              <div className="p-3.5 rounded-2xl bg-red-50 border border-red-100 text-red-900 space-y-1">
-                <strong className="text-red-600 font-bold flex items-center text-xs">
-                  ❌ Restricted &amp; Rejected Topics
-                </strong>
-                <p className="text-[11px] text-red-800 leading-normal">
-                  General conversational chatter, programming/coding assistance, email administration tasks, college exam structures, and non-academic knowledge. Unrelated queries trigger immediate rejection by the NLP classification guardrail.
-                </p>
-              </div>
-            </div>
-
-            <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-[11px] text-slate-600 flex items-center justify-between font-mono">
-              <span>Model Architecture:</span>
-              <span className="text-blue-600 font-bold">Gemini 3.5 Flash + Scikit-Learn NLP</span>
-            </div>
-
-            <button
-              onClick={() => setShowGuardrailModal(false)}
-              className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs transition-all shadow-xs cursor-pointer"
-            >
-              Got it, Continue Researching
-            </button>
-
-          </div>
-        </div>
-      )}
 
     </div>
   );

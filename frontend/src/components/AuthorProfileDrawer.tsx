@@ -127,13 +127,13 @@ export const AuthorProfileDrawer: React.FC<AuthorProfileDrawerProps> = ({
         
         {/* Drawer Header */}
         <div className="px-6 py-5 border-b border-slate-200 bg-white flex items-center justify-between shrink-0">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-base shadow-2xs shrink-0">
+          <div className="flex items-center space-x-3.5">
+            <div className="w-11 h-11 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-lg shadow-2xs shrink-0">
               {cleanAuthorName.charAt(0)}
             </div>
             <div>
-              <h3 className="text-base font-bold text-slate-900 leading-tight">{cleanAuthorName}</h3>
-              <p className="text-xs text-blue-600 font-medium mt-0.5">{primaryDept}</p>
+              <h3 className="text-lg font-bold text-slate-900 leading-tight">{cleanAuthorName}</h3>
+              <p className="text-sm text-blue-600 font-semibold mt-0.5">{primaryDept}</p>
             </div>
           </div>
 
@@ -146,44 +146,44 @@ export const AuthorProfileDrawer: React.FC<AuthorProfileDrawerProps> = ({
         </div>
 
         {/* Content Body */}
-        <div className="p-6 space-y-6 flex-1 overflow-y-auto text-xs">
+        <div className="p-6 sm:p-7 space-y-7 flex-1 overflow-y-auto text-sm">
           
           {/* Key Metrics Cards */}
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-3 gap-3.5">
             <div className="p-4 rounded-lg bg-slate-50 border border-slate-200 space-y-1">
-              <span className="text-slate-500 text-[10px] font-bold uppercase tracking-wider block">Publications</span>
-              <p className="text-base sm:text-lg font-extrabold text-slate-900 font-mono">{totalPubs}</p>
+              <span className="text-slate-600 text-xs font-bold uppercase tracking-wider block">Publications</span>
+              <p className="text-xl sm:text-2xl font-extrabold text-slate-900 font-mono">{totalPubs}</p>
             </div>
 
             <div className="p-4 rounded-lg bg-slate-50 border border-slate-200 space-y-1">
-              <span className="text-slate-500 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1">
-                <Award className="w-3 h-3 text-amber-600" />
+              <span className="text-slate-600 text-xs font-bold uppercase tracking-wider flex items-center gap-1">
+                <Award className="w-3.5 h-3.5 text-amber-600" />
                 <span>Est. h-index</span>
               </span>
-              <p className="text-base sm:text-lg font-extrabold text-amber-700 font-mono">{hIndex}</p>
+              <p className="text-xl sm:text-2xl font-extrabold text-amber-700 font-mono">{hIndex}</p>
             </div>
 
             <div className="p-4 rounded-lg bg-slate-50 border border-slate-200 space-y-1">
-              <span className="text-slate-500 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1">
-                <TrendingUp className="w-3 h-3 text-emerald-600" />
+              <span className="text-slate-600 text-xs font-bold uppercase tracking-wider flex items-center gap-1">
+                <TrendingUp className="w-3.5 h-3.5 text-emerald-600" />
                 <span>Citations</span>
               </span>
-              <p className="text-base sm:text-lg font-extrabold text-emerald-700 font-mono">{totalCitations}</p>
+              <p className="text-xl sm:text-2xl font-extrabold text-emerald-700 font-mono">{totalCitations}</p>
             </div>
           </div>
 
           {/* Top Venues */}
           {topVenues.length > 0 && (
-            <div className="space-y-2">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
-                <BookOpen className="w-3.5 h-3.5 text-blue-600" />
+            <div className="space-y-2.5">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
+                <BookOpen className="w-4 h-4 text-blue-600" />
                 <span>Frequent Publication Venues</span>
               </h4>
               <div className="flex flex-wrap gap-3">
                 {topVenues.map(([venue, count], idx) => (
-                  <span key={idx} className="text-xs text-slate-700 font-semibold flex items-center space-x-1.5">
-                    <span className="truncate max-w-[200px]">{venue}</span>
-                    <span className="text-slate-500 font-mono text-[11px]">({count})</span>
+                  <span key={idx} className="text-sm text-slate-800 font-semibold flex items-center space-x-1.5 border border-slate-200 px-2.5 py-1 rounded-md bg-slate-50">
+                    <span className="truncate max-w-[220px]">{venue}</span>
+                    <span className="text-slate-500 font-mono text-xs">({count})</span>
                   </span>
                 ))}
               </div>
@@ -192,12 +192,12 @@ export const AuthorProfileDrawer: React.FC<AuthorProfileDrawerProps> = ({
 
           {/* Frequent Collaborators */}
           {topCoAuthors.length > 0 && (
-            <div className="space-y-2">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
-                <Users className="w-3.5 h-3.5 text-blue-600" />
+            <div className="space-y-2.5">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
+                <Users className="w-4 h-4 text-blue-600" />
                 <span>Frequent Co-Authors</span>
               </h4>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                 {topCoAuthors.map(([coAuthor, count], idx) => (
                   <div 
                     key={idx}
@@ -205,13 +205,13 @@ export const AuthorProfileDrawer: React.FC<AuthorProfileDrawerProps> = ({
                     className="p-3 rounded-lg bg-slate-50 border border-slate-200 hover:border-slate-300 flex items-center justify-between transition-all cursor-pointer group"
                     title={`View ${coAuthor}'s author profile`}
                   >
-                    <div className="flex items-center space-x-2 truncate">
-                      <div className="w-6 h-6 rounded-md bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-[10px] shrink-0 border border-blue-100">
+                    <div className="flex items-center space-x-2.5 truncate">
+                      <div className="w-7 h-7 rounded-md bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-xs shrink-0 border border-blue-100">
                         {coAuthor.charAt(0)}
                       </div>
-                      <span className="text-slate-900 font-medium truncate group-hover:text-blue-600 transition-colors">{coAuthor}</span>
+                      <span className="text-slate-900 font-semibold text-sm truncate group-hover:text-blue-600 transition-colors">{coAuthor}</span>
                     </div>
-                    <span className="text-slate-500 text-[11px] shrink-0 font-mono">{count} papers</span>
+                    <span className="text-slate-500 text-xs shrink-0 font-mono">{count} papers</span>
                   </div>
                 ))}
 
@@ -221,8 +221,8 @@ export const AuthorProfileDrawer: React.FC<AuthorProfileDrawerProps> = ({
 
           {/* Publication History List */}
           <div className="space-y-3 pt-2">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
-              <FileText className="w-3.5 h-3.5 text-blue-600" />
+            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
+              <FileText className="w-4 h-4 text-blue-600" />
               <span>Publications in Repository ({totalPubs})</span>
             </h4>
 
@@ -231,7 +231,7 @@ export const AuthorProfileDrawer: React.FC<AuthorProfileDrawerProps> = ({
                 No publications found for this author in repository.
               </div>
             ) : (
-              <div className="space-y-2.5">
+              <div className="space-y-3">
                 {authorPapers.map((paper) => (
                   <div
                     key={paper.id}
@@ -239,19 +239,19 @@ export const AuthorProfileDrawer: React.FC<AuthorProfileDrawerProps> = ({
                     className="p-4 rounded-lg bg-slate-50 border border-slate-200 hover:border-slate-300 hover:bg-slate-100/50 transition-all cursor-pointer space-y-2 group"
                   >
                     <div className="flex items-start justify-between gap-2">
-                      <h5 className="font-bold text-slate-900 text-xs group-hover:text-blue-600 transition-colors leading-snug">
+                      <h5 className="font-bold text-slate-900 text-sm group-hover:text-blue-600 transition-colors leading-snug">
                         {paper.title}
                       </h5>
-                      <span className="text-[11px] font-mono text-slate-500 font-semibold shrink-0">
+                      <span className="text-xs font-mono text-slate-500 font-semibold shrink-0">
                         {paper.publication_year}
                       </span>
                     </div>
 
-                    <p className="text-[11px] text-slate-500 line-clamp-2 leading-relaxed">
+                    <p className="text-xs sm:text-sm text-slate-600 line-clamp-2 leading-relaxed">
                       {paper.abstract || 'No abstract preview available.'}
                     </p>
 
-                    <div className="flex items-center justify-between text-[10px] text-slate-500 pt-1 border-t border-slate-200">
+                    <div className="flex items-center justify-between text-xs text-slate-500 pt-1.5 border-t border-slate-200">
                       <span>{paper.department}</span>
                       <span className="font-mono text-emerald-600 font-bold">{paper.citation_count} citations</span>
                     </div>

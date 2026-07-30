@@ -56,18 +56,18 @@ export const HelpModal: React.FC<HelpModalProps> = ({
         
         {/* Modal Header */}
         <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-white shrink-0">
-          <div className="flex items-center space-x-3">
-            <div className="w-9 h-9 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold border border-blue-100">
-              <HelpCircle className="w-4 h-4" />
+          <div className="flex items-center space-x-3.5">
+            <div className="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold border border-blue-100">
+              <HelpCircle className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+              <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
                 <span>promptFlow-AI Documentation &amp; Help Center</span>
-                <span className="text-[10px] text-slate-500 font-mono">
+                <span className="text-xs text-slate-500 font-mono">
                   v1.2.0
                 </span>
               </h3>
-              <p className="text-xs text-slate-500">Automated Research Tracking Platform Operations &amp; Guidelines</p>
+              <p className="text-xs sm:text-sm text-slate-500">Automated Research Tracking Platform Operations &amp; Guidelines</p>
             </div>
           </div>
 
@@ -76,7 +76,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({
             className="p-2 rounded-lg bg-slate-50 text-slate-500 hover:text-slate-900 border border-slate-200 transition-colors cursor-pointer"
             title="Close Help Modal (Esc)"
           >
-            <X className="w-4 h-4" />
+            <X className="w-5 h-5" />
           </button>
         </div>
 
@@ -94,7 +94,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
-                className={`py-3 px-3 flex items-center space-x-2 text-xs font-semibold border-b-2 transition-all cursor-pointer whitespace-nowrap ${
+                className={`py-3.5 px-4 flex items-center space-x-2 text-sm font-semibold border-b-2 transition-all cursor-pointer whitespace-nowrap ${
                   isActive
                     ? 'border-blue-600 text-blue-600 font-bold'
                     : 'border-transparent text-slate-500 hover:text-slate-900'

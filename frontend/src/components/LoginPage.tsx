@@ -75,7 +75,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBackToLa
       <motion.div
         layout
         transition={{ duration: 0.5, ease: easeCurve }}
-        className={`w-full max-w-5xl min-h-145 lg:h-155 bg-real-white/80 border border-black/5 rounded-[32px] shadow-[0_16px_48px_rgba(0,0,0,0.03)] overflow-hidden flex flex-col relative z-10 backdrop-blur-md ${
+        className={`w-full max-w-5xl min-h-145 lg:h-155 bg-real-white/90 border border-black/5 rounded-2xl shadow-[0_16px_48px_rgba(0,0,0,0.04)] overflow-hidden flex flex-col relative z-10 backdrop-blur-md ${
           selectedRole === 'admin' ? 'lg:flex-row' : 'lg:flex-row-reverse'
         }`}
       >
@@ -125,7 +125,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBackToLa
           </div>
         </motion.div>
 
-        {/* PANEL B: Authentication Form (Swaps side with Panel A on desktop) */}
+        {/* PANEL B: Authentication Form */}
         <motion.div
           layout
           key="form-panel"
@@ -136,21 +136,21 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBackToLa
             
             {/* Header */}
             <div className="text-center lg:text-left mb-6">
-              <h2 className="text-2xl font-display font-medium text-[#1E1E1E] tracking-tight">
+              <h2 className="text-2xl font-display font-bold text-[#1E1E1E] tracking-tight">
                 Sign in to promptFlow-AI
               </h2>
               
-              <p className="text-xs text-[#6E6E73] mt-2 font-medium">
+              <p className="text-xs text-[#6E6E73] mt-1.5 font-medium">
                 College Research Publication Management
               </p>
             </div>
 
             {/* Segmented Control Selector */}
-            <div className="p-1 bg-[#F4F0EB]/65 border border-black/5 rounded-full flex relative w-full mb-6">
-              {/* Sliding Active Pill Indicator */}
+            <div className="p-1 bg-[#F4F0EB]/65 border border-black/5 rounded-lg flex relative w-full mb-6">
+              {/* Sliding Active Indicator */}
               <div className="absolute inset-1 flex w-full pointer-events-none">
                 <motion.div
-                  className="bg-real-white shadow-[0_2px_8px_rgba(0,0,0,0.06)] border border-black/2 rounded-full w-[calc(50%-8px)] h-full"
+                  className="bg-real-white shadow-[0_2px_8px_rgba(0,0,0,0.06)] border border-black/5 rounded-md w-[calc(50%-8px)] h-full"
                   animate={{
                     x: selectedRole === 'admin' ? '0%' : '100%',
                   }}
@@ -162,7 +162,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBackToLa
               <button
                 type="button"
                 onClick={() => setSelectedRole('admin')}
-                className={`flex-1 text-center py-2 text-xs font-bold rounded-full relative z-10 transition-colors duration-200 cursor-pointer ${
+                className={`flex-1 text-center py-2 text-xs font-bold rounded-md relative z-10 transition-colors duration-200 cursor-pointer ${
                   selectedRole === 'admin' ? 'text-[#1E1E1E]' : 'text-[#6E6E73] hover:text-[#1E1E1E]'
                 }`}
               >
@@ -173,7 +173,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBackToLa
               <button
                 type="button"
                 onClick={() => setSelectedRole('faculty')}
-                className={`flex-1 text-center py-2 text-xs font-bold rounded-full relative z-10 transition-colors duration-200 cursor-pointer ${
+                className={`flex-1 text-center py-2 text-xs font-bold rounded-md relative z-10 transition-colors duration-200 cursor-pointer ${
                   selectedRole === 'faculty' ? 'text-[#1E1E1E]' : 'text-[#6E6E73] hover:text-[#1E1E1E]'
                 }`}
               >
@@ -188,7 +188,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBackToLa
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="mb-4 bg-[#FDF0ED] text-[#C13515] border border-[#F5C9C0] px-4 py-2.5 rounded-xl text-center text-xs font-semibold"
+                  className="mb-4 bg-[#FDF0ED] text-[#C13515] border border-[#F5C9C0] px-4 py-2.5 rounded-lg text-center text-xs font-semibold"
                 >
                   {error}
                 </motion.div>
@@ -208,7 +208,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBackToLa
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full h-12 pl-10 pr-4 rounded-xl bg-[#F5F5F7]/70 hover:bg-[#F5F5F7] focus:bg-real-white border border-transparent focus:border-black/10 text-[#1E1E1E] placeholder-[#8E8E93] text-sm focus:outline-none transition-all duration-200"
+                    className="w-full h-11 pl-10 pr-4 rounded-lg bg-[#F5F5F7]/80 hover:bg-[#F5F5F7] focus:bg-real-white border border-transparent focus:border-black/10 text-[#1E1E1E] placeholder-[#8E8E93] text-xs focus:outline-none transition-all duration-200"
                     placeholder="you@college.edu"
                   />
                 </div>
@@ -225,7 +225,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBackToLa
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full h-12 pl-10 pr-4 rounded-xl bg-[#F5F5F7]/70 hover:bg-[#F5F5F7] focus:bg-real-white border border-transparent focus:border-black/10 text-[#1E1E1E] placeholder-[#8E8E93] text-sm focus:outline-none transition-all duration-200"
+                    className="w-full h-11 pl-10 pr-4 rounded-lg bg-[#F5F5F7]/80 hover:bg-[#F5F5F7] focus:bg-real-white border border-transparent focus:border-black/10 text-[#1E1E1E] placeholder-[#8E8E93] text-xs focus:outline-none transition-all duration-200"
                     placeholder="••••••••"
                   />
                 </div>
@@ -235,7 +235,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBackToLa
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full h-12 mt-2 rounded-xl bg-[#1E1E1E] hover:bg-[#2E2E2E] text-real-white font-bold text-sm shadow-[0_4px_12px_rgba(0,0,0,0.04)] hover:shadow-[0_6px_16px_rgba(0,0,0,0.08)] transition-all flex items-center justify-center gap-2 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:pointer-events-none cursor-pointer group"
+                className="w-full h-11 mt-2 rounded-lg bg-[#1E1E1E] hover:bg-[#2E2E2E] text-real-white font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:pointer-events-none cursor-pointer group"
               >
                 {loading ? (
                   <>

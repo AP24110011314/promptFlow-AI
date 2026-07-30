@@ -92,46 +92,46 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
   };
 
   return (
-    <header className="h-16 border-b border-brand-border bg-brand-bg px-6 flex items-center justify-between gap-4 sticky top-0 z-30">
+    <header className="h-16 border-b border-slate-200 bg-white px-6 flex items-center justify-between gap-4 sticky top-0 z-30 shadow-2xs">
       
       {/* Sidebar Collapse Toggle Button */}
       <button
         onClick={onToggleSidebar}
         title={sidebarCollapsed ? "Expand Navigation Sidebar" : "Collapse Navigation Sidebar"}
-        className="p-2.5 rounded-xl bg-brand-card hover:bg-brand-hover border border-brand-border text-brand-gray hover:text-white transition-colors cursor-pointer flex items-center justify-center shrink-0"
+        className="p-2 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 hover:text-slate-900 transition-colors cursor-pointer flex items-center justify-center shrink-0"
       >
         {sidebarCollapsed ? (
-          <PanelLeft className="w-4 h-4 text-brand-cyan" />
+          <PanelLeft className="w-4 h-4 text-blue-600" />
         ) : (
-          <PanelLeftClose className="w-4 h-4 text-brand-cyan" />
+          <PanelLeftClose className="w-4 h-4 text-blue-600" />
         )}
       </button>
 
       {/* Search Input Bar */}
       <div className="flex-1 max-w-xl relative">
-        <Search className="w-4 h-4 text-brand-gray absolute left-3.5 top-1/2 -translate-y-1/2" />
+        <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
         <input
           type="text"
           value={searchQuery}
           onChange={handleSearchChange}
           placeholder={searchPlaceholder}
-          className="w-full pl-10 pr-4 py-2 rounded-xl bg-brand-card border border-brand-border text-xs sm:text-sm text-white placeholder-brand-gray focus:outline-none focus:border-brand-cyan transition-all"
+          className="w-full pl-10 pr-4 py-2 rounded-lg bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all"
         />
       </div>
 
       {/* Right Actions & User Profile */}
-      <div className="flex items-center space-x-3">
+      <div className="flex items-center space-x-2.5">
         
         {/* Theme Toggle */}
         <button
           onClick={onToggleTheme}
           title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
-          className="p-2 rounded-xl bg-brand-card hover:bg-brand-hover border border-brand-border text-brand-gray hover:text-white transition-colors cursor-pointer flex items-center justify-center"
+          className="p-2 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 hover:text-slate-900 transition-colors cursor-pointer flex items-center justify-center"
         >
           {theme === 'dark' ? (
-            <Sun className="w-4 h-4 text-brand-cyan" />
+            <Sun className="w-4 h-4 text-blue-600" />
           ) : (
-            <Moon className="w-4 h-4 text-brand-cyan" />
+            <Moon className="w-4 h-4 text-blue-600" />
           )}
         </button>
 
@@ -140,9 +140,9 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
           <button
             onClick={onSwitchRole}
             title="Switch Role (Test Admin vs Faculty)"
-            className="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-brand-card hover:bg-brand-hover border border-brand-border text-xs font-medium text-brand-gray hover:text-white transition-colors cursor-pointer"
+            className="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 text-xs font-medium text-slate-700 hover:text-slate-900 transition-colors cursor-pointer"
           >
-            <RefreshCw className="w-3.5 h-3.5 text-brand-cyan" />
+            <RefreshCw className="w-3.5 h-3.5 text-blue-600" />
             <span>Switch Role</span>
           </button>
         )}
@@ -152,11 +152,11 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
           <button
             onClick={() => { setShowNotifications(!showNotifications); fetchUnreadCount(); }}
             title="Notifications"
-            className="p-2 rounded-xl bg-brand-card hover:bg-brand-hover border border-brand-border text-brand-gray hover:text-white transition-colors cursor-pointer relative"
+            className="p-2 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 hover:text-slate-900 transition-colors cursor-pointer relative"
           >
             <Bell className="w-4 h-4" />
             {unreadCount > 0 && (
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-brand-cyan animate-pulse" />
+              <span className="absolute -top-1 -right-1 text-[10px] font-bold text-blue-600">{unreadCount}</span>
             )}
           </button>
           <NotificationDrawer
@@ -169,9 +169,9 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
         <button
           onClick={() => setShowHelpModal(true)}
           title="Help & Platform Documentation"
-          className="p-2 rounded-xl bg-brand-card hover:bg-brand-hover border border-brand-border text-brand-gray hover:text-white transition-colors cursor-pointer"
+          className="p-2 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 hover:text-slate-900 transition-colors cursor-pointer"
         >
-          <HelpCircle className="w-4 h-4 text-brand-gray hover:text-brand-cyan transition-colors" />
+          <HelpCircle className="w-4 h-4 text-slate-500 hover:text-blue-600 transition-colors" />
         </button>
 
 
@@ -180,28 +180,28 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
           <div className="relative">
             <div
               onClick={() => setShowDropdown(!showDropdown)}
-              className="flex items-center space-x-2.5 pl-3 border-l border-brand-border cursor-pointer group select-none"
+              className="flex items-center space-x-2.5 pl-3 border-l border-slate-200 cursor-pointer group select-none"
             >
               <div className="text-right hidden md:block">
-                <p className="text-xs font-bold text-white leading-tight group-hover:text-brand-cyan transition-colors">{user.full_name}</p>
-                <p className="text-[10px] text-brand-gray capitalize font-medium">{user.role}</p>
+                <p className="text-xs font-bold text-slate-900 leading-tight group-hover:text-blue-600 transition-colors">{user.full_name}</p>
+                <p className="text-[10px] text-slate-500 capitalize font-medium">{user.role}</p>
               </div>
-              <div className="w-9 h-9 rounded-full bg-brand-cyan text-real-white flex items-center justify-center font-bold text-xs shadow-sm group-hover:brightness-110 transition-all">
+              <div className="w-8 h-8 rounded-md bg-slate-100 text-slate-700 border border-slate-200 flex items-center justify-center font-bold text-xs shadow-2xs group-hover:bg-blue-600 group-hover:text-white transition-all">
                 {user.full_name.charAt(0)}
               </div>
             </div>
 
             {/* Profile Dropdown Menu */}
             {showDropdown && (
-              <div className="absolute right-0 mt-3 w-64 rounded-2xl bg-brand-card border border-brand-border shadow-2xl py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
-                <div className="px-4 py-3 border-b border-brand-border">
-                  <p className="text-xs font-bold text-white truncate">{user.full_name}</p>
-                  <p className="text-[10px] text-brand-gray truncate mt-0.5">{user.email}</p>
+              <div className="absolute right-0 mt-3 w-64 rounded-xl bg-white border border-slate-200 shadow-xl py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                <div className="px-4 py-3 border-b border-slate-200">
+                  <p className="text-xs font-bold text-slate-900 truncate">{user.full_name}</p>
+                  <p className="text-[10px] text-slate-500 truncate mt-0.5">{user.email}</p>
                   <div className="mt-2 flex items-center space-x-1.5">
-                    <span className="px-2 py-0.5 rounded bg-brand-cyan/15 text-brand-cyan text-[9px] font-bold uppercase tracking-wider">
+                    <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 border border-slate-200 text-[9px] font-semibold uppercase tracking-wider">
                       {user.role}
                     </span>
-                    <span className="px-2 py-0.5 rounded bg-brand-bg text-brand-gray border border-brand-border text-[9px] font-medium truncate">
+                    <span className="px-2 py-0.5 rounded-md bg-slate-50 text-slate-500 border border-slate-200 text-[9px] font-medium truncate">
                       {user.department || 'General'}
                     </span>
                   </div>
@@ -210,36 +210,36 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
                 <div className="py-1">
                   <button
                     onClick={handleOpenEdit}
-                    className="w-full px-4 py-2.5 text-left text-xs font-semibold text-brand-gray hover:text-white hover:bg-brand-hover flex items-center space-x-2.5 transition-colors cursor-pointer"
+                    className="w-full px-4 py-2 text-left text-xs font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-50 flex items-center space-x-2.5 transition-colors cursor-pointer"
                   >
-                    <UserCheck className="w-4 h-4 text-brand-cyan shrink-0" />
+                    <UserCheck className="w-4 h-4 text-blue-600 shrink-0" />
                     <span>Edit Profile Settings</span>
                   </button>
                   <button
                     onClick={() => { setShowDropdown(false); onSwitchRole(); }}
-                    className="w-full px-4 py-2.5 text-left text-xs font-semibold text-brand-gray hover:text-white hover:bg-brand-hover flex items-center space-x-2.5 transition-colors cursor-pointer"
+                    className="w-full px-4 py-2 text-left text-xs font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-50 flex items-center space-x-2.5 transition-colors cursor-pointer"
                   >
-                    <RefreshCw className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <RefreshCw className="w-4 h-4 text-emerald-600 shrink-0" />
                     <span>Switch Role ({user.role === 'admin' ? 'Faculty' : 'Admin'})</span>
                   </button>
                 </div>
 
-                <div className="border-t border-brand-border pt-1 mt-1">
+                <div className="border-t border-slate-200 pt-1 mt-1">
                   <button
                     onClick={() => { setShowDropdown(false); if (onLogout) onLogout(); }}
-                    className="w-full px-4 py-2.5 text-left text-xs font-semibold text-amber-500 hover:bg-amber-500/10 flex items-center space-x-2.5 transition-colors cursor-pointer"
+                    className="w-full px-4 py-2 text-left text-xs font-semibold text-red-600 hover:bg-red-50 flex items-center space-x-2.5 transition-colors cursor-pointer"
                   >
-                    <LogOut className="w-4 h-4 shrink-0" />
-                    <span>Log Out of promptFlow-AI</span>
+                    <LogOut className="w-4 h-4 text-red-600 shrink-0" />
+                    <span>Log Out</span>
                   </button>
                 </div>
               </div>
             )}
           </div>
         ) : (
-          <div className="flex items-center space-x-2 pl-3 border-l border-brand-border">
-            <UserIcon className="w-4 h-4 text-brand-gray" />
-            <span className="text-xs text-brand-gray">Guest</span>
+          <div className="flex items-center space-x-2 pl-3 border-l border-slate-200">
+            <UserIcon className="w-4 h-4 text-slate-400" />
+            <span className="text-xs text-slate-500">Guest</span>
           </div>
         )}
 
@@ -247,61 +247,61 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
 
       {/* Edit Profile Modal */}
       {showEditModal && user && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60">
-          <div className="w-full max-w-md bg-brand-card border border-brand-border rounded-3xl p-6 sm:p-8 relative shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs">
+          <div className="w-full max-w-md bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 relative shadow-2xl">
             
             <button
               onClick={() => setShowEditModal(false)}
-              className="absolute right-6 top-6 p-2 rounded-xl bg-brand-bg text-brand-gray hover:text-white border border-brand-border transition-colors cursor-pointer"
+              className="absolute right-6 top-6 p-2 rounded-xl bg-slate-100 text-slate-500 hover:text-slate-900 border border-slate-200 transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
 
             <div className="flex items-center space-x-3 mb-6">
-              <div className="w-10 h-10 rounded-2xl bg-brand-cyan/15 text-brand-cyan flex items-center justify-center font-bold">
+              <div className="w-10 h-10 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold border border-blue-200">
                 <UserCheck className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-white">Edit Profile</h3>
-                <p className="text-xs text-brand-gray">Update your academic credentials &amp; department</p>
+                <h3 className="text-lg font-bold text-slate-900">Edit Profile</h3>
+                <p className="text-xs text-slate-500">Update your academic credentials &amp; department</p>
               </div>
             </div>
 
             {editError && (
-              <div className="mb-4 bg-amber-500/10 text-amber-500 border border-amber-500/20 p-3 rounded-xl text-xs font-semibold">
+              <div className="mb-4 bg-amber-50 text-amber-800 border border-amber-200 p-3 rounded-xl text-xs font-semibold">
                 {editError}
               </div>
             )}
 
             <form onSubmit={handleSaveProfile} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-brand-gray mb-1.5">Email Address (Read Only)</label>
+                <label className="block text-xs font-semibold text-slate-500 mb-1.5">Email Address (Read Only)</label>
                 <input
                   type="email"
                   disabled
                   value={user.email}
-                  className="w-full px-3 py-2 rounded-xl bg-brand-bg/50 border border-brand-border text-brand-gray text-xs cursor-not-allowed"
+                  className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-500 text-xs cursor-not-allowed"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-brand-gray mb-1.5">Full Name</label>
+                <label className="block text-xs font-semibold text-slate-500 mb-1.5">Full Name</label>
                 <input
                   type="text"
                   required
                   value={editName}
                   onChange={(e) => setEditName(e.target.value)}
-                  className="w-full px-3 py-2.5 rounded-xl bg-brand-bg border border-brand-border text-white text-xs sm:text-sm focus:outline-none focus:border-brand-cyan transition-all"
+                  className="w-full px-3 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 text-xs sm:text-sm focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all"
                   placeholder="Dr. Jane Doe"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-brand-gray mb-1.5">Primary Academic Department</label>
+                <label className="block text-xs font-semibold text-slate-500 mb-1.5">Primary Academic Department</label>
                 <select
                   value={editDept}
                   onChange={(e) => setEditDept(e.target.value)}
-                  className="w-full px-3 py-2.5 rounded-xl bg-brand-bg border border-brand-border text-white text-xs sm:text-sm focus:outline-none focus:border-brand-cyan transition-all"
+                  className="w-full px-3 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 text-xs sm:text-sm focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all cursor-pointer"
                 >
                   <option value="Computer Science">Computer Science</option>
                   <option value="Physics">Physics</option>
@@ -319,14 +319,14 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
                 <button
                   type="button"
                   onClick={() => setShowEditModal(false)}
-                  className="px-4 py-2.5 rounded-xl bg-brand-bg hover:bg-brand-hover text-brand-gray hover:text-white border border-brand-border text-xs font-semibold transition-all cursor-pointer"
+                  className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 font-semibold text-xs transition-all cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-5 py-2.5 rounded-xl bg-brand-cyan hover:brightness-110 text-real-white font-bold text-xs shadow-sm transition-all flex items-center space-x-1.5 cursor-pointer disabled:opacity-50"
+                  className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-sm transition-all flex items-center space-x-1.5 cursor-pointer disabled:opacity-50"
                 >
                   <Check className="w-4 h-4 stroke-[3]" />
                   <span>{saving ? 'Saving...' : 'Save Profile'}</span>

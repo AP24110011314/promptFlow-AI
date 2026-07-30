@@ -179,15 +179,15 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
   return (
     <div className="space-y-6 pb-12">
       
-      {/* Top Header & Export / Upload Actions (Border-bottom instead of Card wrapper) */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-brand-border/30">
+      {/* Top Header & Export / Upload Actions */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-200">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight flex items-center space-x-2.5 font-display">
-            <BookOpen className="w-5.5 h-5.5 text-brand-cyan" />
-            <span>Academic Research Repository</span>
+          <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight flex items-center space-x-2.5">
+            <BookOpen className="w-5 h-5 text-blue-600" />
+            <span>Faculty Research Publication Repository</span>
           </h1>
-          <p className="text-xs text-brand-gray mt-1">
-            Browse, filter, and export college research publications indexed by our automated ML extraction engine.
+          <p className="text-xs text-slate-500 mt-1">
+            Browse, search, and download verified research papers ingested from professor emails.
           </p>
         </div>
 
@@ -195,48 +195,48 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
           <button
             onClick={handleExportExcel}
             title="Download Excel (.xlsx) Spreadsheet"
-            className="px-3 py-2 rounded-xl bg-brand-green/10 text-brand-green hover:bg-brand-green/20 border border-brand-green/30 font-semibold text-xs transition-all flex items-center space-x-1.5 shadow-xs cursor-pointer whitespace-nowrap"
+            className="watt-btn-secondary"
           >
-            <FileSpreadsheet className="w-3.5 h-3.5" />
+            <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-600" />
             <span>Excel</span>
           </button>
 
           <button
             onClick={handleExportPdf}
             title="Download Formatted PDF Report"
-            className="px-3 py-2 rounded-xl bg-brand-cyan/10 text-brand-cyan hover:bg-brand-cyan/20 border border-brand-cyan/30 font-semibold text-xs transition-all flex items-center space-x-1.5 shadow-xs cursor-pointer whitespace-nowrap"
+            className="watt-btn-secondary"
           >
-            <FileText className="w-3.5 h-3.5" />
+            <FileText className="w-3.5 h-3.5 text-blue-600" />
             <span>PDF</span>
           </button>
 
           <button
             onClick={() => setShowUploadModal(true)}
-            className="px-3.5 py-2 rounded-xl bg-brand-cyan hover:brightness-105 text-real-white font-bold text-xs shadow-sm transition-all flex items-center space-x-1.5 cursor-pointer whitespace-nowrap"
+            className="watt-btn-primary"
           >
-            <Upload className="w-3.5 h-3.5 text-real-white stroke-[2.5]" />
+            <Upload className="w-3.5 h-3.5 text-white" />
             <span>Upload PDF</span>
           </button>
         </div>
       </div>
 
       {/* Unified Research Workspace */}
-      <div className="bg-brand-card rounded-2xl border border-brand-border shadow-sm overflow-hidden">
+      <div className="watt-card p-0 rounded-xl overflow-hidden border border-slate-200/80 shadow-xs">
         
         {/* Filter Toolbar Section */}
-        <div className="p-5 sm:p-6 space-y-4 bg-brand-card">
+        <div className="p-5 sm:p-6 space-y-4 bg-white">
           {/* Row 1: Core Search and Department / Category / Type / Quartile */}
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-3.5">
             
             {/* Search Bar */}
             <div className="relative">
-              <Search className="absolute left-3.5 top-3 w-4 h-4 text-brand-gray" />
+              <Search className="absolute left-3 top-2.5 w-4 h-4 text-slate-400" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => handleSetSearchQuery(e.target.value)}
                 placeholder="Search title, abstract..."
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-brand-bg border border-brand-border text-white placeholder-brand-gray text-xs focus:outline-none focus:border-brand-cyan transition-all"
+                className="w-full pl-9 pr-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 placeholder-slate-400 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all"
               />
             </div>
 
@@ -245,7 +245,7 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
               <select
                 value={selectedDept}
                 onChange={(e) => handleSetSelectedDept(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-brand-bg border border-brand-border text-white text-xs focus:outline-none focus:border-brand-cyan transition-all cursor-pointer"
+                className="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all cursor-pointer"
               >
                 {departments.map((dept) => (
                   <option key={dept} value={dept}>Dept: {dept}</option>
@@ -258,7 +258,7 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
               <select
                 value={selectedCat}
                 onChange={(e) => handleSetSelectedCat(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-brand-bg border border-brand-border text-white text-xs focus:outline-none focus:border-brand-cyan transition-all cursor-pointer"
+                className="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all cursor-pointer"
               >
                 <option value="All">Category: All Topics</option>
                 {categories.map((cat) => (
@@ -272,7 +272,7 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
               <select
                 value={selectedType}
                 onChange={(e) => handleSetSelectedType(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-brand-bg border border-brand-border text-white text-xs focus:outline-none focus:border-brand-cyan transition-all cursor-pointer"
+                className="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all cursor-pointer"
               >
                 {pubTypes.map((type) => (
                   <option key={type} value={type}>Type: {type}</option>
@@ -285,7 +285,7 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
               <select
                 value={selectedQuartile}
                 onChange={(e) => handleSetSelectedQuartile(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-brand-bg border border-brand-border text-white text-xs focus:outline-none focus:border-brand-cyan transition-all cursor-pointer"
+                className="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all cursor-pointer"
               >
                 <option value="All">Quartile: All</option>
                 <option value="Q1">Quartile: Q1</option>
@@ -298,25 +298,25 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
           </div>
 
           {/* Row 2: Advanced Author & Year Range (Time Period) */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 pt-2 border-t border-brand-border/40">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-3.5 pt-2 border-t border-slate-200">
             {/* Author Specific Search */}
             <div className="relative">
-              <Users className="absolute left-3.5 top-3 w-4 h-4 text-brand-gray" />
+              <Users className="absolute left-3 top-2.5 w-4 h-4 text-slate-400" />
               <input
                 type="text"
                 value={authorQuery}
                 onChange={(e) => handleSetAuthorQuery(e.target.value)}
                 placeholder="Search by Author Name..."
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-brand-bg border border-brand-border text-white placeholder-brand-gray text-xs focus:outline-none focus:border-brand-cyan transition-all"
+                className="w-full pl-9 pr-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 placeholder-slate-400 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all"
               />
             </div>
 
-            {/* Single Year (Specific Year Override) */}
+            {/* Single Year */}
             <div>
               <select
                 value={selectedYear}
                 onChange={(e) => handleSetSelectedYear(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-brand-bg border border-brand-border text-white text-xs focus:outline-none focus:border-brand-cyan transition-all cursor-pointer"
+                className="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all cursor-pointer"
               >
                 <option value="All">Specific Year: All</option>
                 {years.filter(y => y !== 'All').map((year) => (
@@ -331,7 +331,7 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
                 disabled={selectedYear !== 'All'}
                 value={startYear}
                 onChange={(e) => handleSetStartYear(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-brand-bg border border-brand-border text-white text-xs focus:outline-none focus:border-brand-cyan transition-all cursor-pointer disabled:opacity-40"
+                className="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all cursor-pointer disabled:opacity-40"
               >
                 <option value="All">Start Year: All</option>
                 {years.filter(y => y !== 'All').slice().reverse().map((year) => (
@@ -346,7 +346,7 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
                 disabled={selectedYear !== 'All'}
                 value={endYear}
                 onChange={(e) => handleSetEndYear(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-brand-bg border border-brand-border text-white text-xs focus:outline-none focus:border-brand-cyan transition-all cursor-pointer disabled:opacity-40"
+                className="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all cursor-pointer disabled:opacity-40"
               >
                 <option value="All">End Year: All</option>
                 {years.filter(y => y !== 'All').map((year) => (
@@ -357,8 +357,8 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
           </div>
 
           {/* Clear / Showing stats */}
-          <div className="flex items-center justify-between text-xs text-brand-gray pt-3 border-t border-brand-border/40">
-            <span>Showing <strong className="text-white font-mono">{filteredPapers.length}</strong> research publications</span>
+          <div className="flex items-center justify-between text-xs text-slate-500 pt-2 border-t border-slate-200">
+            <span>Showing <strong className="text-slate-900 font-mono">{filteredPapers.length}</strong> research publications</span>
             {(searchQuery || authorQuery || selectedDept !== 'All' || selectedCat !== 'All' || selectedYear !== 'All' || selectedType !== 'All' || startYear !== 'All' || endYear !== 'All' || selectedQuartile !== 'All') && (
               <button
                 onClick={() => {
@@ -373,7 +373,7 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
                   setSelectedQuartile('All');
                   setCurrentPage(1);
                 }}
-                className="text-brand-cyan hover:brightness-110 font-semibold underline cursor-pointer text-xs"
+                className="text-blue-600 hover:underline font-semibold cursor-pointer text-xs"
               >
                 Reset All Filters
               </button>
@@ -381,59 +381,57 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
           </div>
         </div>
 
-        {/* Separator between filters and content */}
-        <div className="border-t border-brand-border" />
+        {/* Separator */}
+        <div className="border-t border-slate-200" />
 
         {/* Papers Grid Section */}
-        <div className="p-5 sm:p-6 bg-brand-bg/15">
+        <div className="p-5 sm:p-6 bg-slate-50/60">
           {filteredPapers.length === 0 ? (
             <div className="py-12 text-center">
-              <BookOpen className="w-12 h-12 text-brand-gray mx-auto mb-3" />
-              <h3 className="text-base font-semibold text-white">No research papers match your query</h3>
-              <p className="text-xs text-brand-gray mt-1">Try adjusting your filters or search terms.</p>
+              <BookOpen className="w-12 h-12 text-slate-400 mx-auto mb-3" />
+              <h3 className="text-base font-semibold text-slate-900">No research papers match your query</h3>
+              <p className="text-xs text-slate-500 mt-1">Try adjusting your filters or search terms.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4.5">
               {filteredPapers.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((paper) => (
                 <div
                   key={paper.id}
                   onClick={() => onSelectPaper(paper)}
-                  className="bg-brand-card rounded-2xl p-5 border border-brand-border hover:border-brand-cyan transition-all flex flex-col justify-between group cursor-pointer shadow-2xs hover:shadow-sm"
+                  className="watt-card p-5 cursor-pointer flex flex-col justify-between group bg-white border border-slate-200/80 hover:border-slate-300 hover:shadow-md transition-all"
                 >
                   <div>
-                    <div className="flex items-center justify-between gap-2">
-                      <div className="flex items-center space-x-1.5 truncate max-w-[75%]">
-                        <span className="px-2.5 py-1 rounded-lg bg-brand-cyan/10 text-brand-cyan border border-brand-cyan/20 text-[11px] font-semibold truncate">
-                          {paper.department || 'General'}
-                        </span>
-                        <span className="px-2 py-0.5 rounded-md bg-brand-green/10 text-brand-green border border-brand-green/20 text-[10px] font-bold truncate font-mono">
-                          {paper.publication_type || 'Journal'}
-                        </span>
+                    {/* Header Metadata Row: Clean Flat Text (No Pills) */}
+                    <div className="flex items-center justify-between gap-2 text-xs">
+                      <div className="flex items-center space-x-1.5 truncate text-slate-700 font-semibold">
+                        <span>{paper.department || 'General'}</span>
+                        <span className="text-slate-300">•</span>
+                        <span className="text-slate-500 font-normal">{paper.publication_type || 'Journal'}</span>
                       </div>
-                      <span className="text-[11px] font-mono font-medium text-brand-gray bg-brand-bg px-2 py-0.5 rounded border border-brand-border shrink-0">
+                      <span className="text-xs font-mono text-slate-500 font-semibold shrink-0">
                         {paper.publication_year}
                       </span>
                     </div>
 
-                    <h3 className="text-sm font-bold text-white mt-3 group-hover:text-brand-cyan transition-colors line-clamp-2">
+                    <h3 className="text-xs sm:text-sm font-bold text-slate-900 mt-3 group-hover:text-blue-600 transition-colors line-clamp-2 leading-snug">
                       {paper.title}
                     </h3>
 
-                    <p className="text-xs text-brand-gray mt-2 line-clamp-3 italic bg-brand-bg p-2.5 rounded-xl border border-brand-border">
+                    <p className="text-xs text-slate-600 mt-2 line-clamp-3 bg-slate-50 p-2.5 rounded-lg border border-slate-200/80 leading-relaxed font-normal">
                       {paper.ai_summary || paper.abstract || 'No summary available.'}
                     </p>
 
-                    {/* Category Tags */}
-                    <div className="flex flex-wrap gap-1.5 mt-3">
+                    {/* Category Tags: Clean Flat Metadata (No Pills) */}
+                    <div className="flex flex-wrap gap-2 mt-3 text-xs text-slate-500 font-medium">
                       {(paper.categories_list || []).slice(0, 3).map((tag, idx) => (
-                        <span key={idx} className="px-2 py-0.5 rounded-md bg-brand-cyan/10 text-brand-cyan text-[10px] font-medium border border-brand-cyan/20 font-mono">
+                        <span key={idx} className="text-slate-500 font-normal">
                           #{tag}
                         </span>
                       ))}
                     </div>
                   </div>
 
-                  <div className="mt-4 pt-3 border-t border-brand-border flex items-center justify-between text-xs text-brand-gray">
+                  <div className="mt-4 pt-3 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500">
                     <div 
                       onClick={(e) => {
                         if (onSelectAuthor && paper.authors_raw) {
@@ -442,14 +440,14 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
                           onSelectAuthor(firstAuthor);
                         }
                       }}
-                      className="flex items-center space-x-1.5 truncate max-w-[65%] hover:text-brand-cyan transition-colors cursor-pointer"
+                      className="flex items-center space-x-1.5 truncate max-w-[65%] hover:text-blue-600 transition-colors cursor-pointer"
                       title="View Author Profile & Analytics"
                     >
-                      <Users className="w-3.5 h-3.5 text-brand-cyan shrink-0" />
-                      <span className="truncate hover:underline">{paper.authors_raw || 'College Faculty'}</span>
+                      <Users className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                      <span className="truncate hover:underline text-slate-700 font-medium">{paper.authors_raw || 'College Faculty'}</span>
                     </div>
 
-                    <div className="flex items-center space-x-1 text-brand-cyan font-bold shrink-0">
+                    <div className="flex items-center space-x-1 text-blue-600 font-semibold text-xs shrink-0 group-hover:translate-x-0.5 transition-transform">
                       <span>View Details</span>
                     </div>
                   </div>
@@ -459,25 +457,25 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
           )}
         </div>
 
-        {/* Pagination Section (Integrated at bottom of the unified card) */}
+        {/* Pagination Section */}
         {filteredPapers.length > itemsPerPage && (
           <>
-            <div className="border-t border-brand-border" />
-            <div className="p-4 sm:px-6 bg-brand-card flex items-center justify-between">
+            <div className="border-t border-slate-200" />
+            <div className="p-4 sm:px-6 bg-white flex items-center justify-between">
               <button
                 disabled={currentPage === 1}
                 onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                className="px-4 py-2 rounded-xl bg-brand-bg text-white hover:bg-brand-hover hover:border-brand-cyan border border-brand-border text-xs font-bold transition-all disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
+                className="watt-btn-secondary"
               >
                 Previous
               </button>
-              <span className="text-xs text-brand-gray font-medium">
-                Page <strong className="text-white font-mono">{currentPage}</strong> of <strong className="text-white font-mono">{Math.ceil(filteredPapers.length / itemsPerPage)}</strong>
+              <span className="text-xs text-slate-500 font-medium">
+                Page <strong className="text-slate-900 font-mono">{currentPage}</strong> of <strong className="text-slate-900 font-mono">{Math.ceil(filteredPapers.length / itemsPerPage)}</strong>
               </span>
               <button
                 disabled={currentPage === Math.ceil(filteredPapers.length / itemsPerPage)}
                 onClick={() => setCurrentPage(prev => Math.min(prev + 1, Math.ceil(filteredPapers.length / itemsPerPage)))}
-                className="px-4 py-2 rounded-xl bg-brand-bg text-white hover:bg-brand-hover hover:border-brand-cyan border border-brand-border text-xs font-bold transition-all disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
+                className="watt-btn-secondary"
               >
                 Next
               </button>
@@ -498,29 +496,26 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
         />
       )}
 
-
       {/* Upload PDF Modal */}
       {showUploadModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60">
-          <div className="w-full max-w-lg bg-brand-card border border-brand-border rounded-3xl p-6 sm:p-8 relative shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs">
+          <div className="w-full max-w-lg bg-white border border-slate-200 rounded-xl p-6 sm:p-8 relative shadow-2xl">
             <button
               onClick={() => setShowUploadModal(false)}
-              className="absolute right-6 top-6 p-2 rounded-xl bg-brand-bg text-brand-gray hover:text-white border border-brand-border cursor-pointer"
+              className="absolute right-6 top-6 p-2 rounded-lg bg-slate-100 text-slate-500 hover:text-slate-900 border border-slate-200 cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
 
-            <h3 className="text-lg font-bold text-white flex items-center space-x-2 mb-1">
-              <Upload className="w-5 h-5 text-brand-cyan" />
+            <h3 className="text-lg font-bold text-slate-900 flex items-center space-x-2 mb-1">
+              <Upload className="w-5 h-5 text-blue-600" />
               <span>Multi-PDF Batch Research Ingestion</span>
             </h3>
-            <p className="text-xs text-brand-gray mb-5">
+            <p className="text-xs text-slate-500 mb-5">
               Drag &amp; drop multiple research paper PDFs. PyMuPDF &amp; Scikit-Learn will extract metadata in batch!
-            </p>
-
-            {uploadError && (
-              <div className="mb-4 watt-alert shadow-lg flex items-center space-x-2 text-xs">
-                <AlertCircle className="w-4 h-4 shrink-0" />
+            </p>            {uploadError && (
+              <div className="mb-4 watt-alert shadow-sm flex items-center space-x-2 text-xs">
+                <AlertCircle className="w-4 h-4 shrink-0 text-amber-600" />
                 <span>{uploadError}</span>
               </div>
             )}
@@ -532,10 +527,10 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
                 onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
                 onDragLeave={(e) => { e.preventDefault(); setIsDragging(false); }}
                 onDrop={handleFileDrop}
-                className={`p-6 rounded-2xl border-2 border-dashed text-center transition-all cursor-pointer relative ${
+                className={`p-6 rounded-lg border-2 border-dashed text-center transition-all cursor-pointer relative ${
                   isDragging
-                    ? 'border-brand-cyan bg-brand-cyan/10'
-                    : 'border-brand-border bg-brand-bg/60 hover:border-brand-cyan/50'
+                    ? 'border-blue-600 bg-blue-50'
+                    : 'border-slate-300 bg-slate-50 hover:border-slate-400'
                 }`}
               >
                 <input
@@ -554,41 +549,41 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
                 />
 
                 <div className="space-y-2 pointer-events-none">
-                  <div className="w-10 h-10 rounded-2xl bg-brand-cyan/15 text-brand-cyan flex items-center justify-center mx-auto">
-                    <Upload className="w-5 h-5" />
+                  <div className="w-9 h-9 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center mx-auto border border-blue-200">
+                    <Upload className="w-4 h-4" />
                   </div>
-                  <p className="text-xs font-bold text-white">
-                    Drag &amp; Drop Research PDFs Here or <span className="text-brand-cyan underline">Browse</span>
+                  <p className="text-xs font-bold text-slate-900">
+                    Drag &amp; Drop Research PDFs Here or <span className="text-blue-600 underline">Browse</span>
                   </p>
-                  <p className="text-[10px] text-brand-gray">Select one or multiple PDF papers simultaneously</p>
+                  <p className="text-[10px] text-slate-500">Select one or multiple PDF papers simultaneously</p>
                 </div>
               </div>
 
               {/* Selected Files Queue List */}
               {uploadFiles.length > 0 && (
                 <div className="space-y-2 max-h-40 overflow-y-auto pr-1">
-                  <div className="flex items-center justify-between text-xs font-bold text-white">
+                  <div className="flex items-center justify-between text-xs font-bold text-slate-900">
                     <span>Batch Queue ({uploadFiles.length} files)</span>
                     <button
                       type="button"
                       onClick={() => setUploadFiles([])}
-                      className="text-[10px] text-brand-gray hover:text-brand-red cursor-pointer"
+                      className="text-[10px] text-slate-500 hover:text-red-600 cursor-pointer"
                     >
                       Clear All
                     </button>
                   </div>
 
                   {uploadFiles.map((file, idx) => (
-                    <div key={idx} className="p-2.5 rounded-xl bg-brand-bg border border-brand-border flex items-center justify-between text-xs">
+                    <div key={idx} className="p-2.5 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-between text-xs">
                       <div className="flex items-center space-x-2 truncate">
-                        <FileText className="w-3.5 h-3.5 text-brand-cyan shrink-0" />
-                        <span className="text-white truncate font-medium">{file.name}</span>
-                        <span className="text-[10px] text-brand-gray">({(file.size / 1024 / 1024).toFixed(2)} MB)</span>
+                        <FileText className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                        <span className="text-slate-800 truncate font-medium">{file.name}</span>
+                        <span className="text-[10px] text-slate-500">({(file.size / 1024 / 1024).toFixed(2)} MB)</span>
                       </div>
                       <button
                         type="button"
                         onClick={() => handleRemoveFile(idx)}
-                        className="p-1 text-brand-gray hover:text-brand-red transition-colors cursor-pointer shrink-0"
+                        className="p-1 text-slate-400 hover:text-red-600 transition-colors cursor-pointer shrink-0"
                       >
                         <X className="w-3.5 h-3.5" />
                       </button>
@@ -599,14 +594,14 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
 
               {/* Batch Processing Progress Bar */}
               {batchProgress && (
-                <div className="p-3.5 rounded-2xl bg-brand-cyan/10 border border-brand-cyan/30 space-y-2">
-                  <div className="flex items-center justify-between text-xs font-bold text-white">
+                <div className="p-3.5 rounded-lg bg-slate-50 border border-slate-200 space-y-2">
+                  <div className="flex items-center justify-between text-xs font-bold text-slate-900">
                     <span className="truncate">Processing {batchProgress.currentFileName}...</span>
-                    <span className="text-brand-cyan">{batchProgress.current} / {batchProgress.total}</span>
+                    <span className="text-blue-600">{batchProgress.current} / {batchProgress.total}</span>
                   </div>
-                  <div className="w-full h-2 rounded-full bg-brand-bg overflow-hidden">
+                  <div className="w-full h-1.5 rounded-md bg-slate-200 overflow-hidden">
                     <div
-                      className="h-full bg-brand-cyan transition-all duration-300"
+                      className="h-full bg-blue-600 transition-all duration-300"
                       style={{ width: `${(batchProgress.current / batchProgress.total) * 100}%` }}
                     />
                   </div>
@@ -614,11 +609,11 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
               )}
 
               <div>
-                <label className="block text-xs font-medium text-brand-gray mb-1">Academic Department Hint</label>
+                <label className="block text-xs font-medium text-slate-700 mb-1">Academic Department Hint</label>
                 <select
                   value={uploadDeptHint}
                   onChange={(e) => setUploadDeptHint(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-brand-bg border border-brand-border text-white text-xs focus:outline-none focus:border-brand-cyan transition-all cursor-pointer"
+                  className="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all cursor-pointer"
                 >
                   {departments.filter(d => d !== 'All').map(d => (
                     <option key={d} value={d}>{d}</option>
@@ -630,14 +625,14 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
                 <button
                   type="button"
                   onClick={() => { setShowUploadModal(false); setUploadFiles([]); }}
-                  className="px-4 py-2.5 rounded-xl bg-brand-bg hover:bg-brand-hover text-white border border-brand-border font-semibold text-xs cursor-pointer"
+                  className="watt-btn-secondary"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={uploading || uploadFiles.length === 0}
-                  className="px-5 py-2.5 rounded-xl bg-brand-cyan text-real-white font-bold text-xs shadow-md hover:brightness-110 disabled:opacity-50 transition-all flex items-center space-x-2 cursor-pointer"
+                  className="watt-btn-primary"
                 >
                   <span>
                     {uploading
@@ -647,7 +642,6 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
                 </button>
               </div>
             </form>
-
 
           </div>
         </div>

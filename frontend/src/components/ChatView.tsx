@@ -20,10 +20,10 @@ import {
   Compass, 
   X, 
   Database,
-  ExternalLink
+  ArrowUpRight
 } from 'lucide-react';
 import type { ResearchPaper, ChatResponse, User as UserType } from '../types';
-import { chatService, SERVER_BASE_URL } from '../services/api';
+import { chatService } from '../services/api';
 
 interface ChatMessage {
   id: string;
@@ -45,9 +45,10 @@ interface ChatSession {
 interface ChatViewProps {
   user: UserType | null;
   onSelectPaper: (paper: ResearchPaper) => void;
+  onSelectAuthor?: (authorName: string) => void;
 }
 
-export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper }) => {
+export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper, onSelectAuthor }) => {
   const [sessions, setSessions] = useState<ChatSession[]>([]);
   const [activeSessionId, setActiveSessionId] = useState<string>('default-session');
 
@@ -310,19 +311,19 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper }) => {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
 
-  // Reusable Pilled Input Box Component
+  // Reusable Input Box Component
   const renderPilledInputBox = (isCentered: boolean) => (
     <form 
       onSubmit={(e) => {
         e.preventDefault();
         handleSend(input);
       }} 
-      className={`relative flex items-center w-full bg-brand-card border border-brand-border/80 hover:border-brand-gray/50 focus-within:border-brand-cyan focus-within:ring-4 focus-within:ring-brand-cyan/15 rounded-full shadow-2xl transition-all duration-300 ${
-        isCentered ? 'p-2 sm:p-2.5 max-w-3xl mx-auto' : 'p-1.5 sm:p-2 max-w-4xl mx-auto'
+      className={`relative flex items-center w-full bg-white border border-slate-300 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-600/20 rounded-xl shadow-2xs transition-all duration-200 ${
+        isCentered ? 'p-2 max-w-3xl mx-auto' : 'p-1.5 max-w-4xl mx-auto'
       }`}
     >
-      <div className="pl-3.5 sm:pl-4 text-brand-cyan flex items-center shrink-0">
-        <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 animate-pulse" />
+      <div className="pl-3 text-blue-600 flex items-center shrink-0">
+        <Sparkles className="w-4 h-4" />
       </div>
       <input
         ref={inputRef}
@@ -330,42 +331,40 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper }) => {
         value={input}
         onChange={(e) => setInput(e.target.value)}
         placeholder={isCentered ? "Ask about papers, authors, departments... (e.g. 'Show Computer Science papers from 2026')" : "Ask a follow-up query or search publications..."}
-        className="flex-1 bg-transparent border-none text-white text-xs sm:text-sm rounded-full px-3 py-2 sm:py-2.5 focus:outline-none placeholder:text-brand-gray/50 font-sans"
+        className="flex-1 bg-transparent border-none text-slate-900 text-xs sm:text-sm rounded-lg px-3 py-2 focus:outline-none placeholder:text-slate-400 font-sans"
         disabled={loading}
       />
       <button
         type="submit"
         disabled={!input.trim() || loading}
-        className={`rounded-full bg-gradient-to-r from-brand-cyan to-indigo-500 hover:brightness-115 text-brand-bg font-bold flex items-center justify-center transition-all disabled:opacity-30 disabled:hover:brightness-100 shadow-md shadow-brand-cyan/20 cursor-pointer shrink-0 ${
-          isCentered ? 'w-10 h-10 sm:w-11 sm:h-11' : 'w-9 h-9 sm:w-10 sm:h-10'
-        }`}
+        className="watt-btn-primary shrink-0"
       >
-        <Send className="w-4 h-4 text-brand-bg stroke-[2.5]" />
+        <Send className="w-4 h-4 text-white stroke-[2.5]" />
       </button>
     </form>
   );
 
   return (
-    <div className="flex-1 flex h-full w-full overflow-hidden bg-brand-bg relative font-sans">
+    <div className="flex-1 flex h-full w-full overflow-hidden bg-slate-50 relative font-sans">
       
       {/* LEFT SIDEBAR: Chat History & Sessions */}
       <div 
-        className={`bg-brand-card/95 flex flex-col justify-between shrink-0 transition-all duration-300 z-30 overflow-hidden ${
-          sidebarOpen ? 'w-64 sm:w-72 border-r border-brand-border' : 'w-0'
+        className={`bg-white flex flex-col justify-between shrink-0 transition-all duration-300 z-30 overflow-hidden ${
+          sidebarOpen ? 'w-64 sm:w-72 border-r border-slate-200' : 'w-0'
         }`}
       >
         {/* Sidebar Header: New Chat & Collapse */}
-        <div className="p-4 border-b border-brand-border/60 flex items-center space-x-2">
+        <div className="p-4 border-b border-slate-200 flex items-center space-x-2">
           <button
             onClick={handleNewChat}
-            className="flex-1 px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-brand-cyan/15 to-indigo-500/15 hover:from-brand-cyan/25 hover:to-indigo-500/25 border border-brand-cyan/35 text-white font-semibold text-xs transition-all flex items-center justify-center space-x-2 shadow-sm cursor-pointer group"
+            className="flex-1 px-3.5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs transition-all flex items-center justify-center space-x-2 shadow-2xs cursor-pointer group"
           >
-            <Plus className="w-4 h-4 text-brand-cyan group-hover:rotate-90 transition-transform" />
+            <Plus className="w-4 h-4 text-white group-hover:rotate-90 transition-transform" />
             <span>New Chat</span>
           </button>
           <button
             onClick={() => setSidebarOpen(false)}
-            className="p-2.5 rounded-xl bg-brand-bg hover:bg-brand-hover border border-brand-border text-brand-gray hover:text-white transition-all cursor-pointer"
+            className="p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 hover:text-slate-900 transition-all cursor-pointer"
             title="Close Sidebar"
           >
             <PanelLeftClose className="w-4 h-4" />
@@ -375,13 +374,13 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper }) => {
         {/* Sidebar Middle: History List */}
         <div className="flex-1 overflow-y-auto p-3 space-y-4 custom-scrollbar">
           <div>
-            <div className="flex items-center justify-between px-2 mb-2 text-[10px] font-bold text-brand-gray uppercase tracking-wider">
+            <div className="flex items-center justify-between px-2 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
               <span className="flex items-center">
-                <History className="w-3 h-3 mr-1.5 text-brand-cyan" /> Chat History
+                <History className="w-3 h-3 mr-1.5 text-blue-600" /> Chat History
               </span>
               <button 
                 onClick={handleClearAllHistory}
-                className="text-brand-gray/60 hover:text-brand-red transition-colors text-[9px]"
+                className="text-slate-400 hover:text-red-600 transition-colors text-[9px]"
                 title="Clear all history"
               >
                 Clear All
@@ -400,19 +399,19 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper }) => {
                     }}
                     className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-xs cursor-pointer group transition-all ${
                       isActive
-                        ? 'bg-brand-cyan/15 text-white font-semibold border border-brand-cyan/40 shadow-sm shadow-brand-cyan/5'
-                        : 'text-brand-gray hover:bg-brand-bg hover:text-white border border-transparent'
+                        ? 'bg-blue-50 text-blue-600 font-bold border border-blue-100 shadow-2xs'
+                        : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent'
                     }`}
                   >
                     <div className="flex items-center space-x-2.5 min-w-0 flex-1">
-                      <MessageCircle className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-brand-cyan' : 'text-brand-gray group-hover:text-brand-cyan'}`} />
+                      <MessageCircle className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-blue-600' : 'text-slate-400 group-hover:text-blue-600'}`} />
                       <span className="truncate leading-normal">{session.title}</span>
                     </div>
                     
                     <button
                       onClick={(e) => handleDeleteSession(session.id, e)}
-                      className={`p-1 rounded-md hover:bg-brand-red/20 hover:text-brand-red transition-all shrink-0 ${
-                        isActive ? 'text-brand-gray hover:text-brand-red' : 'opacity-0 group-hover:opacity-100 text-brand-gray'
+                      className={`p-1 rounded-md hover:bg-red-50 hover:text-red-600 transition-all shrink-0 ${
+                        isActive ? 'text-slate-400 hover:text-red-600' : 'opacity-0 group-hover:opacity-100 text-slate-400'
                       }`}
                       title="Delete chat"
                     >
@@ -429,29 +428,29 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper }) => {
       </div>
 
       {/* RIGHT MAIN AREA: ChatGPT Workspace */}
-      <div className="flex-1 flex flex-col h-full min-w-0 bg-brand-bg relative overflow-hidden">
+      <div className="flex-1 flex flex-col h-full min-w-0 bg-slate-50 relative overflow-hidden">
         
         {/* Top Navbar */}
-        <div className="h-14 px-4 sm:px-6 bg-brand-card/70 backdrop-blur-md border-b border-brand-border/80 flex items-center justify-between shrink-0 z-20">
+        <div className="h-14 px-4 sm:px-6 bg-white border-b border-slate-200 flex items-center justify-between shrink-0 z-20 shadow-2xs">
           <div className="flex items-center space-x-3">
             {!sidebarOpen && (
               <button
                 onClick={() => setSidebarOpen(true)}
-                className="p-2 rounded-xl bg-brand-bg hover:bg-brand-hover border border-brand-border text-brand-gray hover:text-white transition-all cursor-pointer mr-1"
+                className="p-2 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 hover:text-slate-900 transition-all cursor-pointer mr-1"
                 title="Open Sidebar"
               >
                 <PanelLeft className="w-4 h-4" />
               </button>
             )}
             <div className="flex items-center space-x-2.5">
-              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-brand-cyan/20 to-indigo-500/20 border border-brand-cyan/40 flex items-center justify-center shadow-sm">
-                <Bot className="w-4 h-4 text-brand-cyan" />
+              <div className="w-8 h-8 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center shadow-2xs">
+                <Bot className="w-4 h-4 text-blue-600" />
               </div>
               <div>
-                <h2 className="text-xs sm:text-sm font-bold text-white leading-tight">
+                <h2 className="text-xs sm:text-sm font-bold text-slate-900 leading-tight">
                   promptFlow-AI Research Assistant
                 </h2>
-                <div className="flex items-center space-x-1.5 text-[10px] text-brand-gray">
+                <div className="flex items-center space-x-1.5 text-[10px] text-slate-500">
                   <span>AI Research Assistant</span>
                 </div>
               </div>
@@ -461,9 +460,9 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper }) => {
           <div className="flex items-center space-x-2">
             <button
               onClick={() => setShowGuardrailModal(true)}
-              className="px-2.5 py-1.5 rounded-lg bg-brand-bg hover:bg-brand-hover border border-brand-border text-brand-gray hover:text-white text-xs font-medium transition-all flex items-center space-x-1.5 cursor-pointer"
+              className="px-2.5 py-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 hover:text-slate-900 text-xs font-medium transition-all flex items-center space-x-1.5 cursor-pointer"
             >
-              <HelpCircle className="w-3.5 h-3.5 text-brand-cyan" />
+              <HelpCircle className="w-3.5 h-3.5 text-blue-600" />
               <span className="hidden sm:inline">Scope & Policy</span>
             </button>
           </div>
@@ -476,13 +475,13 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper }) => {
             
             {/* Hero Header */}
             <div className="text-center mb-8 sm:mb-10 space-y-3 animate-fadeIn">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-brand-cyan/20 via-indigo-500/20 to-brand-cyan/10 border border-brand-cyan/40 flex items-center justify-center mx-auto shadow-xl shadow-brand-cyan/10 mb-4">
-                <Sparkles className="w-8 h-8 text-brand-cyan animate-pulse" />
+              <div className="w-16 h-16 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center mx-auto shadow-xs mb-4">
+                <Sparkles className="w-8 h-8 text-blue-600 animate-pulse" />
               </div>
-              <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
+              <h1 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
                 How can I assist your research today, {user?.full_name?.split(' ')[0] || 'Professor'}?
               </h1>
-              <p className="text-xs sm:text-sm text-brand-gray max-w-lg mx-auto leading-relaxed">
+              <p className="text-xs sm:text-sm text-slate-500 max-w-lg mx-auto leading-relaxed">
                 Query published literature, analyze faculty citation records, or filter departmental research archives using natural language.
               </p>
             </div>
@@ -494,8 +493,8 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper }) => {
 
             {/* Relevant Questions Grid Below Input */}
             <div className="w-full max-w-3xl">
-              <div className="flex items-center justify-center space-x-2 text-[11px] font-bold text-brand-gray uppercase tracking-wider mb-3.5">
-                <Compass className="w-3.5 h-3.5 text-brand-cyan" />
+              <div className="flex items-center justify-center space-x-2 text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-3.5">
+                <Compass className="w-3.5 h-3.5 text-blue-600" />
                 <span>Suggested Research Queries</span>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -503,9 +502,9 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper }) => {
                   <button
                     key={idx}
                     onClick={() => handleSend(s)}
-                    className="p-4 rounded-2xl bg-brand-card/80 hover:bg-brand-card border border-brand-border/80 hover:border-brand-cyan/50 text-left text-xs text-brand-gray hover:text-white transition-all duration-200 flex items-start space-x-3 group cursor-pointer shadow-sm hover:shadow-md"
+                    className="p-4 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200/80 hover:border-blue-500/30 text-left text-xs text-slate-700 hover:text-slate-900 transition-all duration-200 flex items-start space-x-3 group cursor-pointer shadow-xs hover:shadow-md"
                   >
-                    <div className="w-7 h-7 rounded-lg bg-brand-cyan/10 flex items-center justify-center text-brand-cyan shrink-0 mt-0.5 group-hover:scale-110 transition-transform border border-brand-cyan/20">
+                    <div className="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600 shrink-0 mt-0.5 group-hover:scale-110 transition-transform border border-blue-100">
                       <BookOpen className="w-3.5 h-3.5" />
                     </div>
                     <span className="leading-relaxed font-medium pt-0.5">{s}</span>
@@ -530,24 +529,24 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper }) => {
                       
                       {/* Assistant Avatar */}
                       {!isUser && (
-                        <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-brand-cyan/20 to-indigo-500/20 border border-brand-cyan/40 flex items-center justify-center shrink-0 mt-1 shadow-sm">
-                          <Sparkles className="w-4 h-4 text-brand-cyan" />
+                        <div className="w-8 h-8 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center shrink-0 mt-1 shadow-2xs">
+                          <Sparkles className="w-4 h-4 text-blue-600" />
                         </div>
                       )}
 
                       {/* Message Bubble Container */}
                       <div className={`max-w-[88%] sm:max-w-[80%] ${
                         isUser 
-                          ? 'bg-gradient-to-br from-brand-cyan/25 to-brand-cyan/10 text-white border border-brand-cyan/40 rounded-3xl rounded-tr-sm px-5 py-3.5 shadow-md' 
+                          ? 'bg-blue-600 text-white rounded-3xl rounded-tr-sm px-5 py-3.5 shadow-2xs' 
                           : msg.isError 
-                            ? 'bg-brand-red/10 border border-brand-red/25 text-white rounded-3xl rounded-tl-sm px-5 py-4 shadow-sm' 
+                            ? 'bg-red-50 border border-red-200 text-red-900 rounded-3xl rounded-tl-sm px-5 py-4 shadow-2xs' 
                             : msg.response && !msg.response.is_academic_query 
-                              ? 'bg-brand-red/5 border border-brand-red/20 text-white rounded-3xl rounded-tl-sm px-5 py-4 shadow-sm'
-                              : 'bg-brand-card/90 border border-brand-border text-white rounded-3xl rounded-tl-sm px-5 py-4 shadow-md'
+                              ? 'bg-red-50 border border-red-200 text-red-900 rounded-3xl rounded-tl-sm px-5 py-4 shadow-2xs'
+                              : 'bg-white border border-slate-200/80 text-slate-900 rounded-3xl rounded-tl-sm px-5 py-4 shadow-xs'
                       }`}>
                         
                         {/* Sender Info & Timestamp */}
-                        <div className="flex items-center justify-between mb-1.5 text-[10px] text-brand-gray/80">
+                        <div className="flex items-center justify-between mb-1.5 text-[10px] text-slate-400">
                           <span className="font-bold uppercase tracking-wider flex items-center">
                             {isUser ? 'You' : 'promptFlow-AI Research Agent'}
                           </span>
@@ -561,62 +560,47 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper }) => {
 
                         {/* Detected Query Filters */}
                         {msg.response && msg.response.is_academic_query && msg.response.filters && (
-                          <div className="mt-4 pt-3 border-t border-brand-border/60">
-                            <div className="text-[10px] font-bold text-brand-gray uppercase tracking-wider mb-2 flex items-center">
-                              <Tag className="w-3.5 h-3.5 mr-1 text-brand-cyan" /> Detected Search Parameters:
+                          <div className="mt-4 pt-3 border-t border-slate-200">
+                            <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center">
+                              <Tag className="w-3.5 h-3.5 mr-1 text-blue-600" /> Detected Search Parameters:
                             </div>
-                            <div className="flex flex-wrap gap-1.5">
+                            <div className="flex flex-wrap gap-2 text-[11px] font-semibold text-slate-700">
                               {msg.response.filters.departments.map((dept, i) => (
-                                <span key={`dept-${i}`} className="px-2.5 py-1 rounded-full bg-brand-cyan/15 border border-brand-cyan/35 text-brand-cyan text-[10px] font-semibold font-mono">
+                                <span key={`dept-${i}`}>
                                   Dept: {dept}
                                 </span>
                               ))}
                               {msg.response.filters.authors.map((auth, i) => (
-                                <span key={`auth-${i}`} className="px-2.5 py-1 rounded-full bg-brand-cyan/15 border border-brand-cyan/35 text-brand-cyan text-[10px] font-semibold font-mono">
+                                <span key={`auth-${i}`}>
                                   Author: {auth}
                                 </span>
                               ))}
                               {msg.response.filters.years.map((year, i) => (
-                                <span key={`year-${i}`} className="px-2.5 py-1 rounded-full bg-brand-cyan/15 border border-brand-cyan/35 text-brand-cyan text-[10px] font-semibold font-mono">
+                                <span key={`year-${i}`}>
                                   Year: {year}
                                 </span>
                               ))}
                               {msg.response.filters.categories.map((cat, i) => (
-                                <span key={`cat-${i}`} className="px-2.5 py-1 rounded-full bg-brand-cyan/15 border border-brand-cyan/35 text-brand-cyan text-[10px] font-semibold font-mono">
+                                <span key={`cat-${i}`}>
                                   Category: {cat}
                                 </span>
                               ))}
                               {msg.response.filters.title_keywords.map((kw, i) => (
-                                <span key={`kw-${i}`} className="px-2.5 py-1 rounded-full bg-brand-cyan/10 border border-brand-cyan/20 text-brand-cyan text-[10px] font-semibold font-mono">
+                                <span key={`kw-${i}`}>
                                   Keyword: {kw}
                                 </span>
                               ))}
-                              {msg.response.filters.general_query && (
-                                <span className="px-2.5 py-1 rounded-full bg-brand-cyan/10 border border-brand-cyan/20 text-brand-cyan text-[10px] font-semibold font-mono">
-                                  Search: {msg.response.filters.general_query}
-                                </span>
-                              )}
-                              {!msg.response.filters.departments.length && 
-                               !msg.response.filters.authors.length && 
-                               !msg.response.filters.years.length && 
-                               !msg.response.filters.categories.length && 
-                               !msg.response.filters.title_keywords.length && 
-                               !msg.response.filters.general_query && (
-                                <span className="px-2.5 py-1 rounded-full bg-brand-border text-brand-gray text-[10px] font-mono">
-                                  Broad Academic Search
-                                </span>
-                              )}
                             </div>
                           </div>
                         )}
 
                         {/* Guardrail Violation Box */}
                         {msg.response && !msg.response.is_academic_query && (
-                          <div className="mt-3.5 p-3 rounded-2xl bg-brand-red/10 border border-brand-red/25 flex items-start space-x-2.5 text-xs text-brand-red">
-                            <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
+                          <div className="mt-3.5 p-3 rounded-2xl bg-red-50 border border-red-200 flex items-start space-x-2.5 text-xs text-red-800">
+                            <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5 text-red-600" />
                             <div>
-                              <strong className="block mb-0.5 font-bold">Guardrail Policy Triggered</strong>
-                              <p className="text-[11px] text-brand-red/90 leading-normal">
+                              <strong className="block mb-0.5 font-bold text-red-900">Guardrail Policy Triggered</strong>
+                              <p className="text-[11px] text-red-800 leading-normal">
                                 This query falls outside research papers, authors, departments, or categories. Please try phrasing a query related directly to college publications.
                               </p>
                             </div>
@@ -625,106 +609,108 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper }) => {
 
                         {/* Structured Database Matches Accordion List */}
                         {msg.response && msg.response.is_academic_query && msg.response.papers && msg.response.papers.length > 0 && (
-                          <div className="mt-4 pt-3.5 border-t border-brand-border/60 space-y-2.5">
-                            <div className="text-[11px] font-bold text-brand-gray uppercase tracking-wider mb-2 flex items-center justify-between">
-                              <span className="flex items-center">
-                                <Database className="w-3.5 h-3.5 mr-1.5 text-brand-cyan" /> Structured Database Matches ({msg.response.papers.length}):
+                          <div className="mt-4 pt-3 border-t border-slate-200 space-y-2">
+                            <div className="flex items-center justify-between">
+                              <span className="text-[11px] font-bold text-slate-900 uppercase tracking-wider flex items-center">
+                                <Database className="w-3.5 h-3.5 mr-1.5 text-blue-600" /> Structured Database Matches ({msg.response.papers.length}):
                               </span>
-                              <span className="text-[10px] text-brand-cyan font-normal lowercase font-mono">click paper to expand</span>
+                              <span className="text-[10px] text-blue-600 font-normal lowercase font-mono">click paper to expand</span>
                             </div>
-                            <div className="space-y-2">
+
+                            <div className="space-y-2 pt-1">
                               {msg.response.papers.map((paper) => {
                                 const isExpanded = expandedPaperId === paper.id;
                                 return (
                                   <div 
                                     key={paper.id}
-                                    className="border border-brand-border/80 rounded-2xl overflow-hidden bg-brand-bg/60 hover:bg-brand-bg transition-all shadow-sm"
+                                    className="rounded-xl border border-slate-200 bg-white overflow-hidden shadow-2xs transition-all"
                                   >
                                     {/* Accordion Header */}
                                     <button
                                       onClick={() => setExpandedPaperId(isExpanded ? null : paper.id)}
-                                      className="w-full p-3.5 text-left flex items-center justify-between hover:text-brand-cyan transition-colors cursor-pointer group"
+                                      className="w-full p-3.5 text-left flex items-center justify-between hover:text-blue-600 transition-colors cursor-pointer group"
                                     >
-                                      <div className="max-w-[88%] space-y-1">
-                                        <span className="text-xs font-bold text-white block group-hover:text-brand-cyan line-clamp-1 leading-normal transition-colors">
+                                      <div className="min-w-0 flex-1 pr-2">
+                                        <span className="text-xs font-bold text-slate-900 block group-hover:text-blue-600 line-clamp-1 leading-normal transition-colors">
                                           {paper.title}
                                         </span>
-                                        <div className="flex items-center space-x-2 text-[10px] text-brand-gray">
-                                          <span className="font-medium text-white/85">{paper.authors_raw || paper.authors_list.join(", ")}</span>
+                                        <div className="flex items-center space-x-2 text-[10px] text-slate-500 mt-1">
+                                          <span className="font-medium text-slate-700">{paper.authors_raw || paper.authors_list.join(", ")}</span>
                                           <span>•</span>
-                                          <span className="text-brand-cyan/90 font-medium">{paper.department}</span>
+                                          <span className="text-blue-600 font-medium">{paper.department}</span>
                                           <span>•</span>
-                                          <span className="font-mono bg-brand-border/60 px-1.5 py-0.2 rounded text-white/90">{paper.publication_year}</span>
+                                          <span className="font-mono text-slate-600">{paper.publication_year}</span>
                                         </div>
                                       </div>
-                                      <div className="w-7 h-7 rounded-full bg-brand-card border border-brand-border flex items-center justify-center shrink-0 ml-2 group-hover:border-brand-cyan/40">
+                                      <div className="w-7 h-7 rounded-md bg-slate-50 border border-slate-200 flex items-center justify-center shrink-0 ml-2 group-hover:border-blue-300">
                                         {isExpanded ? (
-                                          <ChevronDown className="w-4 h-4 text-brand-cyan transform rotate-180 transition-all" />
+                                          <ChevronDown className="w-4 h-4 text-blue-600 transform rotate-180 transition-all" />
                                         ) : (
-                                          <ChevronRight className="w-4 h-4 text-brand-gray group-hover:text-brand-cyan transition-all" />
+                                          <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-blue-600 transition-all" />
                                         )}
                                       </div>
                                     </button>
                                     
                                     {/* Accordion Body */}
                                     {isExpanded && (
-                                      <div className="px-4 pb-4 pt-2.5 border-t border-brand-border/60 space-y-3 bg-brand-card/40 text-xs">
-                                        {/* AI Summary Callout */}
-                                        <div className="p-3.5 rounded-xl bg-brand-bg/80 border-l-4 border-brand-cyan text-xs leading-relaxed italic text-white/95 font-sans shadow-inner">
-                                          <span className="text-brand-cyan font-bold block not-italic text-[10px] uppercase tracking-wider mb-1 flex items-center">
-                                            <Sparkles className="w-3.5 h-3.5 mr-1" /> Executive AI Summary
+                                      <div className="px-4 pb-4 pt-2.5 border-t border-slate-200 space-y-3 bg-white text-xs">
+                                        {/* AI Summary Callout - Clean white box */}
+                                        <div className="p-3.5 rounded-xl bg-white border border-slate-200 text-xs leading-relaxed italic text-slate-800 font-sans shadow-2xs">
+                                          <span className="text-blue-600 font-bold block not-italic text-[10px] uppercase tracking-wider mb-1 flex items-center">
+                                            <Sparkles className="w-3.5 h-3.5 mr-1 text-blue-600" /> Executive AI Summary
                                           </span>
                                           “{paper.ai_summary || paper.abstract}”
                                         </div>
                                         
                                         {/* Metadata Metrics Table */}
                                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[10px]">
-                                          <div className="p-2.5 rounded-xl bg-brand-bg/60 border border-brand-border/60">
-                                            <span className="text-brand-gray block text-[9px] uppercase font-bold mb-0.5">Journal / Conf</span>
-                                            <span className="text-white font-medium truncate block" title={paper.journal_or_conference || 'N/A'}>{paper.journal_or_conference || 'N/A'}</span>
+                                          <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
+                                            <span className="text-slate-500 block text-[9px] uppercase font-bold mb-0.5">Journal / Conf</span>
+                                            <span className="text-slate-900 font-medium truncate block" title={paper.journal_or_conference || 'N/A'}>{paper.journal_or_conference || 'N/A'}</span>
                                           </div>
-                                          <div className="p-2.5 rounded-xl bg-brand-bg/60 border border-brand-border/60">
-                                            <span className="text-brand-gray block text-[9px] uppercase font-bold mb-0.5">DOI Number</span>
-                                            <span className="text-white font-mono truncate block" title={paper.doi || 'N/A'}>{paper.doi || 'N/A'}</span>
+                                          <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
+                                            <span className="text-slate-500 block text-[9px] uppercase font-bold mb-0.5">DOI Number</span>
+                                            <span className="text-slate-900 font-mono truncate block" title={paper.doi || 'N/A'}>{paper.doi || 'N/A'}</span>
                                           </div>
-                                          <div className="p-2.5 rounded-xl bg-brand-bg/60 border border-brand-border/60">
-                                            <span className="text-brand-gray block text-[9px] uppercase font-bold mb-0.5">Citations</span>
-                                            <span className="text-brand-green font-mono font-bold block">{paper.citation_count} citations</span>
+                                          <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
+                                            <span className="text-slate-500 block text-[9px] uppercase font-bold mb-0.5">Citations</span>
+                                            <span className="text-emerald-600 font-mono font-bold block">{paper.citation_count} citations</span>
                                           </div>
-                                          <div className="p-2.5 rounded-xl bg-brand-bg/60 border border-brand-border/60">
-                                            <span className="text-brand-gray block text-[9px] uppercase font-bold mb-0.5">ML Confidence</span>
-                                            <span className="text-brand-cyan font-mono font-bold block">{(paper.ml_confidence * 100).toFixed(1)}%</span>
+                                          <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
+                                            <span className="text-slate-500 block text-[9px] uppercase font-bold mb-0.5">ML Confidence</span>
+                                            <span className="text-blue-600 font-mono font-bold block">{(paper.ml_confidence * 100).toFixed(1)}%</span>
                                           </div>
                                         </div>
                                         
-                                        {/* Full Abstract */}
+                                        {/* Full Abstract - Clean white box with border */}
                                         <div>
-                                          <span className="text-[10px] font-bold text-brand-gray uppercase tracking-wider block mb-1">Abstract Text:</span>
-                                          <p className="text-[11px] text-brand-gray leading-relaxed bg-brand-bg/50 p-3 rounded-xl border border-brand-border/60 max-h-32 overflow-y-auto custom-scrollbar font-sans">
+                                          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mb-1">Abstract Text:</span>
+                                          <p className="text-[11px] text-slate-600 leading-relaxed bg-white p-3 rounded-xl border border-slate-200 max-h-32 overflow-y-auto custom-scrollbar font-sans">
                                             {paper.abstract || 'No abstract text available.'}
                                           </p>
                                         </div>
                                         
                                         {/* Actions Footer */}
-                                        <div className="flex items-center justify-end space-x-2.5 pt-2.5 border-t border-brand-border/40">
+                                        <div className="flex items-center justify-end space-x-2.5 pt-2.5 border-t border-slate-200">
                                           <button
                                             onClick={() => onSelectPaper(paper)}
-                                            className="px-3 py-1.5 rounded-xl bg-brand-bg hover:bg-brand-hover text-white border border-brand-border text-xs font-semibold transition-all cursor-pointer shadow-sm flex items-center space-x-1"
+                                            className="px-3 py-1.5 rounded-xl bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 text-xs font-semibold transition-all cursor-pointer shadow-2xs flex items-center space-x-1"
                                           >
-                                            <FileText className="w-3.5 h-3.5 text-brand-cyan" />
-                                            <span>Full Metadata Modal</span>
+                                            <FileText className="w-3.5 h-3.5 text-blue-600" />
+                                            <span>Paper Details</span>
                                           </button>
-                                          {paper.pdf_url && (
-                                            <a
-                                              href={`${SERVER_BASE_URL}${paper.pdf_url}`}
-                                              target="_blank"
-                                              rel="noreferrer"
-                                              className="px-3 py-1.5 rounded-xl bg-brand-cyan/20 hover:bg-brand-cyan/35 border border-brand-cyan/40 text-brand-cyan text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer shadow-sm"
-                                            >
-                                              <ExternalLink className="w-3.5 h-3.5" />
-                                              <span>View PDF</span>
-                                            </a>
-                                          )}
+                                          <button
+                                            onClick={() => {
+                                              if (onSelectAuthor && paper.authors_raw) {
+                                                const firstAuthor = paper.authors_raw.split(',')[0].trim();
+                                                onSelectAuthor(firstAuthor);
+                                              }
+                                            }}
+                                            className="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer shadow-2xs"
+                                          >
+                                            <span>Author Profile</span>
+                                            <ArrowUpRight className="w-3.5 h-3.5" />
+                                          </button>
                                         </div>
                                       </div>
                                     )}
@@ -737,7 +723,7 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper }) => {
 
                         {/* Empty state matches */}
                         {msg.response && msg.response.is_academic_query && msg.response.papers && msg.response.papers.length === 0 && (
-                          <div className="mt-4 p-3.5 rounded-2xl bg-brand-bg/80 border border-brand-border text-center text-xs text-brand-gray font-medium">
+                          <div className="mt-4 p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-center text-xs text-slate-500 font-medium">
                             No research publications in the DB match these exact search parameters.
                           </div>
                         )}
@@ -746,8 +732,8 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper }) => {
 
                       {/* User Avatar */}
                       {isUser && (
-                        <div className="w-8 h-8 rounded-xl bg-brand-card border border-brand-border flex items-center justify-center shrink-0 mt-1 shadow-sm">
-                          <User className="w-4 h-4 text-white" />
+                        <div className="w-8 h-8 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center shrink-0 mt-1 shadow-2xs">
+                          <User className="w-4 h-4 text-slate-700" />
                         </div>
                       )}
 
@@ -758,16 +744,16 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper }) => {
                 {/* Loading Indicator Bubble */}
                 {loading && (
                   <div className="flex justify-start space-x-3 sm:space-x-4">
-                    <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-brand-cyan/20 to-indigo-500/20 border border-brand-cyan/40 flex items-center justify-center shrink-0 mt-1 shadow-sm">
-                      <Sparkles className="w-4 h-4 text-brand-cyan animate-spin" />
+                    <div className="w-8 h-8 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center shrink-0 mt-1 shadow-2xs">
+                      <Sparkles className="w-4 h-4 text-blue-600 animate-spin" />
                     </div>
-                    <div className="bg-brand-card/90 border border-brand-border rounded-3xl rounded-tl-sm px-5 py-4 max-w-[60%] flex items-center space-x-3 shadow-md">
+                    <div className="bg-white border border-slate-200 rounded-3xl rounded-tl-sm px-5 py-4 max-w-[60%] flex items-center space-x-3 shadow-xs">
                       <div className="flex space-x-1.5">
-                        <div className="w-2 h-2 rounded-full bg-brand-cyan animate-bounce" style={{ animationDelay: '0ms' }} />
-                        <div className="w-2 h-2 rounded-full bg-brand-cyan animate-bounce" style={{ animationDelay: '150ms' }} />
-                        <div className="w-2 h-2 rounded-full bg-brand-cyan animate-bounce" style={{ animationDelay: '300ms' }} />
+                        <div className="w-2 h-2 rounded-full bg-blue-600 animate-bounce" style={{ animationDelay: '0ms' }} />
+                        <div className="w-2 h-2 rounded-full bg-blue-600 animate-bounce" style={{ animationDelay: '150ms' }} />
+                        <div className="w-2 h-2 rounded-full bg-blue-600 animate-bounce" style={{ animationDelay: '300ms' }} />
                       </div>
-                      <span className="text-xs text-brand-gray font-semibold">Agent is querying Scikit-Learn & DB corpus...</span>
+                      <span className="text-xs text-slate-500 font-semibold">Agent is querying Scikit-Learn &amp; DB corpus...</span>
                     </div>
                   </div>
                 )}
@@ -777,9 +763,9 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper }) => {
             </div>
 
             {/* DOCKED BOTTOM BAR (Fixed ChatGPT Footer) */}
-            <div className="p-3 sm:p-4 bg-gradient-to-t from-brand-bg via-brand-bg/95 to-brand-bg/80 backdrop-blur-md border-t border-brand-border/60 shrink-0 z-10">
+            <div className="p-3 sm:p-4 bg-white border-t border-slate-200 shrink-0 z-10">
               {renderPilledInputBox(false)}
-              <div className="mt-2 text-center text-[10px] text-brand-gray/70 font-sans flex items-center justify-center space-x-2">
+              <div className="mt-2 text-center text-[10px] text-slate-400 font-sans flex items-center justify-center space-x-2">
                 <span>promptFlow-AI Research Agent v3.5 can make mistakes. Verify important citations and DOI metadata against the primary repository.</span>
               </div>
             </div>
@@ -791,59 +777,59 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper }) => {
 
       {/* GUARDRAIL & SCOPE MODAL */}
       {showGuardrailModal && (
-        <div className="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fadeIn">
-          <div className="bg-brand-card border border-brand-border rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-5">
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-xs z-50 flex items-center justify-center p-4 animate-fadeIn">
+          <div className="bg-white border border-slate-200 rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-5">
             
-            <div className="flex items-center justify-between pb-3 border-b border-brand-border/80">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-200">
               <div className="flex items-center space-x-2.5">
-                <div className="w-9 h-9 rounded-xl bg-brand-red/15 border border-brand-red/35 flex items-center justify-center text-brand-red">
+                <div className="w-9 h-9 rounded-xl bg-red-50 border border-red-100 flex items-center justify-center text-red-600">
                   <AlertTriangle className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-white leading-tight">Assistant Guardrails & Policy</h3>
-                  <p className="text-[11px] text-brand-gray">Strict academic filtering engine</p>
+                  <h3 className="text-base font-bold text-slate-900 leading-tight">Assistant Guardrails &amp; Policy</h3>
+                  <p className="text-[11px] text-slate-500">Strict academic filtering engine</p>
                 </div>
               </div>
               <button
                 onClick={() => setShowGuardrailModal(false)}
-                className="p-1.5 rounded-xl bg-brand-bg hover:bg-brand-hover text-brand-gray hover:text-white transition-colors cursor-pointer"
+                className="p-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-500 hover:text-slate-900 transition-colors cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <p className="text-xs text-brand-gray leading-relaxed">
+            <p className="text-xs text-slate-600 leading-relaxed">
               This chat interface is explicitly designed to query the College Research Digest database. It operates under strict academic and departmental parameters to maintain high signal-to-noise ratio:
             </p>
 
             <div className="space-y-3 text-xs">
-              <div className="p-3.5 rounded-2xl bg-brand-cyan/10 border border-brand-cyan/30 text-white space-y-1">
-                <strong className="text-brand-cyan font-bold flex items-center text-xs">
-                  ✅ Supported Topics & Scope
+              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-slate-800 space-y-1">
+                <strong className="text-blue-600 font-bold flex items-center text-xs">
+                  ✅ Supported Topics &amp; Scope
                 </strong>
-                <p className="text-[11px] text-brand-gray leading-normal">
+                <p className="text-[11px] text-slate-600 leading-normal">
                   Searching for faculty papers, looking up specific author publication history, summarizing abstracts, filtering by academic department, year, or citation count.
                 </p>
               </div>
 
-              <div className="p-3.5 rounded-2xl bg-brand-red/10 border border-brand-red/30 text-white space-y-1">
-                <strong className="text-brand-red font-bold flex items-center text-xs">
-                  ❌ Restricted & Rejected Topics
+              <div className="p-3.5 rounded-2xl bg-red-50 border border-red-100 text-red-900 space-y-1">
+                <strong className="text-red-600 font-bold flex items-center text-xs">
+                  ❌ Restricted &amp; Rejected Topics
                 </strong>
-                <p className="text-[11px] text-brand-red/90 leading-normal">
+                <p className="text-[11px] text-red-800 leading-normal">
                   General conversational chatter, programming/coding assistance, email administration tasks, college exam structures, and non-academic knowledge. Unrelated queries trigger immediate rejection by the NLP classification guardrail.
                 </p>
               </div>
             </div>
 
-            <div className="p-3 rounded-xl bg-brand-bg border border-brand-border text-[11px] text-brand-gray flex items-center justify-between font-mono">
+            <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-[11px] text-slate-600 flex items-center justify-between font-mono">
               <span>Model Architecture:</span>
-              <span className="text-brand-cyan font-bold">Gemini 3.5 Flash + Scikit-Learn NLP</span>
+              <span className="text-blue-600 font-bold">Gemini 3.5 Flash + Scikit-Learn NLP</span>
             </div>
 
             <button
               onClick={() => setShowGuardrailModal(false)}
-              className="w-full py-3 rounded-xl bg-gradient-to-r from-brand-cyan to-indigo-500 hover:brightness-115 text-brand-bg font-bold text-xs transition-all shadow-lg shadow-brand-cyan/15 cursor-pointer"
+              className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs transition-all shadow-xs cursor-pointer"
             >
               Got it, Continue Researching
             </button>

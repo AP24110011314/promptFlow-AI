@@ -127,7 +127,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <>
-      <nav className="h-14 border-b border-brand-border bg-brand-card sticky top-0 z-40 select-none shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
+      <nav className="h-14 border-b border-slate-200 bg-white sticky top-0 z-40 select-none shadow-2xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between gap-4">
           
           {/* Left: Logo */}
@@ -136,10 +136,10 @@ export const Navbar: React.FC<NavbarProps> = ({
               className="flex items-center space-x-2 cursor-pointer"
               onClick={() => { setActiveTab('dashboard'); setShowMobileMenu(false); }}
             >
-              <div className="w-7 h-7 rounded-lg bg-brand-cyan text-real-white flex items-center justify-center font-bold text-sm shrink-0">
-                <Zap className="w-4 h-4 fill-real-white text-real-white" />
+              <div className="w-7 h-7 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-sm shrink-0 shadow-2xs">
+                <Zap className="w-4 h-4 fill-white text-white" />
               </div>
-              <span className="text-xs font-bold text-white tracking-tight font-display">
+              <span className="text-xs font-bold text-slate-900 tracking-tight font-display">
                 promptFlow-AI
               </span>
             </div>
@@ -155,8 +155,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                   onClick={() => setActiveTab(item.id)}
                   className={`relative h-full px-3.5 flex items-center text-xs font-semibold transition-all cursor-pointer ${
                     isActive
-                      ? 'text-brand-cyan font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-brand-cyan'
-                      : 'text-brand-gray hover:text-white'
+                      ? 'text-blue-600 font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-blue-600'
+                      : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
                   <span>{item.label}</span>
@@ -169,16 +169,16 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="flex items-center space-x-2 shrink-0">
             {/* Minimal Search bar with Ctrl+K shortcut */}
             <div className="hidden lg:block relative">
-              <Search className="w-3.5 h-3.5 text-brand-gray absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 id="navbar-search"
                 type="text"
                 value={searchQuery}
                 onChange={handleSearchChange}
                 placeholder={searchPlaceholder}
-                className="w-48 pl-8 pr-12 py-1.5 rounded-xl bg-brand-bg border border-brand-border text-xs text-white placeholder-brand-gray focus:outline-none focus:border-brand-cyan transition-all duration-200"
+                className="w-48 pl-8 pr-12 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all duration-200"
               />
-              <kbd className="absolute right-2 top-1/2 -translate-y-1/2 px-1.5 py-0.5 rounded bg-brand-card border border-brand-border text-[9px] font-mono text-brand-gray pointer-events-none select-none">
+              <kbd className="absolute right-2 top-1/2 -translate-y-1/2 px-1.5 py-0.5 rounded bg-slate-100 border border-slate-200 text-[9px] font-mono text-slate-500 pointer-events-none select-none">
                 ⌘K
               </kbd>
             </div>
@@ -187,12 +187,12 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               onClick={onToggleTheme}
               title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
-              className="p-2 rounded-xl hover:bg-brand-hover text-brand-gray hover:text-white transition-all cursor-pointer flex items-center justify-center"
+              className="p-2 rounded-xl hover:bg-slate-100 text-slate-600 hover:text-slate-900 transition-all cursor-pointer flex items-center justify-center"
             >
               {theme === 'dark' ? (
-                <Sun className="w-4 h-4 text-brand-cyan" />
+                <Sun className="w-4 h-4 text-blue-600" />
               ) : (
-                <Moon className="w-4 h-4 text-brand-cyan" />
+                <Moon className="w-4 h-4 text-blue-600" />
               )}
             </button>
 
@@ -201,9 +201,9 @@ export const Navbar: React.FC<NavbarProps> = ({
               <button
                 onClick={onSwitchRole}
                 title={`Switch Role (Current: ${user.role})`}
-                className="hidden sm:flex p-2 rounded-xl hover:bg-brand-hover text-brand-gray hover:text-white transition-all cursor-pointer"
+                className="hidden sm:flex p-2 rounded-xl hover:bg-slate-100 text-slate-600 hover:text-slate-900 transition-all cursor-pointer"
               >
-                <RefreshCw className="w-4 h-4 text-brand-cyan" />
+                <RefreshCw className="w-4 h-4 text-blue-600" />
               </button>
             )}
 
@@ -212,11 +212,11 @@ export const Navbar: React.FC<NavbarProps> = ({
               <button
                 onClick={() => { setShowNotifications(!showNotifications); fetchUnreadCount(); }}
                 title="Notifications"
-                className="hidden sm:flex p-2 rounded-xl hover:bg-brand-hover text-brand-gray hover:text-white transition-all cursor-pointer relative"
+                className="hidden sm:flex p-2 rounded-xl hover:bg-slate-100 text-slate-600 hover:text-slate-900 transition-all cursor-pointer relative"
               >
                 <Bell className="w-4 h-4" />
                 {unreadCount > 0 && (
-                  <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-brand-cyan animate-pulse" />
+                  <span className="absolute -top-1 -right-1 text-[10px] font-bold text-blue-600">{unreadCount}</span>
                 )}
               </button>
 
@@ -228,66 +228,69 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
 
             {/* Help Icon */}
-            <button 
+            <button
               onClick={() => setShowHelpModal(true)}
-              title="Help & Platform Documentation" 
-              className="hidden sm:flex p-2 rounded-xl hover:bg-brand-hover text-brand-gray hover:text-white transition-all cursor-pointer"
+              title="Documentation & Help"
+              className="p-2 rounded-xl hover:bg-slate-100 text-slate-600 hover:text-slate-900 transition-all cursor-pointer"
             >
-              <HelpCircle className="w-4 h-4 text-brand-gray hover:text-brand-cyan transition-colors" />
+              <HelpCircle className="w-4 h-4 text-slate-500 hover:text-blue-600 transition-colors" />
             </button>
 
-
-            {/* User Dropdown */}
+            {/* User Profile Avatar with Dropdown */}
             {user ? (
               <div className="relative">
                 <div
                   onClick={() => setShowDropdown(!showDropdown)}
-                  className="flex items-center pl-2 border-l border-brand-border cursor-pointer group select-none"
+                  className="flex items-center space-x-2 p-1 rounded-xl hover:bg-slate-100 transition-all cursor-pointer group"
                 >
-                  <div className="w-7 h-7 rounded-full bg-brand-cyan text-real-white flex items-center justify-center font-bold text-xs shadow-xs group-hover:brightness-105 transition-all">
+                  <div className="w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs shadow-2xs group-hover:brightness-105 transition-all">
                     {user.full_name.charAt(0)}
                   </div>
+                  <span className="hidden xl:inline text-xs font-semibold text-slate-800 group-hover:text-slate-900 truncate max-w-[120px]">
+                    {user.full_name.split(' ')[0]}
+                  </span>
                 </div>
 
                 {/* Dropdown Menu */}
                 {showDropdown && (
-                  <div className="absolute right-0 mt-3 w-60 rounded-2xl bg-brand-card border border-brand-border shadow-lg py-1.5 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
-                    <div className="px-4 py-2.5 border-b border-brand-border">
-                      <p className="text-xs font-bold text-white truncate">{user.full_name}</p>
-                      <p className="text-[10px] text-brand-gray truncate mt-0.5">{user.email}</p>
-                      <div className="mt-2 flex flex-wrap gap-1">
-                        <span className="px-1.5 py-0.5 rounded bg-brand-cyan/10 text-brand-cyan text-[8px] font-bold uppercase tracking-wider">
+                  <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-white border border-slate-200 shadow-xl py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                    <div className="px-4 py-2 border-b border-slate-200">
+                      <p className="text-xs font-bold text-slate-900 truncate">{user.full_name}</p>
+                      <p className="text-[10px] text-slate-500 truncate mt-0.5">{user.email}</p>
+                      <div className="mt-1.5 flex items-center space-x-1">
+                        <span className="px-1.5 py-0.5 rounded bg-blue-50 text-blue-600 text-[8px] font-bold uppercase tracking-wider border border-blue-100">
                           {user.role}
                         </span>
-                        <span className="px-1.5 py-0.5 rounded bg-brand-bg text-brand-gray border border-brand-border text-[8px] font-medium truncate max-w-[120px]">
-                          {user.department || 'General'}
-                        </span>
+                        <span className="text-[10px] text-slate-400">•</span>
+                        <span className="text-[10px] text-slate-500 truncate">{user.department || 'General'}</span>
                       </div>
                     </div>
 
                     <div className="py-1">
                       <button
                         onClick={handleOpenEdit}
-                        className="w-full px-4 py-2 text-left text-xs font-semibold text-brand-gray hover:text-white hover:bg-brand-hover flex items-center space-x-2 transition-colors cursor-pointer"
+                        className="w-full px-4 py-2 text-left text-xs font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-50 flex items-center space-x-2 transition-colors cursor-pointer"
                       >
-                        <UserCheck className="w-4 h-4 text-brand-cyan shrink-0" />
-                        <span>Profile Settings</span>
+                        <UserCheck className="w-4 h-4 text-blue-600 shrink-0" />
+                        <span>Edit Profile</span>
                       </button>
-                      <button
-                        onClick={() => { setShowDropdown(false); onSwitchRole(); }}
-                        className="w-full px-4 py-2 text-left text-xs font-semibold text-brand-gray hover:text-white hover:bg-brand-hover flex items-center space-x-2 transition-colors cursor-pointer"
-                      >
-                        <RefreshCw className="w-4 h-4 text-brand-green shrink-0" />
-                        <span>Switch to {user.role === 'admin' ? 'Faculty' : 'Admin'}</span>
-                      </button>
+                      {onSwitchRole && (
+                        <button
+                          onClick={() => { setShowDropdown(false); onSwitchRole(); }}
+                          className="w-full px-4 py-2 text-left text-xs font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-50 flex items-center space-x-2 transition-colors cursor-pointer"
+                        >
+                          <RefreshCw className="w-4 h-4 text-emerald-600 shrink-0" />
+                          <span>Switch to {user.role === 'admin' ? 'Faculty' : 'Admin'}</span>
+                        </button>
+                      )}
                     </div>
 
-                    <div className="border-t border-brand-border pt-1.5 mt-1">
+                    <div className="border-t border-slate-200 pt-1">
                       <button
                         onClick={() => { setShowDropdown(false); onLogout(); }}
-                        className="w-full px-4 py-2 text-left text-xs font-semibold text-brand-red hover:bg-brand-red/5 flex items-center space-x-2 transition-colors cursor-pointer"
+                        className="w-full px-4 py-2 text-left text-xs font-semibold text-red-600 hover:bg-red-50 flex items-center space-x-2 transition-colors cursor-pointer"
                       >
-                        <LogOut className="w-4 h-4 shrink-0" />
+                        <LogOut className="w-4 h-4 text-red-600 shrink-0" />
                         <span>Log Out</span>
                       </button>
                     </div>
@@ -295,19 +298,19 @@ export const Navbar: React.FC<NavbarProps> = ({
                 )}
               </div>
             ) : (
-              <div className="flex items-center space-x-1.5 pl-2 border-l border-brand-border">
-                <UserIcon className="w-3.5 h-3.5 text-brand-gray" />
-                <span className="text-xs text-brand-gray">Guest</span>
+              <div className="flex items-center space-x-1.5 pl-2 border-l border-slate-200">
+                <UserIcon className="w-3.5 h-3.5 text-slate-400" />
+                <span className="text-xs text-slate-500">Guest</span>
               </div>
             )}
 
             {/* Mobile Menu Button */}
             <button
               onClick={() => setShowMobileMenu(!showMobileMenu)}
-              className="md:hidden p-2 rounded-xl hover:bg-brand-hover text-brand-gray hover:text-white transition-all cursor-pointer flex items-center justify-center"
+              className="md:hidden p-2 rounded-xl hover:bg-slate-100 text-slate-600 hover:text-slate-900 transition-all cursor-pointer flex items-center justify-center"
               title="Toggle Menu"
             >
-              {showMobileMenu ? <X className="w-4 h-4 text-brand-cyan" /> : <Menu className="w-4 h-4" />}
+              {showMobileMenu ? <X className="w-4 h-4 text-blue-600" /> : <Menu className="w-4 h-4" />}
             </button>
           </div>
 
@@ -493,5 +496,4 @@ export const Navbar: React.FC<NavbarProps> = ({
     </>
   );
 };
-
 

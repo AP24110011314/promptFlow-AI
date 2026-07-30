@@ -209,7 +209,7 @@ export default function App() {
   }
 
   return (
-    <div className="h-screen flex flex-col bg-brand-bg text-white selection:bg-brand-cyan selection:text-white font-sans overflow-hidden">
+    <div className="h-screen flex flex-col bg-slate-50 text-slate-900 selection:bg-blue-600 selection:text-white font-sans overflow-hidden">
       
       {/* Sleek Top Navigation Header */}
       <Navbar
@@ -305,12 +305,12 @@ export default function App() {
 
           {activeTab === 'admin' && user?.role !== 'admin' && (
             <div className="p-6 sm:p-8 max-w-xl mx-auto my-12">
-              <div className="bg-brand-card rounded-2xl p-8 text-center border border-brand-red/30 shadow-sm">
-                <div className="w-12 h-12 rounded-xl bg-brand-red/10 text-brand-red flex items-center justify-center mx-auto mb-4">
+              <div className="bg-white rounded-2xl p-8 text-center border border-red-200 shadow-xs">
+                <div className="w-12 h-12 rounded-xl bg-red-50 text-red-600 flex items-center justify-center mx-auto mb-4 border border-red-100">
                   <ShieldAlert className="w-6 h-6 animate-pulse" />
                 </div>
-                <h3 className="text-lg font-bold text-white">Access Denied (RBAC Protected)</h3>
-                <p className="text-xs text-brand-gray mt-2 leading-relaxed">
+                <h3 className="text-lg font-bold text-slate-900">Access Denied (RBAC Protected)</h3>
+                <p className="text-xs text-slate-500 mt-2 leading-relaxed">
                   You are currently signed in as a Faculty member without administrative privileges. Use the "Switch Role" button in the top header to switch to the Admin account.
                 </p>
               </div>

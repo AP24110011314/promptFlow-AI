@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, ShieldAlert, CheckCircle2, AlertTriangle, Play, Sparkles, RefreshCw, Layers } from 'lucide-react';
+import { Mail, ShieldAlert, CheckCircle2, AlertTriangle, Send, Sparkles, RefreshCw, Layers } from 'lucide-react';
 import type { EmailLog } from '../types';
 import { emailService } from '../services/api';
 
@@ -74,32 +74,39 @@ export const EmailSimulationView: React.FC<EmailSimulationViewProps> = ({
   };
 
   return (
-    <div className="space-y-8 pb-12">
+    <div className="space-y-6 pb-12">
       
-      {/* Banner */}
-      <div className="watt-card relative overflow-hidden">
-        <div className="absolute right-0 top-0 w-80 h-80 bg-gradient-to-l from-brand-cyan/5 via-brand-green/5 to-transparent blur-3xl pointer-events-none" />
-        <div className="relative z-10 max-w-3xl">
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-            Ingestion &amp; Classification Simulation
+      {/* Top Header */}
+      <div className="watt-card flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight flex items-center space-x-2.5">
+            <Mail className="w-6 h-6 text-blue-600" />
+            <span>Email Ingestion &amp; Classification Sandbox</span>
           </h1>
-          <p className="text-sm text-brand-gray mt-2 leading-relaxed">
-            Test and simulate the ingestion pipeline for incoming research papers. This runs relevance classification to filter out non-academic emails before indexing publication metadata.
+          <p className="text-xs text-slate-500 mt-1">
+            Simulate incoming professor publication emails to test TF-IDF + Multinomial Naive Bayes classification.
           </p>
+        </div>
+
+        <div className="flex items-center space-x-2 shrink-0">
+          <span className="text-blue-600 font-bold uppercase tracking-wider text-[10px]">
+            ML PIPELINE ONLINE
+          </span>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      {/* Main Grid: 2 Columns */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
-        {/* Simulation Form Panel (7 cols) */}
+        {/* Email Simulation Form (7 cols) */}
         <div className="lg:col-span-7 space-y-6">
-          <div className="watt-card space-y-5">
+          <div className="watt-card space-y-4">
             <div>
-              <h2 className="text-base font-bold text-white flex items-center space-x-2">
-                <Play className="w-4 h-4 text-brand-cyan fill-brand-cyan" />
-                <span>Simulate Incoming Email Arrival</span>
+              <h2 className="text-base font-bold text-slate-900 flex items-center space-x-2">
+                <Send className="w-4 h-4 text-blue-600" />
+                <span>Compose Inbound Email Payload</span>
               </h2>
-              <p className="text-xs text-brand-gray mt-0.5">
+              <p className="text-xs text-slate-500 mt-0.5">
                 Pick a preset or type custom text to test our scikit-learn relevance classifier in real-time.
               </p>
             </div>
@@ -111,34 +118,34 @@ export const EmailSimulationView: React.FC<EmailSimulationViewProps> = ({
                   key={idx}
                   type="button"
                   onClick={() => loadPreset(p)}
-                  className="p-2.5 rounded-xl bg-brand-bg hover:bg-brand-hover border border-brand-border text-left transition-all group cursor-pointer"
+                  className="p-2.5 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 text-left transition-all group cursor-pointer"
                 >
-                  <span className="text-[11px] font-semibold text-white group-hover:text-brand-cyan block truncate">
+                  <span className="text-[11px] font-semibold text-slate-900 group-hover:text-blue-600 block truncate">
                     {p.title}
                   </span>
-                  <span className="text-[10px] text-brand-gray block truncate mt-0.5">{p.dept}</span>
+                  <span className="text-[10px] text-slate-500 block truncate mt-0.5">{p.dept}</span>
                 </button>
               ))}
             </div>
 
-            <form onSubmit={handleSimulate} className="space-y-4 pt-2 border-t border-brand-border">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <form onSubmit={handleSimulate} className="space-y-3.5 pt-2 border-t border-slate-200">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 <div>
-                  <label className="block text-xs font-medium text-brand-gray mb-1">Sender Email</label>
+                  <label className="block text-xs font-medium text-slate-600 mb-1">Sender Email</label>
                   <input
                     type="email"
                     required
                     value={sender}
                     onChange={(e) => setSender(e.target.value)}
-                    className="w-full px-3.5 py-2 rounded-xl bg-brand-bg border border-brand-border text-white text-xs focus:outline-none focus:border-brand-cyan"
+                    className="w-full px-3.5 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-brand-gray mb-1">Department Hint</label>
+                  <label className="block text-xs font-medium text-slate-600 mb-1">Department Hint</label>
                   <select
                     value={deptHint}
                     onChange={(e) => setDeptHint(e.target.value)}
-                    className="w-full px-3.5 py-2 rounded-xl bg-brand-bg border border-brand-border text-white text-xs focus:outline-none focus:border-brand-cyan"
+                    className="w-full px-3.5 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 cursor-pointer"
                   >
                     <option value="Computer Science">Computer Science</option>
                     <option value="Physics">Physics</option>
@@ -154,33 +161,33 @@ export const EmailSimulationView: React.FC<EmailSimulationViewProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-brand-gray mb-1">Email Subject Line</label>
+                <label className="block text-xs font-medium text-slate-600 mb-1">Email Subject Line</label>
                 <input
                   type="text"
                   required
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
-                  className="w-full px-3.5 py-2 rounded-xl bg-brand-bg border border-brand-border text-white text-xs focus:outline-none focus:border-brand-cyan"
+                  className="w-full px-3.5 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-brand-gray mb-1">Email Body Content / Abstract Text</label>
+                <label className="block text-xs font-medium text-slate-600 mb-1">Email Body Content / Abstract Text</label>
                 <textarea
                   rows={5}
                   required
                   value={body}
                   onChange={(e) => setBody(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-brand-bg border border-brand-border text-white text-xs focus:outline-none focus:border-brand-cyan leading-relaxed"
+                  className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 leading-relaxed"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={processing}
-                className="w-full py-3 px-6 rounded-xl bg-gradient-to-r from-brand-cyan to-brand-cyan/80 text-brand-bg font-bold text-xs shadow-lg hover:brightness-110 disabled:opacity-50 transition-all flex items-center justify-center space-x-2 cursor-pointer"
+                className="w-full watt-btn-primary"
               >
-                <Sparkles className={`w-4 h-4 text-brand-bg ${processing ? 'animate-spin' : ''}`} />
+                <Sparkles className={`w-4 h-4 text-white ${processing ? 'animate-spin' : ''}`} />
                 <span>{processing ? 'Running Scikit-Learn ML Classifier & NLP Extraction...' : 'Execute ML Email Ingestion Pipeline'}</span>
               </button>
             </form>
@@ -191,39 +198,39 @@ export const EmailSimulationView: React.FC<EmailSimulationViewProps> = ({
         <div className="lg:col-span-5 space-y-6">
           <div className="watt-card min-h-[380px] flex flex-col justify-between">
             <div>
-              <h3 className="text-base font-bold text-white flex items-center space-x-2 mb-4">
-                <ShieldAlert className="w-5 h-5 text-brand-cyan" />
+              <h3 className="text-base font-bold text-slate-900 flex items-center space-x-2 mb-4">
+                <ShieldAlert className="w-4 h-4 text-blue-600" />
                 <span>Real-Time ML Classification Decision</span>
               </h3>
 
               {!lastResult ? (
-                <div className="text-center py-16 px-4 bg-brand-bg rounded-2xl border border-dashed border-brand-border">
-                  <Mail className="w-10 h-10 text-brand-gray mx-auto mb-3 animate-bounce" />
-                  <p className="text-xs font-semibold text-white">Waiting for email ingestion event</p>
-                  <p className="text-[11px] text-brand-gray mt-1">
+                <div className="text-center py-16 px-4 bg-slate-50 rounded-lg border border-dashed border-slate-300">
+                  <Mail className="w-9 h-9 text-slate-400 mx-auto mb-3 animate-bounce" />
+                  <p className="text-xs font-semibold text-slate-900">Waiting for email ingestion event</p>
+                  <p className="text-[11px] text-slate-500 mt-1">
                     Click the execute button to test the scikit-learn relevance classifier!
                   </p>
                 </div>
               ) : (
-                <div className="space-y-4 animate-fadeIn">
+                <div className="space-y-4">
                   
-                  {/* Status Banner - WattVision Alerts Style */}
+                  {/* Status Banner */}
                   {lastResult.status === 'processed' ? (
-                    <div className="bg-brand-green/10 text-brand-green border-l-4 border-brand-green p-4 rounded-r-lg shadow-lg flex items-start space-x-3">
-                      <CheckCircle2 className="w-5 h-5 text-brand-green shrink-0 mt-0.5" />
+                    <div className="bg-emerald-50 text-emerald-800 border border-emerald-200 p-3.5 rounded-lg flex items-start space-x-3 text-xs">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
                       <div>
-                        <h4 className="text-xs font-bold uppercase tracking-wider">Indexed into Repository</h4>
-                        <p className="text-xs mt-1 leading-relaxed text-white">
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-emerald-900">Indexed into Repository</h4>
+                        <p className="text-xs mt-0.5 leading-relaxed text-emerald-800">
                           Classified as an authentic research publication. NLP metadata extracted and saved to DB.
                         </p>
                       </div>
                     </div>
                   ) : (
-                    <div className="watt-alert shadow-lg flex items-start space-x-3">
-                      <AlertTriangle className="w-5 h-5 text-brand-red shrink-0 mt-0.5" />
+                    <div className="bg-amber-50 text-amber-800 border border-amber-200 p-3.5 rounded-lg flex items-start space-x-3 text-xs">
+                      <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
                       <div>
-                        <h4 className="text-xs font-bold uppercase tracking-wider">Filtered Out by ML Model</h4>
-                        <p className="text-xs mt-1 leading-relaxed text-white">
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-amber-900">Filtered Out by ML Model</h4>
+                        <p className="text-xs mt-0.5 leading-relaxed text-amber-800">
                           {lastResult.error_message || 'Classified as routine general chatter/spam.'}
                         </p>
                       </div>
@@ -231,27 +238,25 @@ export const EmailSimulationView: React.FC<EmailSimulationViewProps> = ({
                   )}
 
                   {/* Score Breakdown Card */}
-                  <div className="p-4 rounded-xl bg-brand-bg border border-brand-border space-y-3 text-xs">
+                  <div className="p-3.5 rounded-lg bg-slate-50 border border-slate-200 space-y-2.5 text-xs">
                     <div className="flex items-center justify-between">
-                      <span className="text-brand-gray font-medium">Predicted Class:</span>
-                      <span className={`px-2 py-0.5 rounded font-bold uppercase ${
-                        lastResult.ml_predicted_class === 'research_paper' ? 'bg-brand-cyan/20 text-brand-cyan' : 'bg-brand-border text-brand-gray'
-                      }`}>
+                      <span className="text-slate-500 font-medium">Predicted Class:</span>
+                      <span className="font-mono uppercase font-bold text-[10px] text-slate-700">
                         {lastResult.ml_predicted_class}
                       </span>
                     </div>
 
                     <div className="flex items-center justify-between">
-                      <span className="text-brand-gray font-medium">Confidence Score:</span>
-                      <span className="text-brand-green font-mono font-bold text-base">
+                      <span className="text-slate-500 font-medium">Confidence Score:</span>
+                      <span className="text-emerald-600 font-mono font-bold text-sm">
                         {(lastResult.ml_classification_score * 100).toFixed(1)}%
                       </span>
                     </div>
 
                     {lastResult.extracted_paper_id && (
-                      <div className="pt-2 border-t border-brand-border flex items-center justify-between">
-                        <span className="text-brand-gray font-medium">Extracted Paper ID:</span>
-                        <span className="text-brand-cyan font-mono font-bold">#PROMPTFLOW-{lastResult.extracted_paper_id}</span>
+                      <div className="pt-2 border-t border-slate-200 flex items-center justify-between">
+                        <span className="text-slate-500 font-medium">Extracted Paper ID:</span>
+                        <span className="text-blue-600 font-mono font-bold">#PROMPTFLOW-{lastResult.extracted_paper_id}</span>
                       </div>
                     )}
                   </div>
@@ -270,63 +275,61 @@ export const EmailSimulationView: React.FC<EmailSimulationViewProps> = ({
       <div className="watt-card space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-base font-bold text-white flex items-center space-x-2">
-              <Layers className="w-4 h-4 text-brand-cyan" />
+            <h3 className="text-base font-bold text-slate-900 flex items-center space-x-2">
+              <Layers className="w-4 h-4 text-blue-600" />
               <span>Email Ingestion Audit Log</span>
             </h3>
-            <p className="text-xs text-brand-gray mt-0.5">
+            <p className="text-xs text-slate-500 mt-0.5">
               Historical log of monitored emails and automated classification decisions
             </p>
           </div>
           <button
             onClick={onRefreshLogs}
-            className="p-2 rounded-xl bg-brand-bg text-brand-gray hover:text-white border border-brand-border transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg bg-slate-50 text-slate-500 hover:text-slate-900 border border-slate-200 transition-colors cursor-pointer"
             title="Refresh Logs"
           >
-            <RefreshCw className="w-4 h-4" />
+            <RefreshCw className="w-3.5 h-3.5" />
           </button>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
-              <tr className="border-b border-brand-border text-brand-gray uppercase font-semibold text-[10px]">
-                <th className="py-3 px-3">Sender</th>
-                <th className="py-3 px-3">Subject Line</th>
-                <th className="py-3 px-3">Prediction</th>
-                <th className="py-3 px-3">Confidence</th>
-                <th className="py-3 px-3">Status</th>
-                <th className="py-3 px-3">Received At</th>
+              <tr className="border-b border-slate-200 text-slate-500 uppercase font-semibold text-[10px]">
+                <th className="py-2.5 px-3">Sender</th>
+                <th className="py-2.5 px-3">Subject Line</th>
+                <th className="py-2.5 px-3">Prediction</th>
+                <th className="py-2.5 px-3">Confidence</th>
+                <th className="py-2.5 px-3">Status</th>
+                <th className="py-2.5 px-3">Received At</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-brand-border text-white">
+            <tbody className="divide-y divide-slate-100 text-slate-900">
               {logs.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="py-8 text-center text-brand-gray italic">No emails ingested yet.</td>
+                  <td colSpan={6} className="py-8 text-center text-slate-500 italic">No emails ingested yet.</td>
                 </tr>
               ) : (
                 logs.map((log) => (
-                  <tr key={log.id} className="hover:bg-brand-hover transition-colors">
-                    <td className="py-3 px-3 font-medium truncate max-w-[140px]">{log.sender}</td>
-                    <td className="py-3 px-3 truncate max-w-[220px] text-brand-gray">{log.subject}</td>
-                    <td className="py-3 px-3">
-                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
-                        log.ml_predicted_class === 'research_paper' ? 'bg-brand-cyan/20 text-brand-cyan' : 'bg-brand-border text-brand-gray'
-                      }`}>
-                        {log.ml_predicted_class === 'research_paper' ? 'Research' : 'General/Spam'}
-                      </span>
+                  <tr key={log.id} className="hover:bg-slate-50/80 transition-colors">
+                    <td className="py-2.5 px-3 font-medium truncate max-w-[140px] text-slate-900">{log.sender}</td>
+                    <td className="py-2.5 px-3 truncate max-w-[220px] text-slate-600">{log.subject}</td>
+                    <td className="py-2.5 px-3">
+                      {log.ml_predicted_class === 'research_paper' ? (
+                        <span className="font-semibold text-slate-700">Research</span>
+                      ) : (
+                        <span className="text-slate-500 font-normal">General/Spam</span>
+                      )}
                     </td>
-                    <td className="py-3 px-3 font-mono font-bold text-brand-green">{(log.ml_classification_score * 100).toFixed(1)}%</td>
-                    <td className="py-3 px-3">
-                      <span className={`px-2 py-0.5 rounded text-[10px] font-semibold ${
-                        log.status === 'processed' ? 'bg-brand-green/20 text-brand-green border border-brand-green/30' :
-                        log.status === 'rejected_spam' ? 'bg-brand-red/20 text-brand-red border border-brand-red/30' :
-                        'bg-brand-red/10 text-brand-red'
-                      }`}>
-                        {log.status === 'processed' ? 'Indexed' : log.status === 'rejected_spam' ? 'Rejected' : 'Error'}
-                      </span>
+                    <td className="py-2.5 px-3 font-mono font-bold text-emerald-600">{(log.ml_classification_score * 100).toFixed(1)}%</td>
+                    <td className="py-2.5 px-3">
+                      {log.status === 'processed' ? (
+                        <span className="font-semibold text-emerald-600">Indexed</span>
+                      ) : (
+                        <span className="font-semibold text-amber-600">Rejected</span>
+                      )}
                     </td>
-                    <td className="py-3 px-3 text-brand-gray text-[11px]">
+                    <td className="py-2.5 px-3 text-slate-500 text-[11px] font-mono">
                       {log.received_at ? new Date(log.received_at).toLocaleTimeString() : 'Just now'}
                     </td>
                   </tr>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Users, CheckCircle2, Sparkles, Trash2, ExternalLink, Edit, Quote } from 'lucide-react';
+import { X, Users, Sparkles, Trash2, ExternalLink, Edit, Quote } from 'lucide-react';
 import type { ResearchPaper, User } from '../types';
 import { paperService, SERVER_BASE_URL } from '../services/api';
 import { CitationModal } from './CitationModal';
@@ -92,68 +92,68 @@ export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 overflow-y-auto">
-      <div className="w-full max-w-3xl bg-brand-card border border-brand-border rounded-3xl p-6 sm:p-8 relative shadow-2xl max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs overflow-y-auto">
+      <div className="w-full max-w-3xl bg-white border border-slate-200 rounded-xl p-6 sm:p-8 relative shadow-2xl max-h-[90vh] overflow-y-auto">
         
         <button
           onClick={onClose}
-          className="absolute right-6 top-6 p-2 rounded-xl bg-brand-bg text-brand-gray hover:text-white border border-brand-border transition-colors cursor-pointer"
+          className="absolute right-6 top-6 p-2 rounded-lg bg-slate-100 text-slate-500 hover:text-slate-900 border border-slate-200 transition-colors cursor-pointer"
         >
           <X className="w-5 h-5" />
         </button>
 
         {isEditing ? (
           <form onSubmit={handleSaveEdit} className="space-y-4">
-            <h3 className="text-base sm:text-lg font-bold text-white flex items-center space-x-2.5">
-              <Edit className="w-5 h-5 text-brand-cyan" />
+            <h3 className="text-base sm:text-lg font-bold text-slate-900 flex items-center space-x-2.5">
+              <Edit className="w-5 h-5 text-blue-600" />
               <span>Edit Publication Metadata</span>
             </h3>
             
             {error && (
-              <div className="p-3 rounded-xl bg-amber-500/10 text-amber-500 border border-amber-500/30 text-xs font-semibold">
+              <div className="p-3 rounded-lg bg-amber-50 text-amber-800 border border-amber-200 text-xs font-semibold">
                 {error}
               </div>
             )}
 
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-brand-gray mb-1">Title</label>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">Title</label>
               <input
                 type="text"
                 required
                 value={editTitle}
                 onChange={(e) => setEditTitle(e.target.value)}
-                className="w-full px-3.5 py-2 rounded-xl bg-brand-bg border border-brand-border text-white text-xs focus:outline-none focus:border-brand-cyan transition-all"
+                className="w-full px-3.5 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all"
               />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-brand-gray mb-1">Authors (Comma separated)</label>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">Authors (Comma separated)</label>
                 <input
                   type="text"
                   value={editAuthors}
                   onChange={(e) => setEditAuthors(e.target.value)}
-                  className="w-full px-3.5 py-2 rounded-xl bg-brand-bg border border-brand-border text-white text-xs focus:outline-none focus:border-brand-cyan transition-all"
+                  className="w-full px-3.5 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all"
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-brand-gray mb-1">Journal or Conference</label>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">Journal or Conference</label>
                 <input
                   type="text"
                   value={editJournal}
                   onChange={(e) => setEditJournal(e.target.value)}
-                  className="w-full px-3.5 py-2 rounded-xl bg-brand-bg border border-brand-border text-white text-xs focus:outline-none focus:border-brand-cyan transition-all"
+                  className="w-full px-3.5 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-brand-gray mb-1">Department</label>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">Department</label>
                 <select
                   value={editDept}
                   onChange={(e) => setEditDept(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-brand-bg border border-brand-border text-white text-xs focus:outline-none focus:border-brand-cyan transition-all cursor-pointer"
+                  className="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all cursor-pointer"
                 >
                   {['Computer Science', 'Physics', 'Chemistry', 'Biotechnology', 'Mechanical Engineering', 'Electrical Engineering', 'Mathematics', 'Economics & Finance'].map(d => (
                     <option key={d} value={d}>{d}</option>
@@ -161,11 +161,11 @@ export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-brand-gray mb-1">Pub Type</label>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">Pub Type</label>
                 <select
                   value={editType}
                   onChange={(e) => setEditType(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-brand-bg border border-brand-border text-white text-xs focus:outline-none focus:border-brand-cyan transition-all cursor-pointer"
+                  className="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all cursor-pointer"
                 >
                   {['Journal', 'Conference', 'Patent', 'Preprint'].map(t => (
                     <option key={t} value={t}>{t}</option>
@@ -173,43 +173,43 @@ export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-brand-gray mb-1">Pub Year</label>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">Pub Year</label>
                 <input
                   type="number"
                   value={editYear}
                   onChange={(e) => setEditYear(parseInt(e.target.value) || 2026)}
-                  className="w-full px-3.5 py-2 rounded-xl bg-brand-bg border border-brand-border text-white text-xs focus:outline-none focus:border-brand-cyan transition-all"
+                  className="w-full px-3.5 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all"
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-brand-gray mb-1">DOI</label>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">DOI</label>
                 <input
                   type="text"
                   value={editDoi}
                   onChange={(e) => setEditDoi(e.target.value)}
-                  className="w-full px-3.5 py-2 rounded-xl bg-brand-bg border border-brand-border text-white text-xs focus:outline-none focus:border-brand-cyan transition-all"
+                  className="w-full px-3.5 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-brand-gray mb-1">External Publication URL</label>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">External Publication URL</label>
               <input
                 type="url"
                 value={editPaperUrl}
                 onChange={(e) => setEditPaperUrl(e.target.value)}
                 placeholder="https://doi.org/10.1007/..."
-                className="w-full px-3.5 py-2 rounded-xl bg-brand-bg border border-brand-border text-white text-xs focus:outline-none focus:border-brand-cyan transition-all"
+                className="w-full px-3.5 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-brand-gray mb-1">Abstract</label>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">Abstract</label>
               <textarea
                 value={editAbstract}
                 onChange={(e) => setEditAbstract(e.target.value)}
                 rows={4}
-                className="w-full px-3.5 py-2 rounded-xl bg-brand-bg border border-brand-border text-white text-xs focus:outline-none focus:border-brand-cyan transition-all resize-none"
+                className="w-full px-3.5 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all resize-none"
               />
             </div>
 
@@ -217,14 +217,14 @@ export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
               <button
                 type="button"
                 onClick={() => setIsEditing(false)}
-                className="px-4 py-2.5 rounded-xl bg-brand-bg hover:bg-brand-hover text-white border border-brand-border font-semibold text-xs cursor-pointer"
+                className="watt-btn-secondary"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={saving}
-                className="px-5 py-2.5 rounded-xl bg-brand-cyan text-brand-bg font-bold text-xs shadow-lg hover:brightness-110 disabled:opacity-50 transition-all cursor-pointer"
+                className="watt-btn-primary"
               >
                 {saving ? 'Saving...' : 'Save Changes'}
               </button>
@@ -232,27 +232,23 @@ export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
           </form>
         ) : (
           <>
-            <div className="flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-wider text-brand-cyan mb-3">
-              <span className="px-2.5 py-1 rounded-lg bg-brand-cyan/15 text-brand-cyan border border-brand-cyan/20">
-                {currentPaper.department}
-              </span>
+            <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-slate-700 mb-3">
+              <span>{currentPaper.department}</span>
               <span>•</span>
-              <span>Published {currentPaper.publication_year}</span>
+              <span className="text-slate-500 font-normal">Published {currentPaper.publication_year}</span>
               <span>•</span>
-              <span className="text-brand-green flex items-center font-bold">
-                <CheckCircle2 className="w-3.5 h-3.5 mr-1" /> ML Conf: {(currentPaper.ml_confidence * 100).toFixed(1)}%
-              </span>
+              <span className="text-emerald-600 font-semibold">ML Conf: {(currentPaper.ml_confidence * 100).toFixed(1)}%</span>
             </div>
 
-            <h2 className="text-xl sm:text-2xl font-bold text-white mt-1 pr-10 leading-snug">
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900 mt-1 pr-10 leading-snug">
               {currentPaper.title}
             </h2>
 
             {/* Author List */}
-            <div className="mt-5 p-4 rounded-2xl bg-brand-bg border border-brand-border flex items-start space-x-3">
-              <Users className="w-5 h-5 text-brand-cyan shrink-0 mt-0.5" />
+            <div className="mt-5 p-4 rounded-lg bg-slate-50 border border-slate-200 flex items-start space-x-3">
+              <Users className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
               <div className="text-xs space-y-1.5 flex-1">
-                <span className="text-brand-gray block font-bold uppercase text-[10px] tracking-wider">Authors &amp; Affiliation</span>
+                <span className="text-slate-500 block font-bold uppercase text-[10px] tracking-wider">Authors &amp; Affiliation</span>
                 <div className="flex flex-wrap gap-2 pt-0.5">
                   {((currentPaper.authors_list && currentPaper.authors_list.length > 0)
                     ? currentPaper.authors_list
@@ -261,7 +257,7 @@ export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
                     <button
                       key={idx}
                       onClick={() => { if (onSelectAuthor) onSelectAuthor(author); }}
-                      className="px-2.5 py-1 rounded-xl bg-brand-card hover:bg-brand-cyan/15 text-white hover:text-brand-cyan border border-brand-border hover:border-brand-cyan/40 text-xs font-semibold transition-all cursor-pointer flex items-center space-x-1.5"
+                      className="px-2.5 py-1 rounded-md bg-white hover:bg-slate-50 text-slate-700 hover:text-blue-600 border border-slate-200 text-xs font-medium transition-all cursor-pointer flex items-center space-x-1.5"
                       title={`View ${author}'s Profile & Analytics`}
                     >
                       <span>{author}</span>
@@ -272,43 +268,43 @@ export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
             </div>
 
 
-            {/* AI Summary */}
-            <div className="mt-5 p-5 rounded-2xl bg-brand-bg border-l-4 border-brand-cyan shadow-sm">
-              <div className="flex items-center space-x-2 text-xs font-bold text-brand-cyan mb-2">
-                <Sparkles className="w-4 h-4 text-brand-cyan" />
+            {/* AI Summary - Clean Box (No Left Glow Border) */}
+            <div className="mt-5 p-4.5 rounded-lg bg-white border border-slate-200">
+              <div className="flex items-center space-x-2 text-xs font-bold text-blue-600 mb-2">
+                <Sparkles className="w-4 h-4 text-blue-600" />
                 <span>AI Extractive Summary (NLP Sentence Scoring)</span>
               </div>
-              <p className="text-xs sm:text-sm text-white leading-relaxed italic font-sans">
+              <p className="text-xs sm:text-sm text-slate-800 leading-relaxed italic font-sans">
                 “{currentPaper.ai_summary || currentPaper.abstract}”
               </p>
             </div>
 
             {/* Full Abstract */}
             <div className="mt-5">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-brand-gray mb-2">Full Abstract</h4>
-              <p className="text-xs sm:text-sm text-brand-gray leading-relaxed bg-brand-bg p-4 rounded-2xl border border-brand-border font-sans">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Full Abstract</h4>
+              <p className="text-xs sm:text-sm text-slate-700 leading-relaxed bg-slate-50 p-4 rounded-lg border border-slate-200 font-sans">
                 {currentPaper.abstract || 'No abstract text available for this paper.'}
               </p>
             </div>
 
             {/* Metadata Grid */}
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-5 text-xs">
-              <div className="p-3.5 rounded-2xl bg-brand-bg border border-brand-border">
-                <span className="text-brand-gray block text-[10px] uppercase font-bold tracking-wider">Journal / Conference</span>
-                <span className="text-white font-semibold truncate block mt-1">{currentPaper.journal_or_conference || 'N/A'}</span>
+              <div className="p-3 rounded-lg bg-slate-50 border border-slate-200">
+                <span className="text-slate-500 block text-[10px] uppercase font-bold tracking-wider">Journal / Conference</span>
+                <span className="text-slate-900 font-semibold truncate block mt-1">{currentPaper.journal_or_conference || 'N/A'}</span>
               </div>
-              <div className="p-3.5 rounded-2xl bg-brand-bg border border-brand-border">
-                <span className="text-brand-gray block text-[10px] uppercase font-bold tracking-wider">DOI / Identifier</span>
-                <span className="text-white font-semibold truncate block mt-1">{currentPaper.doi || 'N/A'}</span>
+              <div className="p-3 rounded-lg bg-slate-50 border border-slate-200">
+                <span className="text-slate-500 block text-[10px] uppercase font-bold tracking-wider">DOI / Identifier</span>
+                <span className="text-slate-900 font-semibold truncate block mt-1">{currentPaper.doi || 'N/A'}</span>
               </div>
-              <div className="p-3.5 rounded-2xl bg-brand-bg border border-brand-border">
-                <span className="text-brand-gray block text-[10px] uppercase font-bold tracking-wider">External Link</span>
+              <div className="p-3 rounded-lg bg-slate-50 border border-slate-200">
+                <span className="text-slate-500 block text-[10px] uppercase font-bold tracking-wider">External Link</span>
                 {currentPaper.paper_url ? (
                   <a
                     href={currentPaper.paper_url}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-brand-cyan hover:underline font-semibold truncate block mt-1 flex items-center space-x-1"
+                    className="text-blue-600 hover:underline font-semibold truncate block mt-1 flex items-center space-x-1"
                   >
                     <span>Visit Publication</span>
                     <ExternalLink className="w-3.5 h-3.5 shrink-0" />
@@ -316,7 +312,7 @@ export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
                 ) : (
                   <button
                     onClick={() => setIsEditing(true)}
-                    className="text-brand-gray hover:text-brand-cyan font-semibold block mt-1 text-left transition-colors cursor-pointer"
+                    className="text-slate-500 hover:text-blue-600 font-semibold block mt-1 text-left transition-colors cursor-pointer"
                   >
                     + Add paper link
                   </button>
@@ -324,12 +320,12 @@ export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
               </div>
             </div>
 
-            {/* Tags */}
+            {/* Tags - Flat Metadata Text (No Pills) */}
             <div className="mt-5">
-              <span className="text-xs font-semibold text-brand-gray block mb-2">Assigned Research Categories:</span>
-              <div className="flex flex-wrap gap-2">
+              <span className="text-xs font-semibold text-slate-500 block mb-2">Assigned Research Categories:</span>
+              <div className="flex flex-wrap gap-2 text-xs">
                 {(currentPaper.categories_list || []).map((tag, idx) => (
-                  <span key={idx} className="px-3 py-1 rounded-xl bg-brand-card text-brand-cyan text-xs font-semibold border border-brand-border">
+                  <span key={idx} className="text-slate-600 font-normal">
                     #{tag}
                   </span>
                 ))}
@@ -337,37 +333,37 @@ export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
             </div>
 
             {/* Actions */}
-            <div className="mt-8 pt-5 border-t border-brand-border flex items-center justify-between">
+            <div className="mt-8 pt-5 border-t border-slate-200 flex items-center justify-between">
               {user?.role === 'admin' ? (
                 <button
                   onClick={() => handleDeletePaper(currentPaper.id)}
-                  className="px-4 py-2.5 rounded-xl bg-amber-500/10 text-amber-500 hover:bg-amber-500/20 border border-amber-500/30 text-xs font-semibold transition-all flex items-center space-x-1.5 cursor-pointer"
+                  className="px-3.5 py-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 border border-red-200 text-xs font-semibold transition-all flex items-center space-x-1.5 cursor-pointer"
                 >
                   <Trash2 className="w-4 h-4" />
                   <span>Delete Paper (Admin)</span>
                 </button>
               ) : <div />}
 
-              <div className="flex items-center space-x-2.5">
+              <div className="flex items-center space-x-2">
                 <button
                   onClick={() => setShowCitationModal(true)}
-                  className="px-4 py-2.5 rounded-xl bg-purple-500/10 text-purple-400 hover:bg-purple-500/20 border border-purple-500/30 text-xs font-semibold transition-all flex items-center space-x-1.5 cursor-pointer"
+                  className="watt-btn-secondary"
                   title="Generate APA, IEEE, MLA, or BibTeX citation"
                 >
-                  <Quote className="w-4 h-4 text-purple-400" />
+                  <Quote className="w-3.5 h-3.5 text-blue-600" />
                   <span>Cite Paper</span>
                 </button>
 
                 <button
                   onClick={() => setIsEditing(true)}
-                  className="px-4 py-2.5 rounded-xl bg-brand-cyan/10 text-brand-cyan hover:bg-brand-cyan/20 border border-brand-cyan/30 text-xs font-semibold transition-all flex items-center space-x-1.5 cursor-pointer"
+                  className="watt-btn-secondary"
                 >
-                  <Edit className="w-4 h-4 text-brand-cyan" />
-                  <span>Edit Details</span>
+                  <Edit className="w-3.5 h-3.5 text-slate-600" />
+                  <span>Edit</span>
                 </button>
                 <button
                   onClick={onClose}
-                  className="px-4 py-2.5 rounded-xl bg-brand-bg hover:bg-brand-hover text-white border border-brand-border font-semibold text-xs transition-all cursor-pointer"
+                  className="watt-btn-secondary"
                 >
                   Close
                 </button>
@@ -376,10 +372,10 @@ export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
                     href={`${SERVER_BASE_URL}${currentPaper.pdf_url}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="px-4 py-2.5 rounded-xl bg-brand-cyan text-brand-bg font-bold text-xs shadow-lg hover:brightness-110 transition-all flex items-center space-x-2 cursor-pointer"
+                    className="watt-btn-primary"
                   >
-                    <span>View Full PDF</span>
-                    <ExternalLink className="w-4 h-4 text-brand-bg stroke-[3]" />
+                    <span>View PDF</span>
+                    <ExternalLink className="w-3.5 h-3.5 text-white" />
                   </a>
                 )}
               </div>

@@ -71,7 +71,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   };
 
   return (
-    <aside className={`shrink-0 bg-brand-card border-r border-brand-border flex flex-col justify-between h-screen sticky top-0 z-40 select-none transition-all duration-300 ${
+    <aside className={`shrink-0 bg-white border-r border-slate-200 flex flex-col justify-between h-screen sticky top-0 z-40 select-none transition-all duration-300 ${
       collapsed ? 'w-20' : 'w-64'
     }`}>
       
@@ -83,15 +83,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
           }`} 
           onClick={() => setActiveTab('dashboard')}
         >
-          <div className="w-10 h-10 rounded-2xl bg-brand-cyan text-real-white flex items-center justify-center shadow-md font-bold text-xl tracking-tighter shrink-0">
-            <Zap className="w-5 h-5 fill-real-white" />
+          <div className="w-9 h-9 rounded-lg bg-blue-600 text-white flex items-center justify-center shadow-xs font-bold text-lg tracking-tighter shrink-0">
+            <Zap className="w-5 h-5 fill-white" />
           </div>
           {!collapsed && (
             <div className="animate-in fade-in slide-in-from-left-2 duration-200">
-              <h1 className="text-base font-bold text-white tracking-tight leading-tight">
+              <h1 className="text-base font-bold text-slate-900 tracking-tight leading-tight font-display">
                 promptFlow-AI
               </h1>
-              <p className="text-[11px] text-brand-gray font-medium tracking-wider uppercase">
+              <p className="text-[11px] text-slate-500 font-medium tracking-wider uppercase">
                 Research Digest
               </p>
             </div>
@@ -100,7 +100,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
         {/* Navigation Menu */}
         <div className="px-4 mt-6">
-          <p className={`px-3 text-[10px] font-bold text-brand-gray tracking-wider uppercase mb-2 ${
+          <p className={`px-3 text-[10px] font-bold text-slate-400 tracking-wider uppercase mb-2 ${
             collapsed ? 'text-center px-0' : ''
           }`}>
             {collapsed ? '•' : 'Main Menu'}
@@ -114,15 +114,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   key={item.id}
                   onClick={() => setActiveTab(item.id)}
                   title={collapsed ? item.label : undefined}
-                  className={`w-full flex items-center px-3.5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all cursor-pointer ${
-                    collapsed ? 'justify-center space-x-0' : 'space-x-3'
+                  className={`w-full flex items-center px-3 py-2 rounded-lg font-semibold text-xs transition-all cursor-pointer ${
+                    collapsed ? 'justify-center space-x-0' : 'space-x-2.5'
                   } ${
                     isActive
-                      ? 'bg-brand-cyan text-real-white shadow-sm font-bold'
-                      : 'text-brand-gray hover:bg-brand-hover hover:text-white'
+                      ? 'bg-blue-600 text-white shadow-2xs font-bold'
+                      : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                   }`}
                 >
-                  <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-real-white' : 'text-brand-gray'}`} />
+                  <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-slate-500'}`} />
                   {!collapsed && <span className="truncate">{item.label}</span>}
                 </button>
               );
@@ -132,25 +132,25 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       {/* Bottom Section: User Profile */}
-      <div className="p-4 border-t border-brand-border mt-auto">
+      <div className="p-4 border-t border-slate-200 mt-auto">
         
         {/* User Profile Footer with Interactive Dropdown */}
         {user && (
           <div className="relative">
             <div
               onClick={() => setShowDropdown(!showDropdown)}
-              className={`flex items-center justify-between p-1.5 rounded-xl hover:bg-brand-hover transition-colors cursor-pointer group ${
+              className={`flex items-center justify-between p-1.5 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer group ${
                 collapsed ? 'justify-center' : ''
               }`}
             >
               <div className={`flex items-center truncate ${collapsed ? 'space-x-0' : 'space-x-2.5'}`}>
-                <div className="w-8 h-8 rounded-full bg-brand-cyan/15 text-brand-cyan border border-brand-cyan/20 flex items-center justify-center text-xs font-bold shrink-0 group-hover:bg-brand-cyan group-hover:text-real-white transition-all">
+                <div className="w-7 h-7 rounded-md bg-slate-100 text-slate-700 border border-slate-200 flex items-center justify-center text-xs font-bold shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-all">
                   {user.full_name.charAt(0)}
                 </div>
                 {!collapsed && (
                   <div className="truncate">
-                    <p className="text-xs font-bold text-white truncate group-hover:text-brand-cyan transition-colors">{user.full_name}</p>
-                    <p className="text-[10px] text-brand-gray truncate capitalize">{user.role} • {user.department || 'General'}</p>
+                    <p className="text-xs font-bold text-slate-900 truncate group-hover:text-blue-600 transition-colors">{user.full_name}</p>
+                    <p className="text-[10px] text-slate-500 truncate capitalize">{user.role} • {user.department || 'General'}</p>
                   </div>
                 )}
               </div>
@@ -158,7 +158,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <button
                   onClick={(e) => { e.stopPropagation(); onLogout(); }}
                   title="Sign Out"
-                  className="p-1.5 rounded-lg text-brand-gray hover:text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer shrink-0"
+                  className="p-1 rounded-md text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer shrink-0"
                 >
                   <LogOut className="w-4 h-4" />
                 </button>
@@ -167,40 +167,40 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
             {/* Profile Dropdown Menu */}
             {showDropdown && (
-              <div className={`absolute rounded-2xl bg-brand-card border border-brand-border shadow-2xl py-2 z-50 animate-in fade-in slide-in-from-bottom-2 duration-150 ${
-                collapsed ? 'left-16 bottom-0 w-64 border border-brand-border shadow-2xl ml-2' : 'bottom-16 left-0 w-full'
+              <div className={`absolute rounded-xl bg-white border border-slate-200 shadow-xl py-2 z-50 animate-in fade-in slide-in-from-bottom-2 duration-150 ${
+                collapsed ? 'left-16 bottom-0 w-64 border border-slate-200 shadow-xl ml-2' : 'bottom-14 left-0 w-full'
               }`}>
-                <div className="px-4 py-2.5 border-b border-brand-border">
-                  <p className="text-xs font-bold text-white truncate">{user.full_name}</p>
-                  <p className="text-[10px] text-brand-gray truncate mt-0.5">{user.email}</p>
+                <div className="px-4 py-2.5 border-b border-slate-200">
+                  <p className="text-xs font-bold text-slate-900 truncate">{user.full_name}</p>
+                  <p className="text-[10px] text-slate-500 truncate mt-0.5">{user.email}</p>
                 </div>
 
                 <div className="py-1">
                   <button
                     onClick={handleOpenEdit}
-                    className="w-full px-4 py-2.5 text-left text-xs font-semibold text-brand-gray hover:text-white hover:bg-brand-hover flex items-center space-x-2.5 transition-colors cursor-pointer"
+                    className="w-full px-4 py-2 text-left text-xs font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-50 flex items-center space-x-2.5 transition-colors cursor-pointer"
                   >
-                    <UserCheck className="w-4 h-4 text-brand-cyan shrink-0" />
+                    <UserCheck className="w-4 h-4 text-blue-600 shrink-0" />
                     <span>Edit Profile Settings</span>
                   </button>
                   {onSwitchRole && (
                     <button
                       onClick={() => { setShowDropdown(false); onSwitchRole(); }}
-                      className="w-full px-4 py-2.5 text-left text-xs font-semibold text-brand-gray hover:text-white hover:bg-brand-hover flex items-center space-x-2.5 transition-colors cursor-pointer"
+                      className="w-full px-4 py-2 text-left text-xs font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-50 flex items-center space-x-2.5 transition-colors cursor-pointer"
                     >
-                      <RefreshCw className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <RefreshCw className="w-4 h-4 text-emerald-600 shrink-0" />
                       <span>Switch Role ({user.role === 'admin' ? 'Faculty' : 'Admin'})</span>
                     </button>
                   )}
                 </div>
 
-                <div className="border-t border-brand-border pt-1 mt-1">
+                <div className="border-t border-slate-200 pt-1 mt-1">
                   <button
                     onClick={() => { setShowDropdown(false); onLogout(); }}
-                    className="w-full px-4 py-2.5 text-left text-xs font-semibold text-amber-500 hover:bg-amber-500/10 flex items-center space-x-2.5 transition-colors cursor-pointer"
+                    className="w-full px-4 py-2 text-left text-xs font-semibold text-red-600 hover:bg-red-50 flex items-center space-x-2.5 transition-colors cursor-pointer"
                   >
-                    <LogOut className="w-4 h-4 shrink-0" />
-                    <span>Log Out of promptFlow-AI</span>
+                    <LogOut className="w-4 h-4 text-red-600 shrink-0" />
+                    <span>Log Out</span>
                   </button>
                 </div>
               </div>
@@ -212,61 +212,50 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       {/* Edit Profile Modal */}
       {showEditModal && user && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60">
-          <div className="w-full max-w-md bg-brand-card border border-brand-border rounded-3xl p-6 sm:p-8 relative shadow-2xl">
-            
-            <button
-              onClick={() => setShowEditModal(false)}
-              className="absolute right-6 top-6 p-2 rounded-xl bg-brand-bg text-brand-gray hover:text-white border border-brand-border transition-colors cursor-pointer"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            <div className="flex items-center space-x-3 mb-6">
-              <div className="w-10 h-10 rounded-2xl bg-brand-cyan/15 text-brand-cyan flex items-center justify-center font-bold">
-                <UserCheck className="w-5 h-5" />
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs animate-in fade-in duration-150">
+          <div className="w-full max-w-md bg-white border border-slate-200 rounded-2xl p-6 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+              <div className="flex items-center space-x-2.5">
+                <div className="w-10 h-10 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold border border-blue-200">
+                  <UserCheck className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-slate-900">Edit Profile</h3>
+                  <p className="text-[11px] text-slate-500">Update account details &amp; preferences</p>
+                </div>
               </div>
-              <div>
-                <h3 className="text-lg font-bold text-white">Edit Profile</h3>
-                <p className="text-xs text-brand-gray">Update your academic credentials &amp; department</p>
-              </div>
+              <button
+                onClick={() => setShowEditModal(false)}
+                className="p-1 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-900 transition-colors cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
             </div>
 
             {editError && (
-              <div className="mb-4 bg-amber-500/10 text-amber-500 border border-amber-500/20 p-3 rounded-xl text-xs font-semibold">
+              <div className="p-3 rounded-lg bg-amber-50 text-amber-800 border border-amber-200 text-xs font-semibold">
                 {editError}
               </div>
             )}
 
-            <form onSubmit={handleSaveProfile} className="space-y-4">
+            <form onSubmit={handleSaveProfile} className="space-y-3">
               <div>
-                <label className="block text-xs font-semibold text-brand-gray mb-1.5">Email Address (Read Only)</label>
-                <input
-                  type="email"
-                  disabled
-                  value={user.email}
-                  className="w-full px-3 py-2 rounded-xl bg-brand-bg/50 border border-brand-border text-brand-gray text-xs cursor-not-allowed"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-brand-gray mb-1.5">Full Name</label>
+                <label className="block text-xs font-semibold text-slate-600 mb-1">Full Name</label>
                 <input
                   type="text"
                   required
                   value={editName}
                   onChange={(e) => setEditName(e.target.value)}
-                  className="w-full px-3 py-2.5 rounded-xl bg-brand-bg border border-brand-border text-white text-xs sm:text-sm focus:outline-none focus:border-brand-cyan transition-all"
-                  placeholder="Dr. Jane Doe"
+                  className="w-full px-3 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 text-xs sm:text-sm focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-brand-gray mb-1.5">Primary Academic Department</label>
+                <label className="block text-xs font-semibold text-slate-600 mb-1">Department</label>
                 <select
                   value={editDept}
                   onChange={(e) => setEditDept(e.target.value)}
-                  className="w-full px-3 py-2.5 rounded-xl bg-brand-bg border border-brand-border text-white text-xs sm:text-sm focus:outline-none focus:border-brand-cyan transition-all"
+                  className="w-full px-3 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 text-xs sm:text-sm focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all cursor-pointer"
                 >
                   <option value="Computer Science">Computer Science</option>
                   <option value="Physics">Physics</option>
@@ -284,14 +273,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <button
                   type="button"
                   onClick={() => setShowEditModal(false)}
-                  className="px-4 py-2.5 rounded-xl bg-brand-bg hover:bg-brand-hover text-brand-gray hover:text-white border border-brand-border text-xs font-semibold transition-all cursor-pointer"
+                  className="watt-btn-secondary"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-5 py-2.5 rounded-xl bg-brand-cyan hover:brightness-110 text-real-white font-bold text-xs shadow-sm transition-all flex items-center space-x-1.5 cursor-pointer disabled:opacity-50"
+                  className="watt-btn-primary"
                 >
                   <Check className="w-4 h-4 stroke-[3]" />
                   <span>{saving ? 'Saving...' : 'Save Profile'}</span>

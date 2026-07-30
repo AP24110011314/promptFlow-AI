@@ -103,7 +103,8 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
     exportService.downloadExcel({
       department: selectedDept,
       category: selectedCat,
-      year: selectedYear === 'All' ? undefined : parseInt(selectedYear)
+      year: selectedYear === 'All' ? undefined : parseInt(selectedYear),
+      query: searchQuery || authorQuery || undefined
     });
   };
 
@@ -111,7 +112,8 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
     exportService.downloadPdf({
       department: selectedDept,
       category: selectedCat,
-      year: selectedYear === 'All' ? undefined : parseInt(selectedYear)
+      year: selectedYear === 'All' ? undefined : parseInt(selectedYear),
+      query: searchQuery || authorQuery || undefined
     });
   };
 

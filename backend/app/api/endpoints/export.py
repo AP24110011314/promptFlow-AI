@@ -15,6 +15,7 @@ def export_excel_report(
     department: Optional[str] = None,
     category: Optional[str] = None,
     year: Optional[int] = None,
+    query: Optional[str] = None,
     db: Session = Depends(get_db),
     current_user = Depends(get_current_user)
 ):
@@ -23,7 +24,14 @@ def export_excel_report(
         q = q.filter(ResearchPaper.department == department)
     if year:
         q = q.filter(ResearchPaper.publication_year == year)
-        
+    if query and query.strip():
+        search_pattern = f"%{query.strip()}%"
+        q = q.filter(
+            (ResearchPaper.title.ilike(search_pattern)) |
+            (ResearchPaper.authors_raw.ilike(search_pattern)) |
+            (ResearchPaper.abstract.ilike(search_pattern))
+        )
+
     papers = q.order_by(ResearchPaper.id.desc()).all()
     if category and category != "All":
         papers = [p for p in papers if category in (p.categories_list or [])]
@@ -40,6 +48,7 @@ def export_pdf_report(
     department: Optional[str] = None,
     category: Optional[str] = None,
     year: Optional[int] = None,
+    query: Optional[str] = None,
     db: Session = Depends(get_db),
     current_user = Depends(get_current_user)
 ):
@@ -48,7 +57,14 @@ def export_pdf_report(
         q = q.filter(ResearchPaper.department == department)
     if year:
         q = q.filter(ResearchPaper.publication_year == year)
-        
+    if query and query.strip():
+        search_pattern = f"%{query.strip()}%"
+        q = q.filter(
+            (ResearchPaper.title.ilike(search_pattern)) |
+            (ResearchPaper.authors_raw.ilike(search_pattern)) |
+            (ResearchPaper.abstract.ilike(search_pattern))
+        )
+
     papers = q.order_by(ResearchPaper.id.desc()).all()
     if category and category != "All":
         papers = [p for p in papers if category in (p.categories_list or [])]

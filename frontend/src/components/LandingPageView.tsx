@@ -151,7 +151,7 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({
           <div className="flex items-center justify-between">
             {/* Logo on Left */}
             <div className="flex items-center space-x-2.5">
-              <div className="w-7 h-7 rounded-lg bg-blue-600 text-real-white flex items-center justify-center font-bold text-xs shadow-sm">
+              <div className="w-7 h-7 rounded-lg bg-slate-900 text-real-white flex items-center justify-center font-bold text-xs shadow-sm">
                 p
               </div>
               <span className="font-display font-bold text-base tracking-tight text-slate-900">promptflow</span>
@@ -169,7 +169,7 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({
             <div className="flex items-center">
               <button 
                 onClick={onSignInClick}
-                className="px-5 py-2 rounded-lg bg-blue-600 text-white border border-blue-600 text-xs font-bold hover:bg-blue-700 transition-all duration-200 cursor-pointer"
+                className="px-5 py-2 rounded-lg bg-slate-900 text-white border border-slate-900 text-xs font-bold hover:bg-slate-800 transition-all duration-200 cursor-pointer"
               >
                 Get Started
               </button>
@@ -229,7 +229,7 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({
                 {isLoggedIn ? (
                   <button 
                     onClick={onGoToConsoleClick}
-                    className="px-8 py-3.5 rounded-lg bg-blue-600 text-white font-bold text-sm sm:text-base hover:bg-blue-700 shadow-sm transition-all cursor-pointer flex items-center space-x-2.5"
+                    className="px-8 py-3.5 rounded-lg bg-slate-900 text-white font-bold text-sm sm:text-base hover:bg-slate-800 shadow-sm transition-all cursor-pointer flex items-center space-x-2.5"
                   >
                     <span>Launch Console</span>
                     <ArrowRight className="w-4 h-4" />
@@ -237,7 +237,7 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({
                 ) : (
                   <button 
                     onClick={onSignInClick}
-                    className="px-8 py-3.5 rounded-lg bg-blue-600 text-white font-bold text-sm sm:text-base hover:bg-blue-700 shadow-sm transition-all cursor-pointer flex items-center space-x-2.5"
+                    className="px-8 py-3.5 rounded-lg bg-slate-900 text-white font-bold text-sm sm:text-base hover:bg-slate-800 shadow-sm transition-all cursor-pointer flex items-center space-x-2.5"
                   >
                     <span>Access Console</span>
                     <ArrowRight className="w-4 h-4" />
@@ -265,7 +265,7 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({
             <div className="w-full bg-real-white border border-slate-200/80 rounded-lg p-4 flex flex-col justify-between font-sans text-xs text-slate-500 shadow-[0_1px_3px_rgba(0,0,0,0.01)] mb-6">
               <div className="flex items-center justify-between border-b border-slate-200/80 pb-2 text-[11px] text-slate-400 font-mono tracking-wider font-semibold">
                 <span>INBOUND EMAIL</span>
-                <span className="text-blue-600 font-bold">RESEARCH</span>
+                <span className="text-slate-900 font-bold">RESEARCH</span>
               </div>
               <p className="line-clamp-2 leading-relaxed text-slate-900 my-3 font-medium">"I am pleased to share our research has been accepted in IEEE Signal Processing..."</p>
               <div className="flex items-center justify-between pt-2 border-t border-slate-200/80 text-[11px] text-slate-400">
@@ -311,7 +311,7 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({
               <div className="bg-slate-50 p-2.5 rounded-md text-slate-500 self-end max-w-[85%] border border-slate-200/80">
                 "neural net papers"
               </div>
-              <div className="bg-blue-50 p-2.5 rounded-md text-slate-900 self-start max-w-[85%] border border-blue-100 font-medium">
+              <div className="bg-slate-100 p-2.5 rounded-md text-slate-900 self-start max-w-[85%] border border-slate-200 font-medium">
                 "Found 3 articles under CS."
               </div>
             </div>
@@ -375,7 +375,7 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({
             <div className="p-6 bg-white rounded-xl border border-slate-200/80 relative hover:shadow-sm transition-all duration-300">
               <MetallicNail />
               <div className="flex items-center gap-3 mb-4">
-                <Inbox className="w-5 h-5 text-blue-600" />
+                <Inbox className="w-5 h-5 text-slate-900" />
                 <h4 className="font-display text-base font-bold text-slate-900">
                   Email Poll
                 </h4>
@@ -388,7 +388,7 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({
             <div className="p-6 bg-white rounded-xl border border-slate-200/80 relative hover:shadow-sm transition-all duration-300">
               <MetallicNail />
               <div className="flex items-center gap-3 mb-4">
-                <ShieldAlert className="w-5 h-5 text-blue-600" />
+                <ShieldAlert className="w-5 h-5 text-slate-900" />
                 <h4 className="font-display text-base font-bold text-slate-900">
                   ML Relevance
                 </h4>
@@ -401,7 +401,7 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({
             <div className="p-6 bg-white rounded-xl border border-slate-200/80 relative hover:shadow-sm transition-all duration-300">
               <MetallicNail />
               <div className="flex items-center gap-3 mb-4">
-                <Cpu className="w-5 h-5 text-blue-600" />
+                <Cpu className="w-5 h-5 text-slate-900" />
                 <h4 className="font-display text-base font-bold text-slate-900">
                   Metadata Extraction
                 </h4>
@@ -414,7 +414,7 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({
             <div className="p-6 bg-white rounded-xl border border-slate-200/80 relative hover:shadow-sm transition-all duration-300">
               <MetallicNail />
               <div className="flex items-center gap-3 mb-4">
-                <Database className="w-5 h-5 text-blue-600" />
+                <Database className="w-5 h-5 text-slate-900" />
                 <h4 className="font-display text-base font-bold text-slate-900">
                   Repository
                 </h4>
@@ -448,7 +448,7 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({
             <div className="bg-slate-50 p-8 rounded-xl border border-slate-200/80 flex flex-col justify-between hover:shadow-sm transition-all duration-300">
               <div>
                 <div className="inline-flex items-center space-x-2 bg-white text-slate-700 px-3 py-1 rounded-md border border-slate-200 text-xs font-bold uppercase mb-4 font-mono">
-                  <ShieldAlert className="w-4 h-4 text-blue-600" />
+                  <ShieldAlert className="w-4 h-4 text-slate-900" />
                   <span>Admin / Dean Role</span>
                 </div>
                 <h3 className="font-display font-bold text-xl text-slate-900">Full Ingestion Control</h3>
@@ -458,15 +458,15 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({
 
                 <ul className="mt-6 space-y-3.5 text-sm text-slate-500">
                   <li className="flex items-center space-x-3">
-                    <CheckCircle className="w-4 h-4 text-blue-600 shrink-0" />
+                    <CheckCircle className="w-4 h-4 text-slate-900 shrink-0" />
                     <span>Upload PDFs directly and initiate instant metadata extraction</span>
                   </li>
                   <li className="flex items-center space-x-3">
-                    <CheckCircle className="w-4 h-4 text-blue-600 shrink-0" />
+                    <CheckCircle className="w-4 h-4 text-slate-900 shrink-0" />
                     <span>Force-retrain the Scikit-Learn Naive Bayes ML models</span>
                   </li>
                   <li className="flex items-center space-x-3">
-                    <CheckCircle className="w-4 h-4 text-blue-600 shrink-0" />
+                    <CheckCircle className="w-4 h-4 text-slate-900 shrink-0" />
                     <span>Simulate incoming faculty email arrivals and inspect pipeline logs</span>
                   </li>
                 </ul>
@@ -477,7 +477,7 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({
             <div className="bg-slate-50 p-8 rounded-xl border border-slate-200/80 flex flex-col justify-between hover:shadow-sm transition-all duration-300">
               <div>
                 <div className="inline-flex items-center space-x-2 bg-white text-slate-700 px-3 py-1 rounded-md border border-slate-200 text-xs font-bold uppercase mb-4 font-mono">
-                  <UserCheck className="w-4 h-4 text-blue-600" />
+                  <UserCheck className="w-4 h-4 text-slate-900" />
                   <span>Faculty / Scholar Role</span>
                 </div>
                 <h3 className="font-display font-bold text-xl text-slate-900">Research Discovery</h3>
@@ -487,15 +487,15 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({
 
                 <ul className="mt-6 space-y-3.5 text-sm text-slate-500">
                   <li className="flex items-center space-x-3">
-                    <CheckCircle className="w-4 h-4 text-blue-600 shrink-0" />
+                    <CheckCircle className="w-4 h-4 text-slate-900 shrink-0" />
                     <span>Search across filtered papers by authors, department, categories, or year</span>
                   </li>
                   <li className="flex items-center space-x-3">
-                    <CheckCircle className="w-4 h-4 text-blue-600 shrink-0" />
+                    <CheckCircle className="w-4 h-4 text-slate-900 shrink-0" />
                     <span>Chat with the integrated AI Assistant to list papers and analyze trends</span>
                   </li>
                   <li className="flex items-center space-x-3">
-                    <CheckCircle className="w-4 h-4 text-blue-600 shrink-0" />
+                    <CheckCircle className="w-4 h-4 text-slate-900 shrink-0" />
                     <span>Export reports and download custom lists as PDF or Excel spreadsheets</span>
                   </li>
                 </ul>
@@ -575,7 +575,7 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({
                   className="w-full py-5 px-6 flex items-center justify-between text-left focus:outline-none transition-colors cursor-pointer"
                 >
                   <span className="font-display font-bold text-base text-slate-900">{faq.question}</span>
-                  <HelpCircle className={`w-5 h-5 shrink-0 ml-4 transition-all duration-300 ${activeFaq === index ? "text-blue-600 rotate-12 scale-110" : "text-slate-500"}`} />
+                  <HelpCircle className={`w-5 h-5 shrink-0 ml-4 transition-all duration-300 ${activeFaq === index ? "text-slate-900 rotate-12 scale-110" : "text-slate-500"}`} />
                 </button>
 
                 <AnimatePresence initial={false}>
@@ -606,7 +606,7 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         className="relative z-20 bg-real-white py-24 overflow-hidden text-center max-w-4xl mx-auto px-6"
       >
-        <div className="absolute inset-0 bg-blue-50/40 rounded-xl border border-blue-100 -z-10" />
+        <div className="absolute inset-0 bg-slate-100/40 rounded-xl border border-slate-200 -z-10" />
 
         <div className="max-w-2xl mx-auto">
           <h2 className="font-display text-3xl md:text-4xl font-bold text-slate-900 tracking-tight">
@@ -620,7 +620,7 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({
             {isLoggedIn ? (
               <button
                 onClick={onGoToConsoleClick}
-                className="w-full sm:w-auto px-7 py-3.5 rounded-lg bg-blue-600 text-white font-bold text-sm hover:bg-blue-700 shadow-sm transition-all cursor-pointer flex items-center justify-center space-x-2"
+                className="w-full sm:w-auto px-7 py-3.5 rounded-lg bg-slate-900 text-white font-bold text-sm hover:bg-slate-800 shadow-sm transition-all cursor-pointer flex items-center justify-center space-x-2"
               >
                 <span>Launch Console</span>
                 <ArrowRight className="w-4 h-4 text-real-white" />
@@ -628,7 +628,7 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({
             ) : (
               <button
                 onClick={onSignInClick}
-                className="w-full sm:w-auto px-7 py-3.5 rounded-lg bg-blue-600 text-real-white font-bold text-sm hover:bg-blue-700 shadow-sm transition-all cursor-pointer flex items-center justify-center space-x-2"
+                className="w-full sm:w-auto px-7 py-3.5 rounded-lg bg-slate-900 text-real-white font-bold text-sm hover:bg-slate-800 shadow-sm transition-all cursor-pointer flex items-center justify-center space-x-2"
               >
                 <span>Access Console</span>
                 <ArrowRight className="w-4 h-4 text-real-white" />
@@ -642,7 +642,7 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({
       <footer className="border-t border-slate-200/80 py-12 max-w-5xl mx-auto px-6 text-sm text-slate-500 relative z-20 bg-real-white">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
           <div className="flex items-center space-x-2.5">
-            <div className="w-7 h-7 rounded-lg bg-blue-600 text-real-white flex items-center justify-center font-bold text-xs">
+            <div className="w-7 h-7 rounded-lg bg-slate-900 text-real-white flex items-center justify-center font-bold text-xs">
               p
             </div>
             <span className="font-display font-bold text-base text-slate-900">promptflow-AI</span>

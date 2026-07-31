@@ -10,8 +10,8 @@
   --text-primary: #0f172a;
   --text-secondary: #475569;
   --text-muted: #64748b;
-  --accent-primary: #2563eb; /* Corporate Blue */
-  --accent-secondary: #0284c7; /* Sky Blue */
+  --accent-primary: #0f172a; /* Near-black, matches login page primary */
+  --accent-secondary: #0f766e; /* Muted teal accent */
   --accent-success: #10b981; /* Emerald Green */
   --accent-warning: #f59e0b; /* Amber */
   --alert-bg: #fef3c7;
@@ -45,7 +45,7 @@
 
 @layer base {
   body {
-    @apply bg-slate-50 text-slate-900 font-sans antialiased selection:bg-blue-600 selection:text-white;
+    @apply bg-slate-50 text-slate-900 font-sans antialiased selection:bg-slate-200 selection:text-slate-900;
     min-height: 100vh;
     transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
   }
@@ -73,7 +73,7 @@
   }
 
   .watt-btn-primary {
-    @apply px-4 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition-all shadow-2xs cursor-pointer disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-2;
+    @apply px-4 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm transition-all shadow-2xs cursor-pointer disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-2;
   }
 
   .watt-btn-secondary {

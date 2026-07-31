@@ -150,7 +150,7 @@ export default function App() {
   }
 
   return (
-    <div className="h-screen flex flex-col bg-slate-50 text-slate-900 selection:bg-blue-600 selection:text-white font-sans overflow-hidden">
+    <div className="h-screen flex flex-col bg-slate-50 text-slate-900 selection:bg-slate-200 selection:text-slate-900 font-sans overflow-hidden">
       
       {/* Sleek Top Navigation Header */}
       <Navbar

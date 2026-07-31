@@ -88,7 +88,7 @@ export const AdminPanelView: React.FC<AdminPanelViewProps> = ({
       <div className="watt-card flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight flex items-center space-x-2.5">
-            <ShieldAlert className="w-6 h-6 text-blue-600" />
+            <ShieldAlert className="w-6 h-6 text-teal-700" />
             <span>Admin Control Panel &amp; ML Governance</span>
           </h1>
           <p className="text-xs text-slate-500 mt-1">
@@ -97,7 +97,7 @@ export const AdminPanelView: React.FC<AdminPanelViewProps> = ({
         </div>
 
         <div className="flex items-center space-x-2 shrink-0">
-          <span className="text-blue-600 font-bold uppercase tracking-wider text-[11px]">
+          <span className="text-teal-700 font-bold uppercase tracking-wider text-[11px]">
             ADMIN PRIVILEGES GRANTED
           </span>
         </div>
@@ -111,7 +111,7 @@ export const AdminPanelView: React.FC<AdminPanelViewProps> = ({
           <div className="watt-card space-y-4">
             <div>
               <h2 className="text-base font-bold text-slate-900 flex items-center space-x-2">
-                <Tag className="w-4 h-4 text-blue-600" />
+                <Tag className="w-4 h-4 text-teal-700" />
                 <span>Dynamic Research Category Tags</span>
               </h2>
               <p className="text-xs text-slate-500 mt-0.5">
@@ -135,7 +135,7 @@ export const AdminPanelView: React.FC<AdminPanelViewProps> = ({
                   value={newCatName}
                   onChange={(e) => setNewCatName(e.target.value)}
                   placeholder="e.g., Space Robotics, Astrobiology, 7G Networks..."
-                  className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 placeholder:text-slate-400 text-sm focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20"
+                  className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 placeholder:text-slate-400 text-sm focus:outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-900/10"
                 />
               </div>
 
@@ -146,7 +146,7 @@ export const AdminPanelView: React.FC<AdminPanelViewProps> = ({
                   value={newCatDesc}
                   onChange={(e) => setNewCatDesc(e.target.value)}
                   placeholder="Brief description of this research area..."
-                  className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 placeholder:text-slate-400 text-sm focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20"
+                  className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 placeholder:text-slate-400 text-sm focus:outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-900/10"
                 />
               </div>
 
@@ -170,7 +170,7 @@ export const AdminPanelView: React.FC<AdminPanelViewProps> = ({
                       <span className="font-semibold text-slate-900 flex items-center space-x-2">
                         <span>#{cat.name}</span>
                         {cat.is_custom && (
-                          <span className="text-xs font-semibold text-blue-600 font-mono border border-blue-200 bg-blue-50 px-1.5 py-0.2 rounded-md">
+                          <span className="text-xs font-semibold text-teal-700 font-mono border border-teal-200 bg-teal-50 px-1.5 py-0.2 rounded-md">
                             Custom
                           </span>
                         )}
@@ -201,7 +201,7 @@ export const AdminPanelView: React.FC<AdminPanelViewProps> = ({
           <div className="watt-card space-y-4">
             <div>
               <h2 className="text-base font-bold text-slate-900 flex items-center space-x-2">
-                <Cpu className="w-4 h-4 text-blue-600" />
+                <Cpu className="w-4 h-4 text-teal-700" />
                 <span>Classification Engine Control</span>
               </h2>
               <p className="text-sm text-slate-500 mt-0.5">
@@ -224,7 +224,7 @@ export const AdminPanelView: React.FC<AdminPanelViewProps> = ({
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-slate-500">Text Summarizer:</span>
-                <span className="text-blue-600 font-semibold">Active</span>
+                <span className="text-teal-700 font-semibold">Active</span>
               </div>
             </div>
 
@@ -241,7 +241,7 @@ export const AdminPanelView: React.FC<AdminPanelViewProps> = ({
               disabled={retraining}
               className="w-full watt-btn-secondary"
             >
-              <RefreshCw className={`w-4 h-4 text-blue-600 ${retraining ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`w-4 h-4 text-teal-700 ${retraining ? 'animate-spin' : ''}`} />
               <span>{retraining ? 'Retraining Models on Database Corpus...' : 'Retrain Scikit-Learn ML Models Now'}</span>
             </button>
           </div>
@@ -251,7 +251,7 @@ export const AdminPanelView: React.FC<AdminPanelViewProps> = ({
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="text-base font-bold text-slate-900 flex items-center space-x-2">
-                  <Users className="w-4 h-4 text-blue-600" />
+                  <Users className="w-4 h-4 text-teal-700" />
                   <span>Registered College Users &amp; Roles</span>
                 </h2>
                 <p className="text-sm text-slate-500 mt-0.5">

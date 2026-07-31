@@ -128,12 +128,12 @@ export const AuthorProfileDrawer: React.FC<AuthorProfileDrawerProps> = ({
         {/* Drawer Header */}
         <div className="px-6 py-5 border-b border-slate-200 bg-white flex items-center justify-between shrink-0">
           <div className="flex items-center space-x-3.5">
-            <div className="w-11 h-11 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-lg shadow-2xs shrink-0">
+            <div className="w-11 h-11 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold text-lg shadow-2xs shrink-0">
               {cleanAuthorName.charAt(0)}
             </div>
             <div>
               <h3 className="text-lg font-bold text-slate-900 leading-tight">{cleanAuthorName}</h3>
-              <p className="text-sm text-blue-600 font-semibold mt-0.5">{primaryDept}</p>
+              <p className="text-sm text-teal-700 font-semibold mt-0.5">{primaryDept}</p>
             </div>
           </div>
 
@@ -176,7 +176,7 @@ export const AuthorProfileDrawer: React.FC<AuthorProfileDrawerProps> = ({
           {topVenues.length > 0 && (
             <div className="space-y-2.5">
               <h4 className="text-xs font-bold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
-                <BookOpen className="w-4 h-4 text-blue-600" />
+                <BookOpen className="w-4 h-4 text-teal-700" />
                 <span>Frequent Publication Venues</span>
               </h4>
               <div className="flex flex-wrap gap-3">
@@ -194,7 +194,7 @@ export const AuthorProfileDrawer: React.FC<AuthorProfileDrawerProps> = ({
           {topCoAuthors.length > 0 && (
             <div className="space-y-2.5">
               <h4 className="text-xs font-bold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
-                <Users className="w-4 h-4 text-blue-600" />
+                <Users className="w-4 h-4 text-teal-700" />
                 <span>Frequent Co-Authors</span>
               </h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -206,10 +206,10 @@ export const AuthorProfileDrawer: React.FC<AuthorProfileDrawerProps> = ({
                     title={`View ${coAuthor}'s author profile`}
                   >
                     <div className="flex items-center space-x-2.5 truncate">
-                      <div className="w-7 h-7 rounded-md bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-xs shrink-0 border border-blue-100">
+                      <div className="w-7 h-7 rounded-md bg-teal-50 text-teal-700 flex items-center justify-center font-bold text-xs shrink-0 border border-teal-100">
                         {coAuthor.charAt(0)}
                       </div>
-                      <span className="text-slate-900 font-semibold text-sm truncate group-hover:text-blue-600 transition-colors">{coAuthor}</span>
+                      <span className="text-slate-900 font-semibold text-sm truncate group-hover:text-teal-700 transition-colors">{coAuthor}</span>
                     </div>
                     <span className="text-slate-500 text-xs shrink-0 font-mono">{count} papers</span>
                   </div>
@@ -222,7 +222,7 @@ export const AuthorProfileDrawer: React.FC<AuthorProfileDrawerProps> = ({
           {/* Publication History List */}
           <div className="space-y-3 pt-2">
             <h4 className="text-xs font-bold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
-              <FileText className="w-4 h-4 text-blue-600" />
+              <FileText className="w-4 h-4 text-teal-700" />
               <span>Publications in Repository ({totalPubs})</span>
             </h4>
 
@@ -239,7 +239,7 @@ export const AuthorProfileDrawer: React.FC<AuthorProfileDrawerProps> = ({
                     className="p-4 rounded-lg bg-slate-50 border border-slate-200 hover:border-slate-300 hover:bg-slate-100/50 transition-all cursor-pointer space-y-2 group"
                   >
                     <div className="flex items-start justify-between gap-2">
-                      <h5 className="font-bold text-slate-900 text-sm group-hover:text-blue-600 transition-colors leading-snug">
+                      <h5 className="font-bold text-slate-900 text-sm group-hover:text-teal-700 transition-colors leading-snug">
                         {paper.title}
                       </h5>
                       <span className="text-xs font-mono text-slate-500 font-semibold shrink-0">

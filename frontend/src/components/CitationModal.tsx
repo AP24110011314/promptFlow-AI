@@ -81,7 +81,7 @@ ${doiField}  department = {${paper.department}}
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-200 pb-4">
           <div className="flex items-center space-x-3.5">
-            <div className="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold border border-blue-100">
+            <div className="w-10 h-10 rounded-lg bg-teal-50 text-teal-700 flex items-center justify-center font-bold border border-teal-100">
               <Quote className="w-5 h-5" />
             </div>
             <div>
@@ -108,7 +108,7 @@ ${doiField}  department = {${paper.department}}
               onClick={() => setActiveStyle(style)}
               className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all cursor-pointer ${
                 activeStyle === style
-                  ? 'bg-blue-600 text-white shadow-2xs'
+                  ? 'bg-slate-900 text-white shadow-2xs'
                   : 'bg-slate-50 text-slate-600 hover:text-slate-900 border border-slate-200'
               }`}
             >
@@ -121,7 +121,7 @@ ${doiField}  department = {${paper.department}}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
-              <BookOpen className="w-4 h-4 text-blue-600" />
+              <BookOpen className="w-4 h-4 text-teal-700" />
               <span>{activeStyle} Citation String</span>
             </span>
 
@@ -147,7 +147,7 @@ ${doiField}  department = {${paper.department}}
             </button>
           </div>
 
-          <pre className="w-full p-4.5 rounded-lg bg-white border border-slate-200 text-sm text-slate-800 whitespace-pre-wrap font-mono leading-relaxed overflow-x-auto selection:bg-blue-600 selection:text-white shadow-2xs">
+          <pre className="w-full p-4.5 rounded-lg bg-white border border-slate-200 text-sm text-slate-800 whitespace-pre-wrap font-mono leading-relaxed overflow-x-auto selection:bg-slate-200 selection:text-slate-900 shadow-2xs">
             {getCitationText(activeStyle)}
           </pre>
         </div>

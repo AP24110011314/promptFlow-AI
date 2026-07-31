@@ -57,7 +57,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({
         {/* Modal Header */}
         <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-white shrink-0">
           <div className="flex items-center space-x-3.5">
-            <div className="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold border border-blue-100">
+            <div className="w-10 h-10 rounded-lg bg-teal-50 text-teal-700 flex items-center justify-center font-bold border border-teal-100">
               <HelpCircle className="w-5 h-5" />
             </div>
             <div>
@@ -96,7 +96,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({
                 onClick={() => setActiveTab(tab.id as any)}
                 className={`py-3.5 px-4 flex items-center space-x-2 text-sm font-semibold border-b-2 transition-all cursor-pointer whitespace-nowrap ${
                   isActive
-                    ? 'border-blue-600 text-blue-600 font-bold'
+                    ? 'border-teal-700 text-teal-700 font-bold'
                     : 'border-transparent text-slate-500 hover:text-slate-900'
                 }`}
               >
@@ -115,7 +115,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({
             <div className="space-y-5">
               <div>
                 <h4 className="text-sm font-bold text-slate-900 mb-1.5 flex items-center gap-2">
-                  <Zap className="w-4 h-4 text-blue-600" />
+                  <Zap className="w-4 h-4 text-teal-700" />
                   <span>Automated Research Processing Pipeline</span>
                 </h4>
                 <p className="text-slate-600 leading-relaxed">
@@ -126,7 +126,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({
               {/* Step Flow Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="p-4 rounded-lg bg-slate-50 border border-slate-200 space-y-1.5">
-                  <div className="flex items-center space-x-2 text-blue-600 font-bold">
+                  <div className="flex items-center space-x-2 text-teal-700 font-bold">
                     <Mail className="w-4 h-4" />
                     <span>1. Ingestion &amp; Parsing</span>
                   </div>
@@ -136,7 +136,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({
                 </div>
 
                 <div className="p-4 rounded-lg bg-slate-50 border border-slate-200 space-y-1.5">
-                  <div className="flex items-center space-x-2 text-blue-600 font-bold">
+                  <div className="flex items-center space-x-2 text-teal-700 font-bold">
                     <Cpu className="w-4 h-4" />
                     <span>2. Scikit-Learn Classification</span>
                   </div>
@@ -189,74 +189,74 @@ export const HelpModal: React.FC<HelpModalProps> = ({
             <div className="space-y-4">
               <div className="p-4 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-700 leading-relaxed">
                 <p>
-                  promptFlow-AI enforces strict permissions between Faculty members and System Administrators. Your active role is <strong className="text-blue-600 capitalize">{userRole}</strong>.
+                  promptFlow-AI enforces strict permissions between Faculty members and System Administrators. Your active role is <strong className="text-teal-700 capitalize">{userRole}</strong>.
                 </p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Faculty Box */}
-                <div className={`p-4 rounded-lg bg-slate-50 border ${userRole === 'faculty' ? 'border-blue-600 ring-1 ring-blue-600/30' : 'border-slate-200'} space-y-3`}>
+                <div className={`p-4 rounded-lg bg-slate-50 border ${userRole === 'faculty' ? 'border-slate-900 ring-1 ring-slate-900/20' : 'border-slate-200'} space-y-3`}>
                   <div className="flex items-center justify-between">
                     <h4 className="font-bold text-slate-900 text-xs flex items-center gap-1.5">
-                      <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                      <ShieldCheck className="w-4 h-4 text-teal-700" />
                       <span>Faculty Privileges</span>
                     </h4>
-                    {userRole === 'faculty' && <span className="text-[10px] text-blue-600 font-bold">Active Account</span>}
+                    {userRole === 'faculty' && <span className="text-[10px] text-teal-700 font-bold">Active Account</span>}
                   </div>
 
                   <ul className="space-y-1.5 text-[11px] text-slate-600">
                     <li className="flex items-start gap-1.5">
-                      <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                      <Check className="w-3.5 h-3.5 text-teal-700 shrink-0 mt-0.5" />
                       <span>Browse, search, and filter research repository</span>
                     </li>
                     <li className="flex items-start gap-1.5">
-                      <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                      <Check className="w-3.5 h-3.5 text-teal-700 shrink-0 mt-0.5" />
                       <span>Upload PDF papers for automated ML extraction</span>
                     </li>
                     <li className="flex items-start gap-1.5">
-                      <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                      <Check className="w-3.5 h-3.5 text-teal-700 shrink-0 mt-0.5" />
                       <span>Run email ingestion simulation tests</span>
                     </li>
                     <li className="flex items-start gap-1.5">
-                      <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                      <Check className="w-3.5 h-3.5 text-teal-700 shrink-0 mt-0.5" />
                       <span>Export repository data to Excel &amp; PDF reports</span>
                     </li>
                   </ul>
                 </div>
 
                 {/* Admin Box */}
-                <div className={`p-4 rounded-lg bg-slate-50 border ${userRole === 'admin' ? 'border-blue-600 ring-1 ring-blue-600/30' : 'border-slate-200'} space-y-3`}>
+                <div className={`p-4 rounded-lg bg-slate-50 border ${userRole === 'admin' ? 'border-slate-900 ring-1 ring-slate-900/20' : 'border-slate-200'} space-y-3`}>
                   <div className="flex items-center justify-between">
                     <h4 className="font-bold text-slate-900 text-xs flex items-center gap-1.5">
-                      <ShieldCheck className="w-4 h-4 text-blue-600" />
+                      <ShieldCheck className="w-4 h-4 text-teal-700" />
                       <span>Administrator Privileges</span>
                     </h4>
-                    {userRole === 'admin' && <span className="text-[10px] text-blue-600 font-bold">Active Account</span>}
+                    {userRole === 'admin' && <span className="text-[10px] text-teal-700 font-bold">Active Account</span>}
                   </div>
 
                   <ul className="space-y-1.5 text-[11px] text-slate-600">
                     <li className="flex items-start gap-1.5">
-                      <Check className="w-3.5 h-3.5 text-blue-600 shrink-0 mt-0.5" />
+                      <Check className="w-3.5 h-3.5 text-teal-700 shrink-0 mt-0.5" />
                       <span>All Faculty permissions included</span>
                     </li>
                     <li className="flex items-start gap-1.5">
-                      <Check className="w-3.5 h-3.5 text-blue-600 shrink-0 mt-0.5" />
+                      <Check className="w-3.5 h-3.5 text-teal-700 shrink-0 mt-0.5" />
                       <span>Access Admin Control Panel</span>
                     </li>
                     <li className="flex items-start gap-1.5">
-                      <Check className="w-3.5 h-3.5 text-blue-600 shrink-0 mt-0.5" />
+                      <Check className="w-3.5 h-3.5 text-teal-700 shrink-0 mt-0.5" />
                       <span>Create and manage user accounts &amp; roles</span>
                     </li>
                     <li className="flex items-start gap-1.5">
-                      <Check className="w-3.5 h-3.5 text-blue-600 shrink-0 mt-0.5" />
+                      <Check className="w-3.5 h-3.5 text-teal-700 shrink-0 mt-0.5" />
                       <span>Delete research papers from repository</span>
                     </li>
                     <li className="flex items-start gap-1.5">
-                      <Check className="w-3.5 h-3.5 text-blue-600 shrink-0 mt-0.5" />
+                      <Check className="w-3.5 h-3.5 text-teal-700 shrink-0 mt-0.5" />
                       <span>Introduce custom research category tags</span>
                     </li>
                     <li className="flex items-start gap-1.5">
-                      <Check className="w-3.5 h-3.5 text-blue-600 shrink-0 mt-0.5" />
+                      <Check className="w-3.5 h-3.5 text-teal-700 shrink-0 mt-0.5" />
                       <span>Trigger ML model retraining on updated corpus</span>
                     </li>
                   </ul>
@@ -270,21 +270,21 @@ export const HelpModal: React.FC<HelpModalProps> = ({
             <div className="space-y-4">
               <div className="space-y-2">
                 <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
-                  <Keyboard className="w-4 h-4 text-blue-600" />
+                  <Keyboard className="w-4 h-4 text-teal-700" />
                   <span>Keyboard Shortcuts &amp; Rapid Navigation</span>
                 </h4>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                   <div className="p-3 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-between">
                     <span className="text-slate-700">Focus Global Search</span>
-                    <kbd className="px-2 py-1 rounded bg-slate-200 border border-slate-300 font-mono text-blue-700 text-[11px]">
+                    <kbd className="px-2 py-1 rounded bg-slate-200 border border-slate-300 font-mono text-slate-700 text-[11px]">
                       Ctrl + K / ⌘K
                     </kbd>
                   </div>
 
                   <div className="p-3 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-between">
                     <span className="text-slate-700">Close Open Modal / Drawer</span>
-                    <kbd className="px-2 py-1 rounded bg-slate-200 border border-slate-300 font-mono text-blue-700 text-[11px]">
+                    <kbd className="px-2 py-1 rounded bg-slate-200 border border-slate-300 font-mono text-slate-700 text-[11px]">
                       Esc
                     </kbd>
                   </div>
@@ -308,14 +308,14 @@ export const HelpModal: React.FC<HelpModalProps> = ({
                   onClick={fetchHealth}
                   className="px-3 py-1.5 rounded-lg bg-slate-50 text-slate-700 hover:text-slate-900 border border-slate-200 text-xs font-semibold flex items-center space-x-1.5 cursor-pointer"
                 >
-                  <RefreshCw className={`w-3.5 h-3.5 ${loadingHealth ? 'animate-spin text-blue-600' : ''}`} />
+                  <RefreshCw className={`w-3.5 h-3.5 ${loadingHealth ? 'animate-spin text-teal-700' : ''}`} />
                   <span>Re-check</span>
                 </button>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                 <div className="p-3.5 rounded-lg bg-slate-50 border border-slate-200 flex items-center space-x-3">
-                  <div className="w-8 h-8 rounded-md bg-blue-50 text-emerald-600 flex items-center justify-center shrink-0 border border-blue-100">
+                  <div className="w-8 h-8 rounded-md bg-slate-100 text-emerald-600 flex items-center justify-center shrink-0 border border-slate-200">
                     <CheckCircle2 className="w-4 h-4" />
                   </div>
                   <div>
@@ -327,7 +327,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({
                 </div>
 
                 <div className="p-3.5 rounded-lg bg-slate-50 border border-slate-200 flex items-center space-x-3">
-                  <div className="w-8 h-8 rounded-md bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 border border-blue-100">
+                  <div className="w-8 h-8 rounded-md bg-slate-100 text-teal-700 flex items-center justify-center shrink-0 border border-slate-200">
                     <Cpu className="w-4 h-4" />
                   </div>
                   <div>
@@ -339,7 +339,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({
                 </div>
 
                 <div className="p-3.5 rounded-lg bg-slate-50 border border-slate-200 flex items-center space-x-3">
-                  <div className="w-8 h-8 rounded-md bg-blue-50 text-amber-600 flex items-center justify-center shrink-0 border border-blue-100">
+                  <div className="w-8 h-8 rounded-md bg-slate-100 text-amber-600 flex items-center justify-center shrink-0 border border-slate-200">
                     <Zap className="w-4 h-4" />
                   </div>
                   <div>

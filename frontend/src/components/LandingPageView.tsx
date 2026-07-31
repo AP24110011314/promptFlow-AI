@@ -134,7 +134,7 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({
   ];
 
   return (
-    <div className="min-h-screen bg-real-white text-[#1E1E1E] font-sans overflow-x-hidden relative selection:bg-[#F4F0EB] selection:text-[#1E1E1E]">
+    <div className="min-h-screen bg-real-white text-slate-900 font-sans overflow-x-hidden relative">
 
       {/* 1. FLOATING NAVBAR */}
       {!isLoggedIn && (
@@ -142,7 +142,7 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({
           initial={{ y: -50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
-          className={`fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-4xl rounded-xl border border-black/5 transition-all duration-300 ${
+          className={`fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-4xl rounded-xl border border-slate-200/80 transition-all duration-300 ${
             scrolled 
               ? "py-2.5 px-5 bg-real-white/90 backdrop-blur-[18px] shadow-[0_4px_24px_rgba(0,0,0,0.04)]" 
               : "py-3 px-6 bg-real-white/45 backdrop-blur-sm"
@@ -151,25 +151,25 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({
           <div className="flex items-center justify-between">
             {/* Logo on Left */}
             <div className="flex items-center space-x-2.5">
-              <div className="w-7 h-7 rounded-lg bg-[#1E1E1E] text-real-white flex items-center justify-center font-bold text-xs shadow-sm">
+              <div className="w-7 h-7 rounded-lg bg-blue-600 text-real-white flex items-center justify-center font-bold text-xs shadow-sm">
                 p
               </div>
-              <span className="font-display font-bold text-base tracking-tight text-[#1E1E1E]">promptflow</span>
+              <span className="font-display font-bold text-base tracking-tight text-slate-900">promptflow</span>
             </div>
 
             {/* Navigation Links centered */}
-            <nav className="hidden md:flex items-center space-x-8 text-xs font-bold text-[#6E6E73] tracking-wider uppercase">
-              <a href="#benefits" onClick={(e) => handleNavLinkClick(e, 'benefits')} className="hover:text-black transition-colors">Benefits</a>
-              <a href="#pipeline" onClick={(e) => handleNavLinkClick(e, 'pipeline')} className="hover:text-black transition-colors">How it works</a>
-              <a href="#roles" onClick={(e) => handleNavLinkClick(e, 'roles')} className="hover:text-black transition-colors">Security</a>
-              <a href="#faqs" onClick={(e) => handleNavLinkClick(e, 'faqs')} className="hover:text-black transition-colors">FAQ</a>
+            <nav className="hidden md:flex items-center space-x-8 text-xs font-bold text-slate-500 tracking-wider uppercase">
+              <a href="#benefits" onClick={(e) => handleNavLinkClick(e, 'benefits')} className="hover:text-slate-900 transition-colors">Benefits</a>
+              <a href="#pipeline" onClick={(e) => handleNavLinkClick(e, 'pipeline')} className="hover:text-slate-900 transition-colors">How it works</a>
+              <a href="#roles" onClick={(e) => handleNavLinkClick(e, 'roles')} className="hover:text-slate-900 transition-colors">Security</a>
+              <a href="#faqs" onClick={(e) => handleNavLinkClick(e, 'faqs')} className="hover:text-slate-900 transition-colors">FAQ</a>
             </nav>
 
             {/* CTA on Right */}
             <div className="flex items-center">
               <button 
                 onClick={onSignInClick}
-                className="px-5 py-2 rounded-lg bg-[#F4F0EB] text-[#1E1E1E] border border-black/5 text-xs font-bold hover:bg-[#eae6e1] transition-all duration-200 cursor-pointer"
+                className="px-5 py-2 rounded-lg bg-blue-600 text-white border border-blue-600 text-xs font-bold hover:bg-blue-700 transition-all duration-200 cursor-pointer"
               >
                 Get Started
               </button>
@@ -209,19 +209,19 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({
               initial={{ opacity: 0, y: 40, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ duration: 0.9, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-              className="w-[94%] max-w-5xl bg-real-white rounded-xl shadow-[0_12px_40px_rgba(0,0,0,0.06)] border border-black/5 flex flex-col justify-center items-center p-12 md:p-20 text-center pointer-events-auto"
+              className="w-[94%] max-w-5xl bg-real-white rounded-xl shadow-[0_12px_40px_rgba(0,0,0,0.06)] border border-slate-200/80 flex flex-col justify-center items-center p-12 md:p-20 text-center pointer-events-auto"
             >
               {/* Category label */}
-              <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#8E8E93] mb-6">
+              <span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400 mb-6">
                 Academic Research Catalog
               </span>
 
-              <h1 className="font-display text-5xl sm:text-6xl md:text-[52px] font-normal tracking-tight text-[#1E1E1E] leading-[1.05] max-w-3xl">
+              <h1 className="font-display text-5xl sm:text-6xl md:text-[52px] font-normal tracking-tight text-slate-900 leading-[1.05] max-w-3xl">
                 <span>Track more. </span>
-                <span className="text-[#8E8E93]">Read less.</span>
+                <span className="text-slate-400">Read less.</span>
               </h1>
 
-              <p className="text-[#6E6E73] text-base sm:text-lg max-w-xl mt-6 leading-relaxed font-normal">
+              <p className="text-slate-500 text-base sm:text-lg max-w-xl mt-6 leading-relaxed font-normal">
                 Streamline academic research ingestion. Classify faculty updates using ML, parse DOIs automatically, and query insights via the AI literature assistant.
               </p>
 
@@ -229,7 +229,7 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({
                 {isLoggedIn ? (
                   <button 
                     onClick={onGoToConsoleClick}
-                    className="px-8 py-3.5 rounded-lg bg-[#1E1E1E] text-real-white font-bold text-sm sm:text-base hover:brightness-110 shadow-sm transition-all cursor-pointer flex items-center space-x-2.5"
+                    className="px-8 py-3.5 rounded-lg bg-blue-600 text-white font-bold text-sm sm:text-base hover:bg-blue-700 shadow-sm transition-all cursor-pointer flex items-center space-x-2.5"
                   >
                     <span>Launch Console</span>
                     <ArrowRight className="w-4 h-4" />
@@ -237,7 +237,7 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({
                 ) : (
                   <button 
                     onClick={onSignInClick}
-                    className="px-8 py-3.5 rounded-lg bg-[#1E1E1E] text-real-white font-bold text-sm sm:text-base hover:brightness-110 shadow-sm transition-all cursor-pointer flex items-center space-x-2.5"
+                    className="px-8 py-3.5 rounded-lg bg-blue-600 text-white font-bold text-sm sm:text-base hover:bg-blue-700 shadow-sm transition-all cursor-pointer flex items-center space-x-2.5"
                   >
                     <span>Access Console</span>
                     <ArrowRight className="w-4 h-4" />
@@ -260,66 +260,66 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
           
           {/* Card 1: Relevance Filtering */}
-          <div className="bg-[#F5F5F7] border border-black/5 rounded-xl p-7 hover:shadow-[0_4px_12px_rgba(0,0,0,0.01)] transition-all duration-300">
+          <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-7 hover:shadow-[0_4px_12px_rgba(0,0,0,0.01)] transition-all duration-300">
             {/* Visual element at top */}
-            <div className="w-full bg-real-white border border-black/5 rounded-lg p-4 flex flex-col justify-between font-sans text-xs text-[#6E6E73] shadow-[0_1px_3px_rgba(0,0,0,0.01)] mb-6">
-              <div className="flex items-center justify-between border-b border-black/5 pb-2 text-[11px] text-[#8E8E93] font-mono tracking-wider font-semibold">
+            <div className="w-full bg-real-white border border-slate-200/80 rounded-lg p-4 flex flex-col justify-between font-sans text-xs text-slate-500 shadow-[0_1px_3px_rgba(0,0,0,0.01)] mb-6">
+              <div className="flex items-center justify-between border-b border-slate-200/80 pb-2 text-[11px] text-slate-400 font-mono tracking-wider font-semibold">
                 <span>INBOUND EMAIL</span>
-                <span className="text-emerald-600 font-bold">RESEARCH</span>
+                <span className="text-blue-600 font-bold">RESEARCH</span>
               </div>
-              <p className="line-clamp-2 leading-relaxed text-[#1E1E1E] my-3 font-medium">"I am pleased to share our research has been accepted in IEEE Signal Processing..."</p>
-              <div className="flex items-center justify-between pt-2 border-t border-black/5 text-[11px] text-[#8E8E93]">
+              <p className="line-clamp-2 leading-relaxed text-slate-900 my-3 font-medium">"I am pleased to share our research has been accepted in IEEE Signal Processing..."</p>
+              <div className="flex items-center justify-between pt-2 border-t border-slate-200/80 text-[11px] text-slate-400">
                 <span>Relevance Score</span>
-                <span className="text-[#1E1E1E] font-bold">99.2%</span>
+                <span className="text-slate-900 font-bold">99.2%</span>
               </div>
             </div>
 
             {/* Typography flow below */}
             <div>
-              <span className="text-xs font-semibold tracking-wider text-[#8E8E93] uppercase mb-1.5 block">ML Ingestion</span>
-              <h3 className="text-2xl font-bold text-[#1E1E1E] leading-tight mb-2">Relevance Filtering</h3>
-              <p className="text-sm font-normal text-[#6E6E73] leading-relaxed">
+              <span className="text-xs font-semibold tracking-wider text-slate-400 uppercase mb-1.5 block">ML Ingestion</span>
+              <h3 className="text-2xl font-bold text-slate-900 leading-tight mb-2">Relevance Filtering</h3>
+              <p className="text-sm font-normal text-slate-500 leading-relaxed">
                 Identifies academic research publications from incoming mail streams while discarding administrative spam.
               </p>
             </div>
           </div>
 
           {/* Card 2: Extractive Summarization */}
-          <div className="bg-[#F5F5F7] border border-black/5 rounded-xl p-7 hover:shadow-[0_4px_12px_rgba(0,0,0,0.01)] transition-all duration-300">
+          <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-7 hover:shadow-[0_4px_12px_rgba(0,0,0,0.01)] transition-all duration-300">
             {/* Visual element at top */}
-            <div className="w-full bg-real-white border border-black/5 rounded-lg p-4 flex flex-col justify-between font-sans text-xs text-[#6E6E73] shadow-[0_1px_3px_rgba(0,0,0,0.01)] mb-6">
-              <span className="text-[10px] font-semibold tracking-wider text-[#8E8E93] uppercase mb-2 block font-mono">Abstract summary</span>
-              <p className="leading-relaxed text-[#1E1E1E] italic line-clamp-3">
+            <div className="w-full bg-real-white border border-slate-200/80 rounded-lg p-4 flex flex-col justify-between font-sans text-xs text-slate-500 shadow-[0_1px_3px_rgba(0,0,0,0.01)] mb-6">
+              <span className="text-[10px] font-semibold tracking-wider text-slate-400 uppercase mb-2 block font-mono">Abstract summary</span>
+              <p className="leading-relaxed text-slate-900 italic line-clamp-3">
                 "We present a framework that improves metadata classification bounds by 14% using TF-IDF sentence token weights."
               </p>
             </div>
 
             {/* Typography flow below */}
             <div>
-              <span className="text-xs font-semibold tracking-wider text-[#8E8E93] uppercase mb-1.5 block">NLP Analysis</span>
-              <h3 className="text-2xl font-bold text-[#1E1E1E] leading-tight mb-2">Text Summarization</h3>
-              <p className="text-sm font-normal text-[#6E6E73] leading-relaxed">
+              <span className="text-xs font-semibold tracking-wider text-slate-400 uppercase mb-1.5 block">NLP Analysis</span>
+              <h3 className="text-2xl font-bold text-slate-900 leading-tight mb-2">Text Summarization</h3>
+              <p className="text-sm font-normal text-slate-500 leading-relaxed">
                 Generates summaries of research paper abstracts using local TF-IDF sentence extraction.
               </p>
             </div>
           </div>
 
           {/* Card 3: Chat Assistant */}
-          <div className="bg-[#F5F5F7] border border-black/5 rounded-xl p-7 hover:shadow-[0_4px_12px_rgba(0,0,0,0.01)] transition-all duration-300">
+          <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-7 hover:shadow-[0_4px_12px_rgba(0,0,0,0.01)] transition-all duration-300">
             {/* Visual element at top */}
-            <div className="w-full bg-real-white border border-black/5 rounded-lg p-4 flex flex-col space-y-2.5 font-sans text-xs shadow-[0_1px_3px_rgba(0,0,0,0.01)] mb-6">
-              <div className="bg-[#F8F9FA] p-2.5 rounded-md text-[#6E6E73] self-end max-w-[85%] border border-black/5">
+            <div className="w-full bg-real-white border border-slate-200/80 rounded-lg p-4 flex flex-col space-y-2.5 font-sans text-xs shadow-[0_1px_3px_rgba(0,0,0,0.01)] mb-6">
+              <div className="bg-slate-50 p-2.5 rounded-md text-slate-500 self-end max-w-[85%] border border-slate-200/80">
                 "neural net papers"
               </div>
-              <div className="bg-[#F4F0EB] p-2.5 rounded-md text-[#1E1E1E] self-start max-w-[85%] border border-black/5 font-medium">
+              <div className="bg-blue-50 p-2.5 rounded-md text-slate-900 self-start max-w-[85%] border border-blue-100 font-medium">
                 "Found 3 articles under CS."
               </div>
             </div>
 
             <div>
-              <span className="text-xs font-semibold tracking-wider text-[#8E8E93] uppercase mb-1.5 block">Assistant</span>
-              <h3 className="text-2xl font-bold text-[#1E1E1E] leading-tight mb-2">Literature Search</h3>
-              <p className="text-sm font-normal text-[#6E6E73] leading-relaxed">
+              <span className="text-xs font-semibold tracking-wider text-slate-400 uppercase mb-1.5 block">Assistant</span>
+              <h3 className="text-2xl font-bold text-slate-900 leading-tight mb-2">Literature Search</h3>
+              <p className="text-sm font-normal text-slate-500 leading-relaxed">
                 Query the publication index directly using standard natural language questions.
               </p>
             </div>
@@ -337,20 +337,20 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({
         className="relative z-20 bg-real-white pt-4 pb-20 max-w-5xl mx-auto px-6"
       >
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
-          <div className="bg-[#F5F5F7] p-8 rounded-xl border border-black/5">
-            <div className="font-display text-5xl font-extrabold text-[#1E1E1E]">{totalPapers}</div>
-            <p className="text-xs uppercase tracking-widest text-[#1E1E1E] font-bold mt-3 font-mono">Indexed Publications</p>
-            <p className="text-xs text-[#6E6E73] mt-1.5 max-w-xs mx-auto">Total academic research papers successfully parsed and verified in the catalog</p>
+          <div className="bg-slate-50 p-8 rounded-xl border border-slate-200/80">
+            <div className="font-display text-5xl font-extrabold text-slate-900">{totalPapers}</div>
+            <p className="text-xs uppercase tracking-widest text-slate-900 font-bold mt-3 font-mono">Indexed Publications</p>
+            <p className="text-xs text-slate-500 mt-1.5 max-w-xs mx-auto">Total academic research papers successfully parsed and verified in the catalog</p>
           </div>
-          <div className="bg-[#F5F5F7] p-8 rounded-xl border border-black/5">
-            <div className="font-display text-5xl font-extrabold text-[#1E1E1E]">{avgConfidence}</div>
-            <p className="text-xs uppercase tracking-widest text-[#1E1E1E] font-bold mt-3 font-mono">Ingestion Accuracy</p>
-            <p className="text-xs text-[#6E6E73] mt-1.5 max-w-xs mx-auto">Vetted classifier confidence score based on automated pipeline classifications</p>
+          <div className="bg-slate-50 p-8 rounded-xl border border-slate-200/80">
+            <div className="font-display text-5xl font-extrabold text-slate-900">{avgConfidence}</div>
+            <p className="text-xs uppercase tracking-widest text-slate-900 font-bold mt-3 font-mono">Ingestion Accuracy</p>
+            <p className="text-xs text-slate-500 mt-1.5 max-w-xs mx-auto">Vetted classifier confidence score based on automated pipeline classifications</p>
           </div>
-          <div className="bg-[#F5F5F7] p-8 rounded-xl border border-black/5">
-            <div className="font-display text-5xl font-extrabold text-[#1E1E1E]">{totalAuthors || 8}</div>
-            <p className="text-xs uppercase tracking-widest text-[#1E1E1E] font-bold mt-3 font-mono">Faculty Authors</p>
-            <p className="text-xs text-[#6E6E73] mt-1.5 max-w-xs mx-auto">Total individual faculty authors registered and parsed in the system catalog</p>
+          <div className="bg-slate-50 p-8 rounded-xl border border-slate-200/80">
+            <div className="font-display text-5xl font-extrabold text-slate-900">{totalAuthors || 8}</div>
+            <p className="text-xs uppercase tracking-widest text-slate-900 font-bold mt-3 font-mono">Faculty Authors</p>
+            <p className="text-xs text-slate-500 mt-1.5 max-w-xs mx-auto">Total individual faculty authors registered and parsed in the system catalog</p>
           </div>
         </div>
       </motion.section>
@@ -360,66 +360,66 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({
         id="pipeline" 
         animate={triggerAnimationSection === 'pipeline' ? { opacity: [0, 1], scale: [0.93, 1], y: [40, 0] } : { opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="relative z-20 bg-[#FDFDFD] py-24 border-y border-black/5"
+        className="relative z-20 bg-slate-50 py-24 border-y border-slate-200/80"
       >
         <div className="max-w-5xl mx-auto px-6">
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <span className="inline-flex items-center rounded-md border border-black/10 bg-[#F4F0EB] px-3.5 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#4A4A4A]">Architecture</span>            
-            <h2 className="font-display text-3xl font-bold text-[#1E1E1E] mt-4 tracking-tight">The Ingestion Pipeline</h2>
-            <p className="text-sm text-[#6E6E73] mt-2 leading-relaxed font-medium">
+            <span className="inline-flex items-center rounded-md border border-slate-200 bg-white px-3.5 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Architecture</span>            
+            <h2 className="font-display text-3xl font-bold text-slate-900 mt-4 tracking-tight">The Ingestion Pipeline</h2>
+            <p className="text-sm text-slate-500 mt-2 leading-relaxed font-medium">
               How promptFlow-AI processes, tags, parses, and catalogs academic research papers.
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 relative">
-            <div className="p-6 bg-[#F5F5F7] rounded-xl border border-black/5 relative hover:shadow-sm transition-all duration-300">
+            <div className="p-6 bg-white rounded-xl border border-slate-200/80 relative hover:shadow-sm transition-all duration-300">
               <MetallicNail />
               <div className="flex items-center gap-3 mb-4">
-                <Inbox className="w-5 h-5 text-[#1E1E1E]" />
-                <h4 className="font-display text-base font-bold text-[#1E1E1E]">
+                <Inbox className="w-5 h-5 text-blue-600" />
+                <h4 className="font-display text-base font-bold text-slate-900">
                   Email Poll
                 </h4>
               </div>
-              <p className="text-sm leading-6 text-[#6E6E73]">
+              <p className="text-sm leading-6 text-slate-500">
                 System retrieves incoming emails from faculty mailboxes or accepts simulated payloads.
               </p>
             </div>
 
-            <div className="p-6 bg-[#F5F5F7] rounded-xl border border-black/5 relative hover:shadow-sm transition-all duration-300">
+            <div className="p-6 bg-white rounded-xl border border-slate-200/80 relative hover:shadow-sm transition-all duration-300">
               <MetallicNail />
               <div className="flex items-center gap-3 mb-4">
-                <ShieldAlert className="w-5 h-5 text-[#1E1E1E]" />
-                <h4 className="font-display text-base font-bold text-[#1E1E1E]">
+                <ShieldAlert className="w-5 h-5 text-blue-600" />
+                <h4 className="font-display text-base font-bold text-slate-900">
                   ML Relevance
                 </h4>
               </div>
-              <p className="text-sm leading-6 text-[#6E6E73]">
+              <p className="text-sm leading-6 text-slate-500">
                 Text is evaluated using TF-IDF pipelines to filter non-research emails automatically.
               </p>
             </div>
 
-            <div className="p-6 bg-[#F5F5F7] rounded-xl border border-black/5 relative hover:shadow-sm transition-all duration-300">
+            <div className="p-6 bg-white rounded-xl border border-slate-200/80 relative hover:shadow-sm transition-all duration-300">
               <MetallicNail />
               <div className="flex items-center gap-3 mb-4">
-                <Cpu className="w-5 h-5 text-[#1E1E1E]" />
-                <h4 className="font-display text-base font-bold text-[#1E1E1E]">
+                <Cpu className="w-5 h-5 text-blue-600" />
+                <h4 className="font-display text-base font-bold text-slate-900">
                   Metadata Extraction
                 </h4>
               </div>
-              <p className="text-sm leading-6 text-[#6E6E73]">
+              <p className="text-sm leading-6 text-slate-500">
                 Extracts authors, DOI, journal details, and generates concise AI-powered summaries.
               </p>
             </div>
 
-            <div className="p-6 bg-[#F5F5F7] rounded-xl border border-black/5 relative hover:shadow-sm transition-all duration-300">
+            <div className="p-6 bg-white rounded-xl border border-slate-200/80 relative hover:shadow-sm transition-all duration-300">
               <MetallicNail />
               <div className="flex items-center gap-3 mb-4">
-                <Database className="w-5 h-5 text-[#1E1E1E]" />
-                <h4 className="font-display text-base font-bold text-[#1E1E1E]">
+                <Database className="w-5 h-5 text-blue-600" />
+                <h4 className="font-display text-base font-bold text-slate-900">
                   Repository
                 </h4>
               </div>
-              <p className="text-sm leading-6 text-[#6E6E73]">
+              <p className="text-sm leading-6 text-slate-500">
                 Publications are indexed, organized by department, and instantly searchable.
               </p>
             </div>
@@ -435,9 +435,9 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({
         className="relative z-20 bg-real-white py-24 max-w-5xl mx-auto px-6"
       >
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <span className="inline-flex items-center rounded-md border border-black/10 bg-[#F4F0EB] px-3.5 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#4A4A4A]">Privileges</span>            
-          <h2 className="font-display text-3xl font-bold text-[#1E1E1E] mt-4 tracking-tight">System Roles</h2>
-          <p className="text-sm text-[#6E6E73] mt-2 leading-relaxed font-medium">
+          <span className="inline-flex items-center rounded-md border border-slate-200 bg-white px-3.5 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Privileges</span>            
+          <h2 className="font-display text-3xl font-bold text-slate-900 mt-4 tracking-tight">System Roles</h2>
+          <p className="text-sm text-slate-500 mt-2 leading-relaxed font-medium">
             Review the seeded accounts configured for testing both administrators and faculty views.
           </p>
         </div>
@@ -445,28 +445,28 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({
         <div className="relative">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Admin Role Card */}
-            <div className="bg-[#F5F5F7] p-8 rounded-xl border border-black/5 flex flex-col justify-between hover:shadow-sm transition-all duration-300">
+            <div className="bg-slate-50 p-8 rounded-xl border border-slate-200/80 flex flex-col justify-between hover:shadow-sm transition-all duration-300">
               <div>
-                <div className="inline-flex items-center space-x-2 bg-amber-500/10 text-amber-900 px-3 py-1 rounded-md border border-amber-500/25 text-xs font-bold uppercase mb-4 font-mono">
-                  <ShieldAlert className="w-4 h-4 text-amber-700" />
+                <div className="inline-flex items-center space-x-2 bg-white text-slate-700 px-3 py-1 rounded-md border border-slate-200 text-xs font-bold uppercase mb-4 font-mono">
+                  <ShieldAlert className="w-4 h-4 text-blue-600" />
                   <span>Admin / Dean Role</span>
                 </div>
-                <h3 className="font-display font-bold text-xl text-[#1E1E1E]">Full Ingestion Control</h3>
-                <p className="text-sm text-[#6E6E73] mt-3 leading-relaxed">
+                <h3 className="font-display font-bold text-xl text-slate-900">Full Ingestion Control</h3>
+                <p className="text-sm text-slate-500 mt-3 leading-relaxed">
                   Administrators oversee the institution's publication catalog, retrain classifiers, and configure pipeline parameters.
                 </p>
 
-                <ul className="mt-6 space-y-3.5 text-sm text-[#6E6E73]">
+                <ul className="mt-6 space-y-3.5 text-sm text-slate-500">
                   <li className="flex items-center space-x-3">
-                    <CheckCircle className="w-4 h-4 text-[#1E1E1E] shrink-0" />
+                    <CheckCircle className="w-4 h-4 text-blue-600 shrink-0" />
                     <span>Upload PDFs directly and initiate instant metadata extraction</span>
                   </li>
                   <li className="flex items-center space-x-3">
-                    <CheckCircle className="w-4 h-4 text-[#1E1E1E] shrink-0" />
+                    <CheckCircle className="w-4 h-4 text-blue-600 shrink-0" />
                     <span>Force-retrain the Scikit-Learn Naive Bayes ML models</span>
                   </li>
                   <li className="flex items-center space-x-3">
-                    <CheckCircle className="w-4 h-4 text-[#1E1E1E] shrink-0" />
+                    <CheckCircle className="w-4 h-4 text-blue-600 shrink-0" />
                     <span>Simulate incoming faculty email arrivals and inspect pipeline logs</span>
                   </li>
                 </ul>
@@ -474,28 +474,28 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({
             </div>
 
             {/* Faculty Role Card */}
-            <div className="bg-[#F5F5F7] p-8 rounded-xl border border-black/5 flex flex-col justify-between hover:shadow-sm transition-all duration-300">
+            <div className="bg-slate-50 p-8 rounded-xl border border-slate-200/80 flex flex-col justify-between hover:shadow-sm transition-all duration-300">
               <div>
-                <div className="inline-flex items-center space-x-2 bg-emerald-500/10 text-emerald-900 px-3 py-1 rounded-md border border-emerald-500/25 text-xs font-bold uppercase mb-4 font-mono">
-                  <UserCheck className="w-4 h-4 text-emerald-700" />
+                <div className="inline-flex items-center space-x-2 bg-white text-slate-700 px-3 py-1 rounded-md border border-slate-200 text-xs font-bold uppercase mb-4 font-mono">
+                  <UserCheck className="w-4 h-4 text-blue-600" />
                   <span>Faculty / Scholar Role</span>
                 </div>
-                <h3 className="font-display font-bold text-xl text-[#1E1E1E]">Research Discovery</h3>
-                <p className="text-sm text-[#6E6E73] mt-3 leading-relaxed">
+                <h3 className="font-display font-bold text-xl text-slate-900">Research Discovery</h3>
+                <p className="text-sm text-slate-500 mt-3 leading-relaxed">
                   Faculty members can search the publications repository, view department insights, and query the database via natural language.
                 </p>
 
-                <ul className="mt-6 space-y-3.5 text-sm text-[#6E6E73]">
+                <ul className="mt-6 space-y-3.5 text-sm text-slate-500">
                   <li className="flex items-center space-x-3">
-                    <CheckCircle className="w-4 h-4 text-[#1E1E1E] shrink-0" />
+                    <CheckCircle className="w-4 h-4 text-blue-600 shrink-0" />
                     <span>Search across filtered papers by authors, department, categories, or year</span>
                   </li>
                   <li className="flex items-center space-x-3">
-                    <CheckCircle className="w-4 h-4 text-[#1E1E1E] shrink-0" />
+                    <CheckCircle className="w-4 h-4 text-blue-600 shrink-0" />
                     <span>Chat with the integrated AI Assistant to list papers and analyze trends</span>
                   </li>
                   <li className="flex items-center space-x-3">
-                    <CheckCircle className="w-4 h-4 text-[#1E1E1E] shrink-0" />
+                    <CheckCircle className="w-4 h-4 text-blue-600 shrink-0" />
                     <span>Export reports and download custom lists as PDF or Excel spreadsheets</span>
                   </li>
                 </ul>
@@ -556,26 +556,26 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({
         id="faqs" 
         animate={triggerAnimationSection === 'faqs' ? { opacity: [0, 1], scale: [0.93, 1], y: [40, 0] } : { opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="relative z-20 overflow-hidden bg-[#FAFAFA] py-24"
+        className="relative z-20 overflow-hidden bg-slate-50 py-24"
       >
         <div className="relative z-10 max-w-3xl mx-auto px-6">
           <div className="text-center mb-16">
-          <span className="inline-flex items-center rounded-md border border-black/10 bg-[#F4F0EB] px-3.5 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#4A4A4A]">FAQ</span>            
-            <h2 className="font-display text-3xl font-bold text-[#1E1E1E] mt-4 tracking-tight">Platform FAQs</h2>
+          <span className="inline-flex items-center rounded-md border border-slate-200 bg-white px-3.5 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">FAQ</span>            
+            <h2 className="font-display text-3xl font-bold text-slate-900 mt-4 tracking-tight">Platform FAQs</h2>
           </div>
 
           <div className="space-y-4">
             {faqs.map((faq, index) => (
               <div
                 key={index}
-                className="bg-real-white rounded-xl border border-black/5 overflow-hidden shadow-xs"
+                className="bg-real-white rounded-xl border border-slate-200/80 overflow-hidden shadow-xs"
               >
                 <button
                   onClick={() => setActiveFaq(activeFaq === index ? null : index)}
                   className="w-full py-5 px-6 flex items-center justify-between text-left focus:outline-none transition-colors cursor-pointer"
                 >
-                  <span className="font-display font-bold text-base text-[#1E1E1E]">{faq.question}</span>
-                  <HelpCircle className={`w-5 h-5 shrink-0 ml-4 transition-all duration-300 ${activeFaq === index ? "text-[#1E1E1E] rotate-12 scale-110" : "text-[#6E6E73]"}`} />
+                  <span className="font-display font-bold text-base text-slate-900">{faq.question}</span>
+                  <HelpCircle className={`w-5 h-5 shrink-0 ml-4 transition-all duration-300 ${activeFaq === index ? "text-blue-600 rotate-12 scale-110" : "text-slate-500"}`} />
                 </button>
 
                 <AnimatePresence initial={false}>
@@ -586,7 +586,7 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.25, ease: "easeOut" }}
                     >
-                      <div className="pb-5 px-6 border-t border-black/5 pt-4 text-sm text-[#6E6E73] leading-relaxed">
+                      <div className="pb-5 px-6 border-t border-slate-200/80 pt-4 text-sm text-slate-500 leading-relaxed">
                         {faq.answer}
                       </div>
                     </motion.div>
@@ -606,13 +606,13 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         className="relative z-20 bg-real-white py-24 overflow-hidden text-center max-w-4xl mx-auto px-6"
       >
-        <div className="absolute inset-0 bg-[#F4F0EB]/30 rounded-xl border border-[#F4F0EB] -z-10" />
+        <div className="absolute inset-0 bg-blue-50/40 rounded-xl border border-blue-100 -z-10" />
 
         <div className="max-w-2xl mx-auto">
-          <h2 className="font-display text-3xl md:text-4xl font-bold text-[#1E1E1E] tracking-tight">
+          <h2 className="font-display text-3xl md:text-4xl font-bold text-slate-900 tracking-tight">
             Streamline Academic Literature Tracking
           </h2>
-          <p className="text-sm sm:text-base text-[#6E6E73] mt-4 max-w-md mx-auto leading-relaxed">
+          <p className="text-sm sm:text-base text-slate-500 mt-4 max-w-md mx-auto leading-relaxed">
             Configure automated inbox polling pipelines, structure metadata extracts, and analyze departmental statistics inside a unified research catalog.
           </p>
 
@@ -620,7 +620,7 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({
             {isLoggedIn ? (
               <button
                 onClick={onGoToConsoleClick}
-                className="w-full sm:w-auto px-7 py-3.5 rounded-lg bg-[#1E1E1E] text-white font-bold text-sm hover:brightness-110 shadow-sm transition-all cursor-pointer flex items-center justify-center space-x-2"
+                className="w-full sm:w-auto px-7 py-3.5 rounded-lg bg-blue-600 text-white font-bold text-sm hover:bg-blue-700 shadow-sm transition-all cursor-pointer flex items-center justify-center space-x-2"
               >
                 <span>Launch Console</span>
                 <ArrowRight className="w-4 h-4 text-real-white" />
@@ -628,7 +628,7 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({
             ) : (
               <button
                 onClick={onSignInClick}
-                className="w-full sm:w-auto px-7 py-3.5 rounded-lg bg-[#1E1E1E] text-real-white font-bold text-sm hover:brightness-110 shadow-sm transition-all cursor-pointer flex items-center justify-center space-x-2"
+                className="w-full sm:w-auto px-7 py-3.5 rounded-lg bg-blue-600 text-real-white font-bold text-sm hover:bg-blue-700 shadow-sm transition-all cursor-pointer flex items-center justify-center space-x-2"
               >
                 <span>Access Console</span>
                 <ArrowRight className="w-4 h-4 text-real-white" />
@@ -639,23 +639,23 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({
       </motion.section>
 
       {/* 9. MINIMAL FOOTER */}
-      <footer className="border-t border-black/5 py-12 max-w-5xl mx-auto px-6 text-sm text-[#6E6E73] relative z-20 bg-real-white">
+      <footer className="border-t border-slate-200/80 py-12 max-w-5xl mx-auto px-6 text-sm text-slate-500 relative z-20 bg-real-white">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
           <div className="flex items-center space-x-2.5">
-            <div className="w-7 h-7 rounded-lg bg-[#1E1E1E] text-real-white flex items-center justify-center font-bold text-xs">
+            <div className="w-7 h-7 rounded-lg bg-blue-600 text-real-white flex items-center justify-center font-bold text-xs">
               p
             </div>
-            <span className="font-display font-bold text-base text-[#1E1E1E]">promptflow-AI</span>
+            <span className="font-display font-bold text-base text-slate-900">promptflow-AI</span>
           </div>
 
           <div className="flex flex-wrap items-center gap-6">
-            <a href="#benefits" onClick={(e) => handleNavLinkClick(e, 'benefits')} className="hover:text-black transition-colors font-medium">Benefits</a>
-            <a href="#pipeline" onClick={(e) => handleNavLinkClick(e, 'pipeline')} className="hover:text-black transition-colors font-medium">How it works</a>
-            <a href="#roles" onClick={(e) => handleNavLinkClick(e, 'roles')} className="hover:text-black transition-colors font-medium">Security</a>
-            <a href="#faqs" onClick={(e) => handleNavLinkClick(e, 'faqs')} className="hover:text-black transition-colors font-medium">FAQ</a>
+            <a href="#benefits" onClick={(e) => handleNavLinkClick(e, 'benefits')} className="hover:text-slate-900 transition-colors font-medium">Benefits</a>
+            <a href="#pipeline" onClick={(e) => handleNavLinkClick(e, 'pipeline')} className="hover:text-slate-900 transition-colors font-medium">How it works</a>
+            <a href="#roles" onClick={(e) => handleNavLinkClick(e, 'roles')} className="hover:text-slate-900 transition-colors font-medium">Security</a>
+            <a href="#faqs" onClick={(e) => handleNavLinkClick(e, 'faqs')} className="hover:text-slate-900 transition-colors font-medium">FAQ</a>
           </div>
 
-          <p className="text-xs text-[#6E6E73] font-medium font-mono">
+          <p className="text-xs text-slate-500 font-medium font-mono">
             &copy; {new Date().getFullYear()} promptFlow-AI. All rights reserved.
           </p>
         </div>

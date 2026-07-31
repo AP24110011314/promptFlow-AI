@@ -41,3 +41,6 @@ email_analysis.md
 
 # Skill Agents
 .Agents/
+
+# MCP tool auto-backups
+.mcp-backups/

@@ -81,7 +81,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           }`} 
           onClick={() => setActiveTab('dashboard')}
         >
-          <div className="w-9 h-9 rounded-lg bg-blue-600 text-white flex items-center justify-center shadow-xs font-bold text-lg tracking-tighter shrink-0">
+          <div className="w-9 h-9 rounded-lg bg-slate-900 text-white flex items-center justify-center shadow-xs font-bold text-lg tracking-tighter shrink-0">
             <Zap className="w-5 h-5 fill-white" />
           </div>
           {!collapsed && (
@@ -116,7 +116,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     collapsed ? 'justify-center space-x-0' : 'space-x-2.5'
                   } ${
                     isActive
-                      ? 'bg-blue-600 text-white shadow-2xs font-bold'
+                      ? 'bg-slate-900 text-white shadow-2xs font-bold'
                       : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                   }`}
                 >
@@ -142,12 +142,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
               }`}
             >
               <div className={`flex items-center truncate ${collapsed ? 'space-x-0' : 'space-x-2.5'}`}>
-                <div className="w-7 h-7 rounded-md bg-slate-100 text-slate-700 border border-slate-200 flex items-center justify-center text-xs font-bold shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-all">
+                <div className="w-7 h-7 rounded-md bg-slate-100 text-slate-700 border border-slate-200 flex items-center justify-center text-xs font-bold shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-all">
                   {user.full_name.charAt(0)}
                 </div>
                 {!collapsed && (
                   <div className="truncate">
-                    <p className="text-xs font-bold text-slate-900 truncate group-hover:text-blue-600 transition-colors">{user.full_name}</p>
+                    <p className="text-xs font-bold text-slate-900 truncate group-hover:text-teal-700 transition-colors">{user.full_name}</p>
                     <p className="text-[10px] text-slate-500 truncate capitalize">{user.role} • {user.department || 'General'}</p>
                   </div>
                 )}
@@ -178,7 +178,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     onClick={handleOpenEdit}
                     className="w-full px-4 py-2 text-left text-xs font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-50 flex items-center space-x-2.5 transition-colors cursor-pointer"
                   >
-                    <UserCheck className="w-4 h-4 text-blue-600 shrink-0" />
+                    <UserCheck className="w-4 h-4 text-teal-700 shrink-0" />
                     <span>Edit Profile Settings</span>
                   </button>
                 </div>
@@ -205,7 +205,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <div className="w-full max-w-md bg-white border border-slate-200 rounded-2xl p-6 shadow-2xl space-y-4">
             <div className="flex items-center justify-between border-b border-slate-200 pb-3">
               <div className="flex items-center space-x-2.5">
-                <div className="w-10 h-10 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold border border-blue-200">
+                <div className="w-10 h-10 rounded-2xl bg-teal-50 text-teal-700 flex items-center justify-center font-bold border border-teal-200">
                   <UserCheck className="w-5 h-5" />
                 </div>
                 <div>
@@ -235,7 +235,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   required
                   value={editName}
                   onChange={(e) => setEditName(e.target.value)}
-                  className="w-full px-3 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 text-xs sm:text-sm focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all"
+                  className="w-full px-3 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 text-xs sm:text-sm focus:outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-900/10 transition-all"
                 />
               </div>
 
@@ -244,7 +244,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <select
                   value={editDept}
                   onChange={(e) => setEditDept(e.target.value)}
-                  className="w-full px-3 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 text-xs sm:text-sm focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all cursor-pointer"
+                  className="w-full px-3 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 text-xs sm:text-sm focus:outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-900/10 transition-all cursor-pointer"
                 >
                   <option value="Computer Science">Computer Science</option>
                   <option value="Physics">Physics</option>

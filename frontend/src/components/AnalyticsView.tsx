@@ -8,12 +8,12 @@ interface AnalyticsViewProps {
   onSelectAuthor?: (authorName: string) => void;
 }
 
-// Curated corporate technical colors for graphs & department groups
-const COLORS = ['#2563eb', '#0284c7', '#0d9488', '#f59e0b', '#0369a1', '#10b981', '#3b82f6', '#06b6d4'];
+// Curated warm-neutral technical colors for graphs & department groups
+const COLORS = ['#0f766e', '#ea580c', '#0d9488', '#f59e0b', '#e11d48', '#10b981', '#78716c', '#65a30d'];
 
 const GROUP_COLORS: Record<number, { stroke: string; fill: string; bg: string }> = {
-  1: { stroke: '#2563eb', fill: '#eff6ff', bg: 'bg-blue-50 text-blue-700 border-blue-200' }, // CS
-  2: { stroke: '#0284c7', fill: '#f0f9ff', bg: 'bg-sky-50 text-sky-700 border-sky-200' },   // Sciences
+  1: { stroke: '#0f766e', fill: '#f0fdfa', bg: 'bg-teal-50 text-teal-700 border-teal-200' }, // CS
+  2: { stroke: '#ea580c', fill: '#fff7ed', bg: 'bg-orange-50 text-orange-700 border-orange-200' },   // Sciences
   3: { stroke: '#0d9488', fill: '#f0fdf4', bg: 'bg-teal-50 text-teal-700 border-teal-200' }, // Engineering
   4: { stroke: '#f59e0b', fill: '#fffbeb', bg: 'bg-amber-50 text-amber-700 border-amber-200' }, // Math/Econ
 };
@@ -155,7 +155,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ analytics, onSelec
             <div className="flex items-start justify-between gap-4">
               <div>
                 <h3 className="text-base font-bold text-slate-900 flex items-center space-x-2">
-                  <TrendingUp className="w-5 h-5 text-blue-600 shrink-0" />
+                  <TrendingUp className="w-5 h-5 text-teal-700 shrink-0" />
                   <span>Annual Publication Trajectory</span>
                 </h3>
                 <p className="text-xs text-slate-500 mt-1">
@@ -165,9 +165,9 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ analytics, onSelec
 
               {/* Trajectory KPI Metrics Badge */}
               <div className="flex items-center gap-2">
-                <div className="px-3 py-1.5 rounded-lg bg-blue-50 border border-blue-200 text-right">
+                <div className="px-3 py-1.5 rounded-lg bg-teal-50 border border-teal-200 text-right">
                   <span className="text-[10px] text-slate-500 uppercase tracking-wider font-bold block">Indexed</span>
-                  <span className="text-sm font-extrabold text-blue-700 font-mono">{totalTrajectoryPapers} papers</span>
+                  <span className="text-sm font-extrabold text-teal-700 font-mono">{totalTrajectoryPapers} papers</span>
                 </div>
                 {trajectoryGrowth && (
                   <div className="px-2.5 py-1.5 rounded-lg bg-emerald-50 border border-emerald-200 text-right">
@@ -187,8 +187,8 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ analytics, onSelec
               <AreaChart data={by_year} margin={{ top: 15, right: 20, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorPublicationTrajectory" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#2563eb" stopOpacity={0.28}/>
-                    <stop offset="95%" stopColor="#2563eb" stopOpacity={0.0}/>
+                    <stop offset="5%" stopColor="#0f766e" stopOpacity={0.28}/>
+                    <stop offset="95%" stopColor="#0f766e" stopOpacity={0.0}/>
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
@@ -202,11 +202,11 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ analytics, onSelec
                   type="monotone"
                   dataKey="count"
                   name="Publications"
-                  stroke="#2563eb"
+                  stroke="#0f766e"
                   strokeWidth={3}
                   fillOpacity={1}
                   fill="url(#colorPublicationTrajectory)"
-                  dot={{ r: 5, fill: '#2563eb', stroke: '#ffffff', strokeWidth: 2 }}
+                  dot={{ r: 5, fill: '#0f766e', stroke: '#ffffff', strokeWidth: 2 }}
                   activeDot={{ r: 7, fill: '#10b981', stroke: '#ffffff', strokeWidth: 3 }}
                 />
               </AreaChart>
@@ -220,7 +220,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ analytics, onSelec
             <div className="flex items-start justify-between gap-4">
               <div>
                 <h3 className="text-base font-bold text-slate-900 flex items-center space-x-2">
-                  <Award className="w-5 h-5 text-blue-600 shrink-0" />
+                  <Award className="w-5 h-5 text-teal-700 shrink-0" />
                   <span>Top Prolific Faculty Researchers</span>
                 </h3>
                 <p className="text-xs text-slate-500 mt-1">
@@ -229,7 +229,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ analytics, onSelec
               </div>
 
               {top_authors.length > 0 && (
-                <span className="px-2.5 py-1 rounded-md bg-blue-50 text-blue-700 border border-blue-200 text-xs font-bold shrink-0 font-mono">
+                <span className="px-2.5 py-1 rounded-md bg-teal-50 text-teal-700 border border-teal-200 text-xs font-bold shrink-0 font-mono">
                   Max: {top_authors[0].count} papers
                 </span>
               )}
@@ -296,7 +296,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ analytics, onSelec
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-slate-200">
           <div>
             <h3 className="text-base font-bold text-slate-900 flex items-center space-x-2">
-              <Network className="w-5 h-5 text-blue-600" />
+              <Network className="w-5 h-5 text-teal-700" />
               <span>College Co-Authorship Network Topology</span>
             </h3>
             <p className="text-sm text-slate-500 mt-0.5">
@@ -313,7 +313,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ analytics, onSelec
                 value={searchQuery}
                 onChange={handleSearchChange}
                 placeholder="Highlight professor..."
-                className="pl-8 pr-3 py-1.5 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 w-44 sm:w-56"
+                className="pl-8 pr-3 py-1.5 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-900/10 w-44 sm:w-56"
               />
             </div>
           </div>
@@ -345,7 +345,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ analytics, onSelec
                 (searchQuery && !isHighlighted);
 
               const strokeWidth = isHighlighted ? Math.max(link.value * 2.5, 3) : Math.max(link.value * 1.5, 1.5);
-              const strokeColor = isHighlighted ? '#2563eb' : '#94a3b8';
+              const strokeColor = isHighlighted ? '#0f766e' : '#94a3b8';
               const strokeOpacity = isDimmed ? 0.12 : isHighlighted ? 0.9 : 0.45;
 
               return (
@@ -420,8 +420,8 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ analytics, onSelec
                   {/* Node Circle */}
                   <circle
                     r="24"
-                    fill={isHovered ? '#2563eb' : colorConfig.fill}
-                    stroke={isHovered ? '#1d4ed8' : colorConfig.stroke}
+                    fill={isHovered ? '#0f766e' : colorConfig.fill}
+                    stroke={isHovered ? '#0f5951' : colorConfig.stroke}
                     strokeWidth={isHovered ? '3' : '2'}
                     className="shadow-md transition-all duration-200"
                   />
@@ -431,7 +431,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ analytics, onSelec
                     cx="16"
                     cy="-16"
                     r="10"
-                    fill="#2563eb"
+                    fill="#0f766e"
                     stroke="#ffffff"
                     strokeWidth="1.5"
                   />
@@ -464,7 +464,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ analytics, onSelec
                     dy="40"
                     fontSize="11"
                     fontWeight={isHovered ? 'bold' : '600'}
-                    fill={isHovered ? '#2563eb' : '#0f172a'}
+                    fill={isHovered ? '#0f766e' : '#0f172a'}
                     className="select-none"
                   >
                     {shortName}
@@ -491,7 +491,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ analytics, onSelec
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-base font-bold text-slate-900 flex items-center space-x-2">
-              <Users className="w-4 h-4 text-blue-600" />
+              <Users className="w-4 h-4 text-teal-700" />
               <span>Co-Authorship Pair Details ({filteredLinks.length})</span>
             </h3>
             <p className="text-xs text-slate-500 mt-0.5">
@@ -520,7 +520,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ analytics, onSelec
                 >
                   <td className="py-3.5 px-3">
                     <span className="font-bold text-slate-900 flex items-center space-x-2">
-                      <span className="w-6 h-6 rounded-md bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-xs border border-blue-100 shrink-0">
+                      <span className="w-6 h-6 rounded-md bg-teal-50 text-teal-700 flex items-center justify-center font-bold text-xs border border-teal-100 shrink-0">
                         {link.source.charAt(0)}
                       </span>
                       <span>{link.source}</span>
@@ -529,14 +529,14 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ analytics, onSelec
 
                   <td className="py-3.5 px-3">
                     <span className="font-bold text-slate-900 flex items-center space-x-2">
-                      <span className="w-6 h-6 rounded-md bg-sky-50 text-sky-600 flex items-center justify-center font-bold text-xs border border-sky-100 shrink-0">
+                      <span className="w-6 h-6 rounded-md bg-orange-50 text-orange-700 flex items-center justify-center font-bold text-xs border border-orange-100 shrink-0">
                         {link.target.charAt(0)}
                       </span>
                       <span>{link.target}</span>
                     </span>
                   </td>
 
-                  <td className="py-3.5 px-3 font-mono font-bold text-blue-600">
+                  <td className="py-3.5 px-3 font-mono font-bold text-teal-700">
                     {link.value} {link.value === 1 ? 'paper' : 'papers'}
                   </td>
 
@@ -546,7 +546,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ analytics, onSelec
                         High Interdisciplinary
                       </span>
                     ) : link.value === 2 ? (
-                      <span className="text-xs font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-0.5 rounded-md">
+                      <span className="text-xs font-bold text-teal-700 bg-teal-50 border border-teal-200 px-2.5 py-0.5 rounded-md">
                         Active Co-Authors
                       </span>
                     ) : (
@@ -562,7 +562,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ analytics, onSelec
                         e.stopPropagation();
                         if (onSelectAuthor) onSelectAuthor(link.source);
                       }}
-                      className="px-2.5 py-1 rounded-md bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 hover:text-blue-600 text-xs font-semibold transition-all inline-flex items-center gap-1 cursor-pointer"
+                      className="px-2.5 py-1 rounded-md bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 hover:text-teal-700 text-xs font-semibold transition-all inline-flex items-center gap-1 cursor-pointer"
                     >
                       <span>View Profile</span>
                       <ExternalLink className="w-3.5 h-3.5 text-slate-400" />

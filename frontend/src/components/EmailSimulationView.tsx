@@ -80,7 +80,7 @@ export const EmailSimulationView: React.FC<EmailSimulationViewProps> = ({
       <div className="watt-card flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight flex items-center space-x-2.5">
-            <Mail className="w-6 h-6 text-blue-600" />
+            <Mail className="w-6 h-6 text-teal-700" />
             <span>Email Ingestion &amp; Classification Sandbox</span>
           </h1>
           <p className="text-sm text-slate-500 mt-1">
@@ -89,7 +89,7 @@ export const EmailSimulationView: React.FC<EmailSimulationViewProps> = ({
         </div>
 
         <div className="flex items-center space-x-2 shrink-0">
-          <span className="text-blue-600 font-bold uppercase tracking-wider text-xs border border-blue-200 bg-blue-50 px-2.5 py-1 rounded-md">
+          <span className="text-teal-700 font-bold uppercase tracking-wider text-xs border border-teal-200 bg-teal-50 px-2.5 py-1 rounded-md">
             ML PIPELINE ONLINE
           </span>
         </div>
@@ -103,7 +103,7 @@ export const EmailSimulationView: React.FC<EmailSimulationViewProps> = ({
           <div className="watt-card space-y-4">
             <div>
               <h2 className="text-base font-bold text-slate-900 flex items-center space-x-2">
-                <Send className="w-4 h-4 text-blue-600" />
+                <Send className="w-4 h-4 text-teal-700" />
                 <span>Compose Inbound Email Payload</span>
               </h2>
               <p className="text-sm text-slate-500 mt-0.5">
@@ -120,7 +120,7 @@ export const EmailSimulationView: React.FC<EmailSimulationViewProps> = ({
                   onClick={() => loadPreset(p)}
                   className="p-3 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 text-left transition-all group cursor-pointer"
                 >
-                  <span className="text-xs font-bold text-slate-900 group-hover:text-blue-600 block truncate">
+                  <span className="text-xs font-bold text-slate-900 group-hover:text-teal-700 block truncate">
                     {p.title}
                   </span>
                   <span className="text-xs text-slate-500 block truncate mt-0.5">{p.dept}</span>
@@ -137,7 +137,7 @@ export const EmailSimulationView: React.FC<EmailSimulationViewProps> = ({
                     required
                     value={sender}
                     onChange={(e) => setSender(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20"
+                    className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-900/10"
                   />
                 </div>
                 <div>
@@ -145,7 +145,7 @@ export const EmailSimulationView: React.FC<EmailSimulationViewProps> = ({
                   <select
                     value={deptHint}
                     onChange={(e) => setDeptHint(e.target.value)}
-                    className="w-full px-3.5 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 cursor-pointer"
+                    className="w-full px-3.5 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-900/10 cursor-pointer"
                   >
                     <option value="Computer Science">Computer Science</option>
                     <option value="Physics">Physics</option>
@@ -167,7 +167,7 @@ export const EmailSimulationView: React.FC<EmailSimulationViewProps> = ({
                   required
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
-                  className="w-full px-3.5 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20"
+                  className="w-full px-3.5 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-900/10"
                 />
               </div>
 
@@ -178,7 +178,7 @@ export const EmailSimulationView: React.FC<EmailSimulationViewProps> = ({
                   required
                   value={body}
                   onChange={(e) => setBody(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 leading-relaxed"
+                  className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-900/10 leading-relaxed"
                 />
               </div>
 
@@ -199,7 +199,7 @@ export const EmailSimulationView: React.FC<EmailSimulationViewProps> = ({
           <div className="watt-card min-h-[380px] flex flex-col justify-between">
             <div>
               <h3 className="text-base font-bold text-slate-900 flex items-center space-x-2 mb-4">
-                <ShieldAlert className="w-4 h-4 text-blue-600" />
+                <ShieldAlert className="w-4 h-4 text-teal-700" />
                 <span>Real-Time ML Classification Decision</span>
               </h3>
 
@@ -256,7 +256,7 @@ export const EmailSimulationView: React.FC<EmailSimulationViewProps> = ({
                     {lastResult.extracted_paper_id && (
                       <div className="pt-2 border-t border-slate-200 flex items-center justify-between">
                         <span className="text-slate-500 font-medium">Extracted Paper ID:</span>
-                        <span className="text-blue-600 font-mono font-bold">#PROMPTFLOW-{lastResult.extracted_paper_id}</span>
+                        <span className="text-teal-700 font-mono font-bold">#PROMPTFLOW-{lastResult.extracted_paper_id}</span>
                       </div>
                     )}
                   </div>
@@ -276,7 +276,7 @@ export const EmailSimulationView: React.FC<EmailSimulationViewProps> = ({
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-base font-bold text-slate-900 flex items-center space-x-2">
-              <Layers className="w-4 h-4 text-blue-600" />
+              <Layers className="w-4 h-4 text-teal-700" />
               <span>Email Ingestion Audit Log</span>
             </h3>
             <p className="text-xs text-slate-500 mt-0.5">

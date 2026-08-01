@@ -315,11 +315,11 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper, onSelec
         e.preventDefault();
         handleSend(input);
       }} 
-      className={`relative flex items-center w-full bg-white border border-slate-300 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-600/20 rounded-xl shadow-2xs transition-all duration-200 ${
+      className={`relative flex items-center w-full bg-white border border-slate-300 focus-within:border-slate-400 focus-within:ring-2 focus-within:ring-slate-900/10 rounded-xl shadow-2xs transition-all duration-200 ${
         isCentered ? 'p-2 max-w-3xl mx-auto' : 'p-1.5 max-w-4xl mx-auto'
       }`}
     >
-      <div className="pl-3 text-blue-600 flex items-center shrink-0">
+      <div className="pl-3 text-teal-700 flex items-center shrink-0">
         <Sparkles className="w-4 h-4" />
       </div>
       <input
@@ -354,7 +354,7 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper, onSelec
         <div className="p-4 border-b border-slate-200 flex items-center space-x-2">
           <button
             onClick={handleNewChat}
-            className="flex-1 px-3.5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs transition-all flex items-center justify-center space-x-2 shadow-2xs cursor-pointer group"
+            className="flex-1 px-3.5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs transition-all flex items-center justify-center space-x-2 shadow-2xs cursor-pointer group"
           >
             <Plus className="w-4 h-4 text-white group-hover:rotate-90 transition-transform" />
             <span>New Chat</span>
@@ -373,7 +373,7 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper, onSelec
           <div>
             <div className="flex items-center justify-between px-2 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
               <span className="flex items-center">
-                <History className="w-3 h-3 mr-1.5 text-blue-600" /> Chat History
+                <History className="w-3 h-3 mr-1.5 text-teal-700" /> Chat History
               </span>
               <button 
                 onClick={handleClearAllHistory}
@@ -396,12 +396,12 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper, onSelec
                     }}
                     className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-xs cursor-pointer group transition-all ${
                       isActive
-                        ? 'bg-blue-50 text-blue-600 font-bold border border-blue-100 shadow-2xs'
+                        ? 'bg-teal-50 text-teal-700 font-bold border border-teal-100 shadow-2xs'
                         : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent'
                     }`}
                   >
                     <div className="flex items-center space-x-2.5 min-w-0 flex-1">
-                      <MessageCircle className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-blue-600' : 'text-slate-400 group-hover:text-blue-600'}`} />
+                      <MessageCircle className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-teal-700' : 'text-slate-400 group-hover:text-teal-700'}`} />
                       <span className="truncate leading-normal">{session.title}</span>
                     </div>
                     
@@ -440,8 +440,8 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper, onSelec
               </button>
             )}
             <div className="flex items-center space-x-2.5">
-              <div className="w-8 h-8 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center shadow-2xs">
-                <Bot className="w-4 h-4 text-blue-600" />
+              <div className="w-8 h-8 rounded-xl bg-teal-50 border border-teal-100 flex items-center justify-center shadow-2xs">
+                <Bot className="w-4 h-4 text-teal-700" />
               </div>
               <div>
                 <h2 className="text-xs sm:text-sm font-bold text-slate-900 leading-tight">
@@ -463,8 +463,8 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper, onSelec
             
             {/* Hero Header */}
             <div className="text-center mb-8 sm:mb-10 space-y-3 animate-fadeIn">
-              <div className="w-16 h-16 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center mx-auto shadow-xs mb-4">
-                <Sparkles className="w-8 h-8 text-blue-600 animate-pulse" />
+              <div className="w-16 h-16 rounded-2xl bg-teal-50 border border-teal-100 flex items-center justify-center mx-auto shadow-xs mb-4">
+                <Sparkles className="w-8 h-8 text-teal-700 animate-pulse" />
               </div>
               <h1 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
                 How can I assist your research today, {user?.full_name?.split(' ')[0] || 'Professor'}?
@@ -482,7 +482,7 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper, onSelec
             {/* Relevant Questions Grid Below Input */}
             <div className="w-full max-w-3xl">
               <div className="flex items-center justify-center space-x-2 text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-3.5">
-                <Compass className="w-3.5 h-3.5 text-blue-600" />
+                <Compass className="w-3.5 h-3.5 text-teal-700" />
                 <span>Suggested Research Queries</span>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -490,9 +490,9 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper, onSelec
                   <button
                     key={idx}
                     onClick={() => handleSend(s)}
-                    className="p-4 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200/80 hover:border-blue-500/30 text-left text-xs text-slate-700 hover:text-slate-900 transition-all duration-200 flex items-start space-x-3 group cursor-pointer shadow-xs hover:shadow-md"
+                    className="p-4 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200/80 hover:border-slate-300 text-left text-xs text-slate-700 hover:text-slate-900 transition-all duration-200 flex items-start space-x-3 group cursor-pointer shadow-xs hover:shadow-md"
                   >
-                    <div className="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600 shrink-0 mt-0.5 group-hover:scale-110 transition-transform border border-blue-100">
+                    <div className="w-7 h-7 rounded-lg bg-teal-50 flex items-center justify-center text-teal-700 shrink-0 mt-0.5 group-hover:scale-110 transition-transform border border-teal-100">
                       <BookOpen className="w-3.5 h-3.5" />
                     </div>
                     <span className="leading-relaxed font-medium pt-0.5">{s}</span>
@@ -517,15 +517,15 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper, onSelec
                       
                       {/* Assistant Avatar */}
                       {!isUser && (
-                        <div className="w-8 h-8 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center shrink-0 mt-1 shadow-2xs">
-                          <Sparkles className="w-4 h-4 text-blue-600" />
+                        <div className="w-8 h-8 rounded-xl bg-teal-50 border border-teal-100 flex items-center justify-center shrink-0 mt-1 shadow-2xs">
+                          <Sparkles className="w-4 h-4 text-teal-700" />
                         </div>
                       )}
 
                       {/* Message Bubble Container */}
                       <div className={`max-w-[88%] sm:max-w-[80%] ${
                         isUser 
-                          ? 'bg-blue-600 text-white rounded-3xl rounded-tr-sm px-5 py-3.5 shadow-2xs' 
+                          ? 'bg-slate-900 text-white rounded-3xl rounded-tr-sm px-5 py-3.5 shadow-2xs' 
                           : msg.isError 
                             ? 'bg-red-50 border border-red-200 text-red-900 rounded-3xl rounded-tl-sm px-5 py-4 shadow-2xs' 
                             : msg.response && !msg.response.is_academic_query 
@@ -550,7 +550,7 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper, onSelec
                         {msg.response && msg.response.is_academic_query && msg.response.filters && (
                           <div className="mt-4 pt-3 border-t border-slate-200">
                             <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center">
-                              <Tag className="w-3.5 h-3.5 mr-1 text-blue-600" /> Detected Search Parameters:
+                              <Tag className="w-3.5 h-3.5 mr-1 text-teal-700" /> Detected Search Parameters:
                             </div>
                             <div className="flex flex-wrap gap-2 text-[11px] font-semibold text-slate-700">
                               {msg.response.filters.departments.map((dept, i) => (
@@ -600,9 +600,9 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper, onSelec
                           <div className="mt-4 pt-3 border-t border-slate-200 space-y-2">
                             <div className="flex items-center justify-between">
                               <span className="text-[11px] font-bold text-slate-900 uppercase tracking-wider flex items-center">
-                                <Database className="w-3.5 h-3.5 mr-1.5 text-blue-600" /> Structured Database Matches ({msg.response.papers.length}):
+                                <Database className="w-3.5 h-3.5 mr-1.5 text-teal-700" /> Structured Database Matches ({msg.response.papers.length}):
                               </span>
-                              <span className="text-[10px] text-blue-600 font-normal lowercase font-mono">click paper to expand</span>
+                              <span className="text-[10px] text-teal-700 font-normal lowercase font-mono">click paper to expand</span>
                             </div>
 
                             <div className="space-y-2 pt-1">
@@ -616,25 +616,25 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper, onSelec
                                     {/* Accordion Header */}
                                     <button
                                       onClick={() => setExpandedPaperId(isExpanded ? null : paper.id)}
-                                      className="w-full p-3.5 text-left flex items-center justify-between hover:text-blue-600 transition-colors cursor-pointer group"
+                                      className="w-full p-3.5 text-left flex items-center justify-between hover:text-teal-700 transition-colors cursor-pointer group"
                                     >
                                       <div className="min-w-0 flex-1 pr-2">
-                                        <span className="text-xs font-bold text-slate-900 block group-hover:text-blue-600 line-clamp-1 leading-normal transition-colors">
+                                        <span className="text-xs font-bold text-slate-900 block group-hover:text-teal-700 line-clamp-1 leading-normal transition-colors">
                                           {paper.title}
                                         </span>
                                         <div className="flex items-center space-x-2 text-[10px] text-slate-500 mt-1">
                                           <span className="font-medium text-slate-700">{paper.authors_raw || paper.authors_list.join(", ")}</span>
                                           <span>•</span>
-                                          <span className="text-blue-600 font-medium">{paper.department}</span>
+                                          <span className="text-teal-700 font-medium">{paper.department}</span>
                                           <span>•</span>
                                           <span className="font-mono text-slate-600">{paper.publication_year}</span>
                                         </div>
                                       </div>
-                                      <div className="w-7 h-7 rounded-md bg-slate-50 border border-slate-200 flex items-center justify-center shrink-0 ml-2 group-hover:border-blue-300">
+                                      <div className="w-7 h-7 rounded-md bg-slate-50 border border-slate-200 flex items-center justify-center shrink-0 ml-2 group-hover:border-slate-300">
                                         {isExpanded ? (
-                                          <ChevronDown className="w-4 h-4 text-blue-600 transform rotate-180 transition-all" />
+                                          <ChevronDown className="w-4 h-4 text-teal-700 transform rotate-180 transition-all" />
                                         ) : (
-                                          <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-blue-600 transition-all" />
+                                          <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-teal-700 transition-all" />
                                         )}
                                       </div>
                                     </button>
@@ -644,8 +644,8 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper, onSelec
                                       <div className="px-4 pb-4 pt-2.5 border-t border-slate-200 space-y-3 bg-white text-xs">
                                         {/* AI Summary Callout - Clean white box */}
                                         <div className="p-3.5 rounded-xl bg-white border border-slate-200 text-xs leading-relaxed italic text-slate-800 font-sans shadow-2xs">
-                                          <span className="text-blue-600 font-bold block not-italic text-[10px] uppercase tracking-wider mb-1 flex items-center">
-                                            <Sparkles className="w-3.5 h-3.5 mr-1 text-blue-600" /> Executive AI Summary
+                                          <span className="text-teal-700 font-bold block not-italic text-[10px] uppercase tracking-wider mb-1 flex items-center">
+                                            <Sparkles className="w-3.5 h-3.5 mr-1 text-teal-700" /> Executive AI Summary
                                           </span>
                                           “{paper.ai_summary || paper.abstract}”
                                         </div>
@@ -666,7 +666,7 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper, onSelec
                                           </div>
                                           <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
                                             <span className="text-slate-500 block text-[9px] uppercase font-bold mb-0.5">ML Confidence</span>
-                                            <span className="text-blue-600 font-mono font-bold block">{(paper.ml_confidence * 100).toFixed(1)}%</span>
+                                            <span className="text-teal-700 font-mono font-bold block">{(paper.ml_confidence * 100).toFixed(1)}%</span>
                                           </div>
                                         </div>
                                         
@@ -684,7 +684,7 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper, onSelec
                                             onClick={() => onSelectPaper(paper)}
                                             className="px-3 py-1.5 rounded-xl bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 text-xs font-semibold transition-all cursor-pointer shadow-2xs flex items-center space-x-1"
                                           >
-                                            <FileText className="w-3.5 h-3.5 text-blue-600" />
+                                            <FileText className="w-3.5 h-3.5 text-teal-700" />
                                             <span>Paper Details</span>
                                           </button>
                                           <button
@@ -694,7 +694,7 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper, onSelec
                                                 onSelectAuthor(firstAuthor);
                                               }
                                             }}
-                                            className="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer shadow-2xs"
+                                            className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer shadow-2xs"
                                           >
                                             <span>Author Profile</span>
                                             <ArrowUpRight className="w-3.5 h-3.5" />
@@ -732,14 +732,14 @@ export const ChatView: React.FC<ChatViewProps> = ({ user, onSelectPaper, onSelec
                 {/* Loading Indicator Bubble */}
                 {loading && (
                   <div className="flex justify-start space-x-3 sm:space-x-4">
-                    <div className="w-8 h-8 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center shrink-0 mt-1 shadow-2xs">
-                      <Sparkles className="w-4 h-4 text-blue-600 animate-spin" />
+                    <div className="w-8 h-8 rounded-xl bg-teal-50 border border-teal-100 flex items-center justify-center shrink-0 mt-1 shadow-2xs">
+                      <Sparkles className="w-4 h-4 text-teal-700 animate-spin" />
                     </div>
                     <div className="bg-white border border-slate-200 rounded-3xl rounded-tl-sm px-5 py-4 max-w-[60%] flex items-center space-x-3 shadow-xs">
                       <div className="flex space-x-1.5">
-                        <div className="w-2 h-2 rounded-full bg-blue-600 animate-bounce" style={{ animationDelay: '0ms' }} />
-                        <div className="w-2 h-2 rounded-full bg-blue-600 animate-bounce" style={{ animationDelay: '150ms' }} />
-                        <div className="w-2 h-2 rounded-full bg-blue-600 animate-bounce" style={{ animationDelay: '300ms' }} />
+                        <div className="w-2 h-2 rounded-full bg-teal-700 animate-bounce" style={{ animationDelay: '0ms' }} />
+                        <div className="w-2 h-2 rounded-full bg-teal-700 animate-bounce" style={{ animationDelay: '150ms' }} />
+                        <div className="w-2 h-2 rounded-full bg-teal-700 animate-bounce" style={{ animationDelay: '300ms' }} />
                       </div>
                       <span className="text-xs text-slate-500 font-semibold">Agent is querying Scikit-Learn &amp; DB corpus...</span>
                     </div>

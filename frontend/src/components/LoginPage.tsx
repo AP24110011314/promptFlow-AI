@@ -46,15 +46,15 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBackToLa
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
         {/* Soft Glow (Top Left) */}
         <div 
-          className="absolute top-[-20%] left-[-10%] w-[60%] h-[70%] rounded-full bg-[radial-gradient(ellipse_at_center,var(--tw-gradient-stops))] from-blue-50/60 via-blue-50/20 to-transparent blur-[90px]" 
+          className="absolute top-[-20%] left-[-10%] w-[60%] h-[70%] rounded-full bg-[radial-gradient(ellipse_at_center,var(--tw-gradient-stops))] from-slate-100/60 via-slate-100/20 to-transparent blur-[90px]" 
         />
         {/* Subtle Glow (Center) */}
         <div 
-          className="absolute top-[30%] left-[40%] w-[45%] h-[55%] rounded-full bg-[radial-gradient(ellipse_at_center,var(--tw-gradient-stops))] from-blue-50/50 via-blue-50/10 to-transparent blur-[110px]" 
+          className="absolute top-[30%] left-[40%] w-[45%] h-[55%] rounded-full bg-[radial-gradient(ellipse_at_center,var(--tw-gradient-stops))] from-teal-50/50 via-teal-50/10 to-transparent blur-[110px]" 
         />
         {/* Soft Glow (Bottom Right) */}
         <div 
-          className="absolute bottom-[-20%] right-[-10%] w-[70%] h-[80%] rounded-full bg-[radial-gradient(ellipse_at_center,var(--tw-gradient-stops))] from-blue-50/50 via-blue-50/10 to-transparent blur-[110px]" 
+          className="absolute bottom-[-20%] right-[-10%] w-[70%] h-[80%] rounded-full bg-[radial-gradient(ellipse_at_center,var(--tw-gradient-stops))] from-slate-100/50 via-slate-100/10 to-transparent blur-[110px]" 
         />
       </div>
 
@@ -235,7 +235,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBackToLa
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full h-11 mt-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-real-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:pointer-events-none cursor-pointer group"
+                className="w-full h-11 mt-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-real-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:pointer-events-none cursor-pointer group"
               >
                 {loading ? (
                   <>

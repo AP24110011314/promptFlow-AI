@@ -105,7 +105,7 @@ export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
         {isEditing ? (
           <form onSubmit={handleSaveEdit} className="space-y-4">
             <h3 className="text-base sm:text-lg font-bold text-slate-900 flex items-center space-x-2.5">
-              <Edit className="w-5 h-5 text-blue-600" />
+              <Edit className="w-5 h-5 text-teal-700" />
               <span>Edit Publication Metadata</span>
             </h3>
             
@@ -122,7 +122,7 @@ export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
                 required
                 value={editTitle}
                 onChange={(e) => setEditTitle(e.target.value)}
-                className="w-full px-3.5 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all"
+                className="w-full px-3.5 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-900/10 transition-all"
               />
             </div>
 
@@ -133,7 +133,7 @@ export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
                   type="text"
                   value={editAuthors}
                   onChange={(e) => setEditAuthors(e.target.value)}
-                  className="w-full px-3.5 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all"
+                  className="w-full px-3.5 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-900/10 transition-all"
                 />
               </div>
               <div>
@@ -142,7 +142,7 @@ export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
                   type="text"
                   value={editJournal}
                   onChange={(e) => setEditJournal(e.target.value)}
-                  className="w-full px-3.5 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all"
+                  className="w-full px-3.5 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-900/10 transition-all"
                 />
               </div>
             </div>
@@ -153,7 +153,7 @@ export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
                 <select
                   value={editDept}
                   onChange={(e) => setEditDept(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all cursor-pointer"
+                  className="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-900/10 transition-all cursor-pointer"
                 >
                   {['Computer Science', 'Physics', 'Chemistry', 'Biotechnology', 'Mechanical Engineering', 'Electrical Engineering', 'Mathematics', 'Economics & Finance'].map(d => (
                     <option key={d} value={d}>{d}</option>
@@ -165,7 +165,7 @@ export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
                 <select
                   value={editType}
                   onChange={(e) => setEditType(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all cursor-pointer"
+                  className="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-900/10 transition-all cursor-pointer"
                 >
                   {['Journal', 'Conference', 'Patent', 'Preprint'].map(t => (
                     <option key={t} value={t}>{t}</option>
@@ -178,7 +178,7 @@ export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
                   type="number"
                   value={editYear}
                   onChange={(e) => setEditYear(parseInt(e.target.value) || 2026)}
-                  className="w-full px-3.5 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all"
+                  className="w-full px-3.5 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-900/10 transition-all"
                 />
               </div>
               <div>
@@ -187,7 +187,7 @@ export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
                   type="text"
                   value={editDoi}
                   onChange={(e) => setEditDoi(e.target.value)}
-                  className="w-full px-3.5 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all"
+                  className="w-full px-3.5 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-900/10 transition-all"
                 />
               </div>
             </div>
@@ -199,7 +199,7 @@ export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
                 value={editPaperUrl}
                 onChange={(e) => setEditPaperUrl(e.target.value)}
                 placeholder="https://doi.org/10.1007/..."
-                className="w-full px-3.5 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all"
+                className="w-full px-3.5 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-900/10 transition-all"
               />
             </div>
 
@@ -209,7 +209,7 @@ export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
                 value={editAbstract}
                 onChange={(e) => setEditAbstract(e.target.value)}
                 rows={4}
-                className="w-full px-3.5 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all resize-none"
+                className="w-full px-3.5 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-900/10 transition-all resize-none"
               />
             </div>
 
@@ -246,7 +246,7 @@ export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
 
             {/* Author List */}
             <div className="mt-5 p-4 rounded-lg bg-slate-50 border border-slate-200 flex items-start space-x-3">
-              <Users className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
+              <Users className="w-4 h-4 text-teal-700 shrink-0 mt-0.5" />
               <div className="text-xs space-y-1.5 flex-1">
                 <span className="text-slate-500 block font-bold uppercase text-[10px] tracking-wider">Authors &amp; Affiliation</span>
                 <div className="flex flex-wrap gap-2 pt-0.5">
@@ -257,7 +257,7 @@ export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
                     <button
                       key={idx}
                       onClick={() => { if (onSelectAuthor) onSelectAuthor(author); }}
-                      className="px-2.5 py-1 rounded-md bg-white hover:bg-slate-50 text-slate-700 hover:text-blue-600 border border-slate-200 text-xs font-medium transition-all cursor-pointer flex items-center space-x-1.5"
+                      className="px-2.5 py-1 rounded-md bg-white hover:bg-slate-50 text-slate-700 hover:text-teal-700 border border-slate-200 text-xs font-medium transition-all cursor-pointer flex items-center space-x-1.5"
                       title={`View ${author}'s Profile & Analytics`}
                     >
                       <span>{author}</span>
@@ -270,8 +270,8 @@ export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
 
             {/* AI Summary */}
             <div className="mt-5 p-4.5 rounded-lg bg-white border border-slate-200">
-              <div className="flex items-center space-x-2 text-xs font-bold text-blue-600 mb-2">
-                <Sparkles className="w-4 h-4 text-blue-600" />
+              <div className="flex items-center space-x-2 text-xs font-bold text-teal-700 mb-2">
+                <Sparkles className="w-4 h-4 text-teal-700" />
                 <span>AI Extractive Summary (NLP Sentence Scoring)</span>
               </div>
               <p className="text-sm text-slate-800 leading-relaxed italic font-sans">
@@ -304,7 +304,7 @@ export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
                     href={currentPaper.paper_url}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-blue-600 hover:underline font-semibold truncate block mt-1 flex items-center space-x-1"
+                    className="text-teal-700 hover:underline font-semibold truncate block mt-1 flex items-center space-x-1"
                   >
                     <span>Visit Publication</span>
                     <ExternalLink className="w-4 h-4 shrink-0" />
@@ -312,7 +312,7 @@ export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
                 ) : (
                   <button
                     onClick={() => setIsEditing(true)}
-                    className="text-slate-500 hover:text-blue-600 font-semibold block mt-1 text-left transition-colors cursor-pointer"
+                    className="text-slate-500 hover:text-teal-700 font-semibold block mt-1 text-left transition-colors cursor-pointer"
                   >
                     + Add paper link
                   </button>
@@ -350,7 +350,7 @@ export const PaperDetailModal: React.FC<PaperDetailModalProps> = ({
                   className="watt-btn-secondary"
                   title="Generate APA, IEEE, MLA, or BibTeX citation"
                 >
-                  <Quote className="w-3.5 h-3.5 text-blue-600" />
+                  <Quote className="w-3.5 h-3.5 text-teal-700" />
                   <span>Cite Paper</span>
                 </button>
 

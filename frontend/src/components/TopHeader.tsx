@@ -99,9 +99,9 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
         className="p-2 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 hover:text-slate-900 transition-colors cursor-pointer flex items-center justify-center shrink-0"
       >
         {sidebarCollapsed ? (
-          <PanelLeft className="w-4 h-4 text-blue-600" />
+          <PanelLeft className="w-4 h-4 text-teal-700" />
         ) : (
-          <PanelLeftClose className="w-4 h-4 text-blue-600" />
+          <PanelLeftClose className="w-4 h-4 text-teal-700" />
         )}
       </button>
 
@@ -113,7 +113,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
           value={searchQuery}
           onChange={handleSearchChange}
           placeholder={searchPlaceholder}
-          className="w-full pl-10 pr-4 py-2 rounded-lg bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all"
+          className="w-full pl-10 pr-4 py-2 rounded-lg bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-900/10 transition-all"
         />
       </div>
 
@@ -127,9 +127,9 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
           className="p-2 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 hover:text-slate-900 transition-colors cursor-pointer flex items-center justify-center"
         >
           {theme === 'dark' ? (
-            <Sun className="w-4 h-4 text-blue-600" />
+            <Sun className="w-4 h-4 text-teal-700" />
           ) : (
-            <Moon className="w-4 h-4 text-blue-600" />
+            <Moon className="w-4 h-4 text-teal-700" />
           )}
         </button>
 
@@ -142,7 +142,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
           >
             <Bell className="w-4 h-4" />
             {unreadCount > 0 && (
-              <span className="absolute -top-1 -right-1 text-[10px] font-bold text-blue-600">{unreadCount}</span>
+              <span className="absolute -top-1 -right-1 text-[10px] font-bold text-teal-700">{unreadCount}</span>
             )}
           </button>
           <NotificationDrawer
@@ -157,7 +157,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
           title="Help & Platform Documentation"
           className="p-2 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 hover:text-slate-900 transition-colors cursor-pointer"
         >
-          <HelpCircle className="w-4 h-4 text-slate-500 hover:text-blue-600 transition-colors" />
+          <HelpCircle className="w-4 h-4 text-slate-500 hover:text-teal-700 transition-colors" />
         </button>
 
         {/* User Profile Badge & Dropdown */}
@@ -168,10 +168,10 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
               className="flex items-center space-x-2.5 pl-3 border-l border-slate-200 cursor-pointer group select-none"
             >
               <div className="text-right hidden md:block">
-                <p className="text-xs font-bold text-slate-900 leading-tight group-hover:text-blue-600 transition-colors">{user.full_name}</p>
+                <p className="text-xs font-bold text-slate-900 leading-tight group-hover:text-teal-700 transition-colors">{user.full_name}</p>
                 <p className="text-[10px] text-slate-500 capitalize font-medium">{user.role}</p>
               </div>
-              <div className="w-8 h-8 rounded-md bg-slate-100 text-slate-700 border border-slate-200 flex items-center justify-center font-bold text-xs shadow-2xs group-hover:bg-blue-600 group-hover:text-white transition-all">
+              <div className="w-8 h-8 rounded-md bg-slate-100 text-slate-700 border border-slate-200 flex items-center justify-center font-bold text-xs shadow-2xs group-hover:bg-slate-900 group-hover:text-white transition-all">
                 {user.full_name.charAt(0)}
               </div>
             </div>
@@ -197,7 +197,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
                     onClick={handleOpenEdit}
                     className="w-full px-4 py-2 text-left text-xs font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-50 flex items-center space-x-2.5 transition-colors cursor-pointer"
                   >
-                    <UserCheck className="w-4 h-4 text-blue-600 shrink-0" />
+                    <UserCheck className="w-4 h-4 text-teal-700 shrink-0" />
                     <span>Edit Profile Settings</span>
                   </button>
                 </div>
@@ -236,7 +236,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
             </button>
 
             <div className="flex items-center space-x-3 mb-6">
-              <div className="w-10 h-10 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold border border-blue-200">
+              <div className="w-10 h-10 rounded-2xl bg-teal-50 text-teal-700 flex items-center justify-center font-bold border border-teal-200">
                 <UserCheck className="w-5 h-5" />
               </div>
               <div>
@@ -269,7 +269,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
                   required
                   value={editName}
                   onChange={(e) => setEditName(e.target.value)}
-                  className="w-full px-3 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 text-xs sm:text-sm focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all"
+                  className="w-full px-3 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 text-xs sm:text-sm focus:outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-900/10 transition-all"
                   placeholder="Dr. Jane Doe"
                 />
               </div>
@@ -279,7 +279,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
                 <select
                   value={editDept}
                   onChange={(e) => setEditDept(e.target.value)}
-                  className="w-full px-3 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 text-xs sm:text-sm focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all cursor-pointer"
+                  className="w-full px-3 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 text-xs sm:text-sm focus:outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-900/10 transition-all cursor-pointer"
                 >
                   <option value="Computer Science">Computer Science</option>
                   <option value="Physics">Physics</option>
@@ -304,7 +304,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-sm transition-all flex items-center space-x-1.5 cursor-pointer disabled:opacity-50"
+                  className="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-sm transition-all flex items-center space-x-1.5 cursor-pointer disabled:opacity-50"
                 >
                   <Check className="w-4 h-4 stroke-[3]" />
                   <span>{saving ? 'Saving...' : 'Save Profile'}</span>

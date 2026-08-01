@@ -151,7 +151,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               className="flex items-center space-x-2.5 cursor-pointer"
               onClick={() => { setActiveTab('dashboard'); setShowMobileMenu(false); }}
             >
-              <div className="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-base shrink-0 shadow-2xs">
+              <div className="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold text-base shrink-0 shadow-2xs">
                 <Zap className="w-4.5 h-4.5 fill-white text-white" />
               </div>
               <span className="text-sm sm:text-base font-bold text-slate-900 tracking-tight font-display">
@@ -170,7 +170,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   onClick={() => setActiveTab(item.id)}
                   className={`relative h-full px-4 flex items-center text-sm font-semibold transition-all cursor-pointer ${
                     isActive
-                      ? 'text-blue-600 font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2.5px] after:bg-blue-600'
+                      ? 'text-slate-900 font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2.5px] after:bg-slate-900'
                       : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
@@ -191,7 +191,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 value={searchQuery}
                 onChange={handleSearchChange}
                 placeholder={searchPlaceholder}
-                className="w-52 pl-9 pr-12 py-2 rounded-lg bg-slate-50 border border-slate-200 text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all duration-200"
+                className="w-52 pl-9 pr-12 py-2 rounded-lg bg-slate-50 border border-slate-200 text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-900/10 transition-all duration-200"
               />
               <kbd className="absolute right-2.5 top-1/2 -translate-y-1/2 px-1.5 py-0.5 rounded bg-slate-100 border border-slate-200 text-[10px] font-mono text-slate-500 pointer-events-none select-none">
                 ⌘K
@@ -209,7 +209,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               >
                 <Bell className="w-4 h-4" />
                 {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-1 text-[10px] font-bold text-blue-600">{unreadCount}</span>
+                  <span className="absolute -top-1 -right-1 text-[10px] font-bold text-teal-700">{unreadCount}</span>
                 )}
               </button>
 
@@ -226,7 +226,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               title="Documentation & Help"
               className="p-2 rounded-xl hover:bg-slate-100 text-slate-600 hover:text-slate-900 transition-all cursor-pointer"
             >
-              <HelpCircle className="w-4 h-4 text-slate-500 hover:text-blue-600 transition-colors" />
+              <HelpCircle className="w-4 h-4 text-slate-500 hover:text-teal-700 transition-colors" />
             </button>
 
             {/* User Profile Avatar with Dropdown */}
@@ -236,7 +236,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   onClick={() => setShowDropdown(!showDropdown)}
                   className="flex items-center space-x-2 p-1 rounded-xl hover:bg-slate-100 transition-all cursor-pointer group"
                 >
-                  <div className="w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs shadow-2xs group-hover:brightness-105 transition-all">
+                  <div className="w-7 h-7 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs shadow-2xs group-hover:brightness-105 transition-all">
                     {user.full_name.charAt(0)}
                   </div>
                   <span className="hidden xl:inline text-xs font-semibold text-slate-800 group-hover:text-slate-900 truncate max-w-[120px]">
@@ -248,7 +248,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 {showDropdown && (
                   <div className="absolute right-0 mt-3 w-72 sm:w-80 rounded-xl bg-white border border-slate-200 shadow-xl p-4 z-50 animate-in fade-in slide-in-from-top-2 duration-150 space-y-3.5">
                     <div className="flex items-center space-x-3.5 pb-3 border-b border-slate-200">
-                      <div className="w-11 h-11 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-lg shadow-2xs shrink-0">
+                      <div className="w-11 h-11 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold text-lg shadow-2xs shrink-0">
                         {user.full_name.charAt(0)}
                       </div>
                       <div className="min-w-0 flex-1">
@@ -258,7 +258,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     </div>
 
                     <div className="flex items-center gap-2">
-                      <span className="px-2.5 py-1 rounded-md bg-blue-50 text-blue-700 text-xs font-bold uppercase tracking-wider border border-blue-200">
+                      <span className="px-2.5 py-1 rounded-md bg-teal-50 text-teal-700 text-xs font-bold uppercase tracking-wider border border-teal-200">
                         {user.role}
                       </span>
                       <span className="px-2.5 py-1 rounded-md bg-slate-50 text-slate-700 text-xs font-semibold border border-slate-200 truncate">
@@ -271,7 +271,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         onClick={handleOpenEdit}
                         className="w-full px-3 py-2.5 rounded-lg text-left text-sm font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-50 flex items-center space-x-2.5 transition-colors cursor-pointer"
                       >
-                        <UserCheck className="w-4 h-4 text-blue-600 shrink-0" />
+                        <UserCheck className="w-4 h-4 text-teal-700 shrink-0" />
                         <span>Edit Profile</span>
                       </button>
                     </div>
@@ -301,7 +301,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               className="md:hidden p-2 rounded-xl hover:bg-slate-100 text-slate-600 hover:text-slate-900 transition-all cursor-pointer flex items-center justify-center"
               title="Toggle Menu"
             >
-              {showMobileMenu ? <X className="w-4 h-4 text-blue-600" /> : <Menu className="w-4 h-4" />}
+              {showMobileMenu ? <X className="w-4 h-4 text-teal-700" /> : <Menu className="w-4 h-4" />}
             </button>
           </div>
 
@@ -310,16 +310,16 @@ export const Navbar: React.FC<NavbarProps> = ({
 
       {/* Mobile Drawer Menu overlay */}
       {showMobileMenu && (
-        <div className="md:hidden border-b border-brand-border bg-brand-card px-4 py-3.5 space-y-3 z-30 relative animate-in fade-in slide-in-from-top-1 duration-150 shadow-md">
+        <div className="md:hidden border-b border-slate-200 bg-white px-4 py-3.5 space-y-3 z-30 relative animate-in fade-in slide-in-from-top-1 duration-150 shadow-md">
           {/* Mobile Search Input */}
           <div className="relative">
-            <Search className="w-3.5 h-3.5 text-brand-gray absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={searchQuery}
               onChange={handleSearchChange}
               placeholder={searchPlaceholder}
-              className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-brand-bg border border-brand-border text-xs text-white placeholder-brand-gray focus:outline-none focus:border-brand-cyan"
+              className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-slate-400"
             />
           </div>
 
@@ -334,11 +334,11 @@ export const Navbar: React.FC<NavbarProps> = ({
                   onClick={() => { setActiveTab(item.id); setShowMobileMenu(false); }}
                   className={`flex items-center space-x-2 px-3 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                     isActive
-                      ? 'bg-brand-cyan/10 text-brand-cyan font-bold'
-                      : 'text-brand-gray hover:bg-brand-hover hover:text-white'
+                      ? 'bg-slate-100 text-slate-900 font-bold'
+                      : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
                   }`}
                 >
-                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-brand-cyan' : 'text-brand-gray'}`} />
+                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-teal-700' : 'text-slate-400'}`} />
                   <span>{item.label}</span>
                 </button>
               );
@@ -360,7 +360,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
 
             <div className="flex items-center space-x-3.5 mb-5">
-              <div className="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center font-bold">
+              <div className="w-10 h-10 rounded-lg bg-teal-50 text-teal-700 border border-teal-100 flex items-center justify-center font-bold">
                 <UserCheck className="w-5 h-5" />
               </div>
               <div>
@@ -393,7 +393,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   required
                   value={editName}
                   onChange={(e) => setEditName(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all font-medium placeholder:text-slate-400"
+                  className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-900/10 transition-all font-medium placeholder:text-slate-400"
                   placeholder="Dr. Jane Doe"
                 />
               </div>
@@ -403,7 +403,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <select
                   value={editDept}
                   onChange={(e) => setEditDept(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all cursor-pointer font-medium"
+                  className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-900/10 transition-all cursor-pointer font-medium"
                 >
                   <option value="Computer Science" className="bg-white text-slate-900">Computer Science</option>
                   <option value="Physics" className="bg-white text-slate-900">Physics</option>

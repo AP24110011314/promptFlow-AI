@@ -183,7 +183,7 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-200">
         <div>
           <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight flex items-center space-x-2.5">
-            <BookOpen className="w-5 h-5 text-blue-600" />
+            <BookOpen className="w-5 h-5 text-teal-700" />
             <span>Faculty Research Publication Repository</span>
           </h1>
           <p className="text-xs text-slate-500 mt-1">
@@ -204,7 +204,7 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
           <button
             onClick={handleExportPdf}
             title="Download Formatted PDF Report"
-            className="px-3.5 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs transition-all shadow-2xs cursor-pointer flex items-center gap-1.5"
+            className="px-3.5 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs transition-all shadow-2xs cursor-pointer flex items-center gap-1.5"
           >
             <FileText className="w-4 h-4 text-white stroke-[2.5]" />
             <span>PDF Export</span>
@@ -236,7 +236,7 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
                 value={searchQuery}
                 onChange={(e) => handleSetSearchQuery(e.target.value)}
                 placeholder="Search title, abstract..."
-                className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all"
+                className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-900/10 transition-all"
               />
             </div>
 
@@ -245,7 +245,7 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
               <select
                 value={selectedDept}
                 onChange={(e) => handleSetSelectedDept(e.target.value)}
-                className="w-full px-3 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all cursor-pointer"
+                className="w-full px-3 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-900/10 transition-all cursor-pointer"
               >
                 {departments.map((dept) => (
                   <option key={dept} value={dept}>Dept: {dept}</option>
@@ -258,7 +258,7 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
               <select
                 value={selectedCat}
                 onChange={(e) => handleSetSelectedCat(e.target.value)}
-                className="w-full px-3 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all cursor-pointer"
+                className="w-full px-3 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-900/10 transition-all cursor-pointer"
               >
                 <option value="All">Category: All Topics</option>
                 {categories.map((cat) => (
@@ -272,7 +272,7 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
               <select
                 value={selectedType}
                 onChange={(e) => handleSetSelectedType(e.target.value)}
-                className="w-full px-3 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all cursor-pointer"
+                className="w-full px-3 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-900/10 transition-all cursor-pointer"
               >
                 {pubTypes.map((type) => (
                   <option key={type} value={type}>Type: {type}</option>
@@ -285,7 +285,7 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
               <select
                 value={selectedQuartile}
                 onChange={(e) => handleSetSelectedQuartile(e.target.value)}
-                className="w-full px-3 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all cursor-pointer"
+                className="w-full px-3 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-900/10 transition-all cursor-pointer"
               >
                 <option value="All">Quartile: All</option>
                 <option value="Q1">Quartile: Q1</option>
@@ -307,7 +307,7 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
                 value={authorQuery}
                 onChange={(e) => handleSetAuthorQuery(e.target.value)}
                 placeholder="Search by Author Name..."
-                className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all"
+                className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-900/10 transition-all"
               />
             </div>
 
@@ -316,7 +316,7 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
               <select
                 value={selectedYear}
                 onChange={(e) => handleSetSelectedYear(e.target.value)}
-                className="w-full px-3 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all cursor-pointer"
+                className="w-full px-3 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-900/10 transition-all cursor-pointer"
               >
                 <option value="All">Specific Year: All</option>
                 {years.filter(y => y !== 'All').map((year) => (
@@ -331,7 +331,7 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
                 disabled={selectedYear !== 'All'}
                 value={startYear}
                 onChange={(e) => handleSetStartYear(e.target.value)}
-                className="w-full px-3 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all cursor-pointer disabled:opacity-40"
+                className="w-full px-3 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-900/10 transition-all cursor-pointer disabled:opacity-40"
               >
                 <option value="All">Start Year: All</option>
                 {years.filter(y => y !== 'All').slice().reverse().map((year) => (
@@ -346,7 +346,7 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
                 disabled={selectedYear !== 'All'}
                 value={endYear}
                 onChange={(e) => handleSetEndYear(e.target.value)}
-                className="w-full px-3 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all cursor-pointer disabled:opacity-40"
+                className="w-full px-3 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-900/10 transition-all cursor-pointer disabled:opacity-40"
               >
                 <option value="All">End Year: All</option>
                 {years.filter(y => y !== 'All').map((year) => (
@@ -373,7 +373,7 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
                   setSelectedQuartile('All');
                   setCurrentPage(1);
                 }}
-                className="text-blue-600 hover:underline font-semibold cursor-pointer text-sm"
+                className="text-teal-700 hover:underline font-semibold cursor-pointer text-sm"
               >
                 Reset All Filters
               </button>
@@ -413,7 +413,7 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
                       </span>
                     </div>
 
-                    <h3 className="text-sm sm:text-base font-bold text-slate-900 mt-3 group-hover:text-blue-600 transition-colors line-clamp-2 leading-snug">
+                    <h3 className="text-sm sm:text-base font-bold text-slate-900 mt-3 group-hover:text-teal-700 transition-colors line-clamp-2 leading-snug">
                       {paper.title}
                     </h3>
 
@@ -440,14 +440,14 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
                           onSelectAuthor(firstAuthor);
                         }
                       }}
-                      className="flex items-center space-x-1.5 truncate max-w-[65%] hover:text-blue-600 transition-colors cursor-pointer"
+                      className="flex items-center space-x-1.5 truncate max-w-[65%] hover:text-teal-700 transition-colors cursor-pointer"
                       title="View Author Profile & Analytics"
                     >
-                      <Users className="w-4 h-4 text-blue-600 shrink-0" />
+                      <Users className="w-4 h-4 text-teal-700 shrink-0" />
                       <span className="truncate hover:underline text-slate-700 font-medium">{paper.authors_raw || 'College Faculty'}</span>
                     </div>
 
-                    <div className="flex items-center space-x-1 text-blue-600 font-semibold text-sm shrink-0 group-hover:translate-x-0.5 transition-transform">
+                    <div className="flex items-center space-x-1 text-teal-700 font-semibold text-sm shrink-0 group-hover:translate-x-0.5 transition-transform">
                       <span>View Details</span>
                     </div>
                   </div>
@@ -508,7 +508,7 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
             </button>
 
             <h3 className="text-lg font-bold text-slate-900 flex items-center space-x-2 mb-1">
-              <Upload className="w-5 h-5 text-blue-600" />
+              <Upload className="w-5 h-5 text-teal-700" />
               <span>Multi-PDF Batch Research Ingestion</span>
             </h3>
             <p className="text-xs text-slate-500 mb-5">
@@ -529,7 +529,7 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
                 onDrop={handleFileDrop}
                 className={`p-6 rounded-lg border-2 border-dashed text-center transition-all cursor-pointer relative ${
                   isDragging
-                    ? 'border-blue-600 bg-blue-50'
+                    ? 'border-slate-900 bg-slate-100'
                     : 'border-slate-300 bg-slate-50 hover:border-slate-400'
                 }`}
               >
@@ -549,11 +549,11 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
                 />
 
                 <div className="space-y-2 pointer-events-none">
-                  <div className="w-9 h-9 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center mx-auto border border-blue-200">
+                  <div className="w-9 h-9 rounded-lg bg-teal-50 text-teal-700 flex items-center justify-center mx-auto border border-teal-200">
                     <Upload className="w-4 h-4" />
                   </div>
                   <p className="text-xs font-bold text-slate-900">
-                    Drag &amp; Drop Research PDFs Here or <span className="text-blue-600 underline">Browse</span>
+                    Drag &amp; Drop Research PDFs Here or <span className="text-teal-700 underline">Browse</span>
                   </p>
                   <p className="text-[10px] text-slate-500">Select one or multiple PDF papers simultaneously</p>
                 </div>
@@ -576,7 +576,7 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
                   {uploadFiles.map((file, idx) => (
                     <div key={idx} className="p-2.5 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-between text-xs">
                       <div className="flex items-center space-x-2 truncate">
-                        <FileText className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                        <FileText className="w-3.5 h-3.5 text-teal-700 shrink-0" />
                         <span className="text-slate-800 truncate font-medium">{file.name}</span>
                         <span className="text-[10px] text-slate-500">({(file.size / 1024 / 1024).toFixed(2)} MB)</span>
                       </div>
@@ -597,11 +597,11 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
                 <div className="p-3.5 rounded-lg bg-slate-50 border border-slate-200 space-y-2">
                   <div className="flex items-center justify-between text-xs font-bold text-slate-900">
                     <span className="truncate">Processing {batchProgress.currentFileName}...</span>
-                    <span className="text-blue-600">{batchProgress.current} / {batchProgress.total}</span>
+                    <span className="text-teal-700">{batchProgress.current} / {batchProgress.total}</span>
                   </div>
                   <div className="w-full h-1.5 rounded-md bg-slate-200 overflow-hidden">
                     <div
-                      className="h-full bg-blue-600 transition-all duration-300"
+                      className="h-full bg-slate-900 transition-all duration-300"
                       style={{ width: `${(batchProgress.current / batchProgress.total) * 100}%` }}
                     />
                   </div>
@@ -613,7 +613,7 @@ export const RepositoryView: React.FC<RepositoryViewProps> = ({
                 <select
                   value={uploadDeptHint}
                   onChange={(e) => setUploadDeptHint(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all cursor-pointer"
+                  className="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-900/10 transition-all cursor-pointer"
                 >
                   {departments.filter(d => d !== 'All').map(d => (
                     <option key={d} value={d}>{d}</option>

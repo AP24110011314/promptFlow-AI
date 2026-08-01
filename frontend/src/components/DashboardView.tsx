@@ -93,7 +93,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     );
   }
 
-  const COLORS = ['#2563eb', '#38BDF8', '#34d399', '#f59e0b', '#0284c7'];
+  const COLORS = ['#0d9488', '#f59e0b', '#34d399', '#64748b', '#b45309'];
 
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -105,7 +105,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   const formattedName = user ? user.full_name.split(' ')[0] : 'Faculty';
 
   return (
-    <div className="min-h-screen w-full bg-slate-50 text-slate-900 font-sans selection:bg-blue-600 selection:text-white p-6 sm:p-8">
+    <div className="min-h-screen w-full bg-slate-50 text-slate-900 font-sans selection:bg-slate-200 selection:text-slate-900 p-6 sm:p-8">
       <div className="max-w-7xl mx-auto space-y-6">
         
         {/* HEADER SECTION */}
@@ -125,7 +125,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <button
                 onClick={() => setDateRange('30d')}
                 className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all cursor-pointer flex items-center space-x-1.5 ${
-                  dateRange === '30d' ? 'bg-blue-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                  dateRange === '30d' ? 'bg-slate-900 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
                 <Calendar className="w-3.5 h-3.5" />
@@ -134,7 +134,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <button
                 onClick={() => setDateRange('90d')}
                 className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all cursor-pointer ${
-                  dateRange === '90d' ? 'bg-blue-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                  dateRange === '90d' ? 'bg-slate-900 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
                 <span>Quarter</span>
@@ -159,7 +159,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             {/* Node 1: Faculty Email */}
             <div className="flex flex-col items-center text-center relative z-10">
               <div className="w-9 h-9 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center border border-slate-200 shadow-2xs">
-                <Mail className="w-4 h-4 text-blue-600" />
+                <Mail className="w-4 h-4 text-teal-700" />
               </div>
               <span className="text-xs font-bold text-slate-900 mt-2">Faculty Email</span>
               <span className="text-[10px] text-slate-500 mt-0.5 uppercase tracking-wider font-semibold">Inbound</span>
@@ -171,7 +171,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             {/* Node 2: AI Classification */}
             <div className="flex flex-col items-center text-center relative z-10">
               <div className="w-9 h-9 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center border border-slate-200 shadow-2xs">
-                <Activity className="w-4 h-4 text-blue-600" />
+                <Activity className="w-4 h-4 text-teal-700" />
               </div>
               <span className="text-xs font-bold text-slate-900 mt-2">AI Classification</span>
               <span className="text-[10px] text-emerald-600 mt-0.5 font-bold">{(analytics.avg_ml_confidence * 100).toFixed(0)}% accuracy</span>
@@ -183,7 +183,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             {/* Node 3: Metadata Extraction */}
             <div className="flex flex-col items-center text-center relative z-10">
               <div className="w-9 h-9 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center border border-slate-200 shadow-2xs">
-                <Cpu className="w-4 h-4 text-blue-600" />
+                <Cpu className="w-4 h-4 text-teal-700" />
               </div>
               <span className="text-xs font-bold text-slate-900 mt-2">Metadata Extract</span>
               <span className="text-[10px] text-slate-500 mt-0.5 font-mono">PyMuPDF parser</span>
@@ -195,7 +195,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             {/* Node 4: Repository Indexing */}
             <div className="flex flex-col items-center text-center relative z-10">
               <div className="w-9 h-9 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center border border-slate-200 shadow-2xs">
-                <Database className="w-4 h-4 text-blue-600" />
+                <Database className="w-4 h-4 text-teal-700" />
               </div>
               <span className="text-xs font-bold text-slate-900 mt-2">Repository Index</span>
               <span className="text-[10px] text-slate-500 mt-0.5 font-semibold">Database Store</span>
@@ -207,7 +207,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             {/* Node 5: Analytics */}
             <div className="flex flex-col items-center text-center relative z-10">
               <div className="w-9 h-9 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center border border-slate-200 shadow-2xs">
-                <TrendingUp className="w-4 h-4 text-blue-600" />
+                <TrendingUp className="w-4 h-4 text-teal-700" />
               </div>
               <span className="text-xs font-bold text-slate-900 mt-2">Analytics</span>
               <span className="text-[10px] text-slate-500 mt-0.5 font-semibold">{analytics.total_departments} disciplines</span>
@@ -236,7 +236,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h3 className="text-base sm:text-lg font-bold text-slate-900 flex items-center space-x-2">
-                  <Activity className="w-4 h-4 text-blue-600 shrink-0" />
+                  <Activity className="w-4 h-4 text-teal-700 shrink-0" />
                   <span>Publication Growth Index</span>
                 </h3>
                 <p className="text-xs text-slate-500 mt-0.5">Database storage indices and chronological extraction curves</p>
@@ -251,17 +251,17 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 <AreaChart data={analytics.by_year} margin={{ top: 10, right: 5, left: -25, bottom: 0 }}>
                   <defs>
                     <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#2563eb" stopOpacity={0.25} />
-                      <stop offset="95%" stopColor="#2563eb" stopOpacity={0.0} />
+                      <stop offset="5%" stopColor="#0f766e" stopOpacity={0.25} />
+                      <stop offset="95%" stopColor="#0f766e" stopOpacity={0.0} />
                     </linearGradient>
                   </defs>
                   <XAxis dataKey="year" stroke="#64748b" fontSize={11} tickLine={false} axisLine={false} />
                   <YAxis stroke="#64748b" fontSize={11} tickLine={false} axisLine={false} />
                   <Tooltip
                     contentStyle={{ backgroundColor: '#ffffff', borderColor: '#e2e8f0', borderRadius: '8px', fontSize: '12px', color: '#0f172a', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
-                    itemStyle={{ color: '#2563eb' }}
+                    itemStyle={{ color: '#0f766e' }}
                   />
-                  <Area type="monotone" dataKey="count" stroke="#2563eb" strokeWidth={2.5} fillOpacity={1} fill="url(#colorCount)" />
+                  <Area type="monotone" dataKey="count" stroke="#0f766e" strokeWidth={2.5} fillOpacity={1} fill="url(#colorCount)" />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
@@ -315,7 +315,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={analytics.by_year.slice(-4)} margin={{ top: 5, right: 0, left: -30, bottom: 0 }}>
                     <XAxis dataKey="year" stroke="#64748b" fontSize={9} tickLine={false} axisLine={false} />
-                    <Bar dataKey="count" fill="#2563eb" radius={[4, 4, 0, 0]} barSize={14} />
+                    <Bar dataKey="count" fill="#0f766e" radius={[4, 4, 0, 0]} barSize={14} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -336,7 +336,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </div>
               <button
                 onClick={onNavigateToRepo}
-                className="text-xs font-semibold text-blue-600 hover:text-blue-700 flex items-center space-x-1 cursor-pointer"
+                className="text-xs font-semibold text-teal-700 hover:text-teal-800 flex items-center space-x-1 cursor-pointer"
               >
                 <span>View Full Repository</span>
                 <ArrowUpRight className="w-3.5 h-3.5" />
@@ -361,7 +361,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                       onClick={() => onSelectPaper(paper)}
                       className="hover:bg-slate-50/80 transition-colors cursor-pointer group"
                     >
-                      <td className="py-3.5 px-4 pl-0 font-semibold text-slate-900 group-hover:text-blue-600 transition-colors">
+                      <td className="py-3.5 px-4 pl-0 font-semibold text-slate-900 group-hover:text-teal-700 transition-colors">
                         <div className="flex items-center space-x-3">
                           <div className="w-8 h-8 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center font-bold text-xs shrink-0 border border-slate-200">
                             {paper.authors_raw ? paper.authors_raw.charAt(0) : 'P'}
@@ -376,7 +376,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                   onSelectAuthor(firstAuthor);
                                 }
                               }}
-                              className="text-xs text-slate-500 hover:text-blue-600 truncate font-normal transition-colors cursor-pointer mt-0.5"
+                              className="text-xs text-slate-500 hover:text-teal-700 truncate font-normal transition-colors cursor-pointer mt-0.5"
                             >
                               {paper.authors_raw || 'College Faculty'}
                             </p>
@@ -410,7 +410,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           <div className="watt-card p-5 bg-white border border-slate-200/80 rounded-xl flex flex-col justify-between">
             <div>
               <h3 className="text-base font-bold text-slate-900 flex items-center space-x-2 mb-1">
-                <TrendingUp className="w-4 h-4 text-blue-600 shrink-0" />
+                <TrendingUp className="w-4 h-4 text-teal-700 shrink-0" />
                 <span>Academic Categories</span>
               </h3>
               <p className="text-xs text-slate-500">Publication distribution by departments</p>
@@ -480,7 +480,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <div className="mt-4 pt-4 border-t border-slate-200">
               <button
                 onClick={() => exportService.downloadPdf()}
-                className="w-full px-4 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition-all shadow-2xs cursor-pointer flex items-center justify-center gap-2"
+                className="w-full px-4 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm transition-all shadow-2xs cursor-pointer flex items-center justify-center gap-2"
                 title="Download Formatted PDF Ingestion Report"
               >
                 <Download className="w-4 h-4 text-white stroke-[2.5]" />

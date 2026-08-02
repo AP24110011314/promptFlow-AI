@@ -1,3 +1,7 @@
+<img width="2880" height="1498" alt="dashboard-01" src="https://github.com/user-attachments/assets/0d82a3bd-d748-4dbb-9fa0-2c0279b28a52" />
+
+---
+
 # promptFlow-AI (Automated Research Publication Tracking & Management System)
 
 promptFlow-AI is an automated, enterprise-grade research tracking and management system designed to streamline the ingestion, classification, parsing, and analysis of academic research publications announced via faculty email submissions and multi-PDF document uploads.
@@ -37,7 +41,7 @@ graph TD
 
 The landing page serves as the entry point for institutional visitors and non-authenticated users, presenting high-level system highlights, institutional publication stats, recent paper announcements, and direct access to authentication controls.
 
-![Landing Page View](<insert_landing_page_screenshot_url_here>)
+![Landing Page View](https://github.com/user-attachments/assets/441555c7-19dc-411f-8924-d20fb1d431c6)
 
 * Features include:
   * Public summary of institutional research metrics and paper counts.
@@ -50,7 +54,7 @@ The landing page serves as the entry point for institutional visitors and non-au
 
 The platform enforces strict Role-Based Access Control (RBAC) secured via JSON Web Tokens (JWT) and PBKDF2 SHA-256 password hashing. The sign-in portal supports separate access flows for Faculty members and System Administrators.
 
-![Sign-In Page View](<insert_signin_page_screenshot_url_here>)
+![Sign-In Page View](https://github.com/user-attachments/assets/8ce461f5-9e07-4d1a-99d6-275ce5cf45e1)
 
 * Features include:
   * Secure credential verification with JWT token persistence.
@@ -63,7 +67,7 @@ The platform enforces strict Role-Based Access Control (RBAC) secured via JSON W
 
 The Executive Dashboard provides an overview of research productivity across the institution. It integrates real-time analytical summary cards, recent ingestion activities, notification drawers, and batch paper upload controls.
 
-![Dashboard View](<insert_dashboard_page_screenshot_url_here>)
+![Dashboard View](https://github.com/user-attachments/assets/4a0bed79-b498-4b86-bf85-19750af4a50c)
 
 * Features include:
   * Metrics overview showing total publications, active departments, category counts, and system activity status.
@@ -77,7 +81,7 @@ The Executive Dashboard provides an overview of research productivity across the
 
 The Research Repository is a centralized database containing indexed publication records. Users can filter, search, inspect, and export publication data.
 
-![Repository View](<insert_repository_page_screenshot_url_here>)
+![Repository View](https://github.com/user-attachments/assets/8cf6d426-d0ae-4caa-b45c-c4b691d60f13)
 
 * Features include:
   * Full-text search across titles, author names, abstracts, DOIs, and departments.
@@ -92,7 +96,7 @@ The Research Repository is a centralized database containing indexed publication
 
 The Analytics view presents statistical representations of institutional research output, departmental contributions, and research domain distributions.
 
-![Analytics View](<insert_analytics_page_screenshot_url_here>)
+![Analytics View](https://github.com/user-attachments/assets/b7420ee6-37ac-44e1-bcca-81ec4b9303d4)
 
 * Features include:
   * Departmental publication volume distribution bar charts.
@@ -106,7 +110,7 @@ The Analytics view presents statistical representations of institutional researc
 
 The Co-Authorship Network visualization presents an interactive, SVG-rendered graphic representation of collaborative relationships among college faculty members.
 
-![Faculty Co-Authorship Network Graph](<insert_coauthorship_network_screenshot_url_here>)
+![Faculty Co-Authorship Network Graph](https://github.com/user-attachments/assets/a4f74739-e877-4208-921f-97fd104103c1)
 
 * Features include:
   * Interactive SVG node graph visualizing faculty members and co-authorship links.
@@ -120,7 +124,7 @@ The Co-Authorship Network visualization presents an interactive, SVG-rendered gr
 
 The AI Research Assistant provides a natural language conversational interface allowing faculty and administrators to query the indexed publication corpus, synthesize literature findings, and generate citations.
 
-![AI Assistant Page View](<insert_ai_assistant_page_screenshot_url_here>)
+![AI Assistant Page View](https://github.com/user-attachments/assets/2eeba799-9933-47c4-b032-d7333ff0c210)
 
 * Features include:
   * Context-aware answers based on indexed paper titles, abstracts, and departmental data.

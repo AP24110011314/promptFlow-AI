@@ -29,12 +29,12 @@ services:
         fromService:
           type: web
           name: promptflow-backend
-          property: url
+          property: host
       - key: VITE_API_URL
         fromService:
           type: web
           name: promptflow-backend
-          property: url
+          property: host
           append: /api/v1
     routes:
       - type: rewrite

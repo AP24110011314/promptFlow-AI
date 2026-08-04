@@ -2,8 +2,21 @@ import axios from 'axios';
 import type { AuthResponse, ResearchPaper, Category, EmailLog, DashboardAnalytics, User, ChatResponse, AppNotification } from '../types';
 
 
-export const SERVER_BASE_URL = import.meta.env.VITE_SERVER_URL || (import.meta.env.DEV ? 'http://localhost:8000' : '');
-const API_BASE_URL = import.meta.env.VITE_API_URL || `${SERVER_BASE_URL}/api/v1`;
+const formatUrl = (url?: string): string => {
+  if (!url) return '';
+  if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('//')) {
+    return url;
+  }
+  return `https://${url}`;
+};
+
+const rawServerUrl = import.meta.env.VITE_SERVER_URL;
+export const SERVER_BASE_URL = rawServerUrl
+  ? formatUrl(rawServerUrl)
+  : (import.meta.env.DEV ? 'http://localhost:8000' : '');
+
+const rawApiUrl = import.meta.env.VITE_API_URL;
+const API_BASE_URL = rawApiUrl ? formatUrl(rawApiUrl) : (SERVER_BASE_URL ? `${SERVER_BASE_URL}/api/v1` : '/api/v1');
 
 const api = axios.create({
   baseURL: API_BASE_URL,

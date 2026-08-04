@@ -10,6 +10,10 @@ class Settings(BaseSettings):
     # Database (Standardized on PostgreSQL)
     DATABASE_URL: str = os.getenv("DATABASE_URL", "postgresql://promptflow_user:promptflow_password@localhost:5432/promptflow_database")
 
+    # AI & LLM Keys
+    GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
+    OPENROUTER_API_KEY: str = os.getenv("OPENROUTER_API_KEY", "")
+
     
     # Paths
     BASE_DIR: str = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

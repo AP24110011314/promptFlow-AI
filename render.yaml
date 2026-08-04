@@ -17,6 +17,10 @@ services:
         generateValue: true
       - key: PORT
         value: "8000"
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: OPENROUTER_API_KEY
+        sync: false
 
   # 2. React Frontend Static Site
   - type: web

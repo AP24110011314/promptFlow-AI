@@ -31,7 +31,7 @@ def seed_initial_data():
 
     db = SessionLocal()
     try:
-        # 1. Seed Users
+        # 1. Seed Users (Keep single initial Admin account)
         if db.query(User).count() == 0:
             admin_user = User(
                 email="admin@college.edu",
@@ -41,15 +41,7 @@ def seed_initial_data():
                 department="Central Research Office",
                 is_active=True
             )
-            faculty_user = User(
-                email="faculty@college.edu",
-                full_name="Prof. Robert Langdon (CS Dept)",
-                hashed_password=get_password_hash("faculty123"),
-                role="faculty",
-                department="Computer Science",
-                is_active=True
-            )
-            db.add_all([admin_user, faculty_user])
+            db.add(admin_user)
             db.commit()
 
         # 2. Seed Categories

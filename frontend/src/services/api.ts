@@ -4,10 +4,30 @@ import type { AuthResponse, ResearchPaper, Category, EmailLog, DashboardAnalytic
 
 const formatUrl = (url?: string): string => {
   if (!url) return '';
-  if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('//')) {
-    return url;
+
+  let cleanUrl = url.trim();
+
+  let protocol = 'https://';
+  if (cleanUrl.startsWith('http://')) {
+    protocol = 'http://';
+    cleanUrl = cleanUrl.slice(7);
+  } else if (cleanUrl.startsWith('https://')) {
+    protocol = 'https://';
+    cleanUrl = cleanUrl.slice(8);
+  } else if (cleanUrl.startsWith('//')) {
+    protocol = 'https://';
+    cleanUrl = cleanUrl.slice(2);
   }
-  return `https://${url}`;
+
+  const slashIdx = cleanUrl.indexOf('/');
+  let host = slashIdx !== -1 ? cleanUrl.slice(0, slashIdx) : cleanUrl;
+  const path = slashIdx !== -1 ? cleanUrl.slice(slashIdx) : '';
+
+  if (host && !host.includes('.') && host !== 'localhost' && !host.includes(':')) {
+    host = `${host}.onrender.com`;
+  }
+
+  return `${protocol}${host}${path}`;
 };
 
 const rawServerUrl = import.meta.env.VITE_SERVER_URL;

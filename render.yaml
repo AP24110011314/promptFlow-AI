@@ -19,8 +19,9 @@ services:
         value: "8000"
 
   # 2. React Frontend Static Site
-  - type: static
+  - type: web
     name: promptflow-frontend
+    env: static
     buildCommand: cd frontend && npm install && npm run build
     staticPublishPath: frontend/dist
     envVars:

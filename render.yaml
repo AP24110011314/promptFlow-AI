@@ -34,13 +34,12 @@ services:
           type: web
           name: promptflow-backend
           property: host
-          append: .onrender.com
       - key: VITE_API_URL
         fromService:
           type: web
           name: promptflow-backend
           property: host
-          append: .onrender.com/api/v1
+          append: /api/v1
     routes:
       - type: rewrite
         source: /*

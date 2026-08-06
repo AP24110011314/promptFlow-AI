@@ -21,22 +21,51 @@ const formatUrl = (url?: string): string => {
 
   const slashIdx = cleanUrl.indexOf('/');
   let host = slashIdx !== -1 ? cleanUrl.slice(0, slashIdx) : cleanUrl;
-  const path = slashIdx !== -1 ? cleanUrl.slice(slashIdx) : '';
+  let path = slashIdx !== -1 ? cleanUrl.slice(slashIdx) : '';
 
   if (host && !host.includes('.') && host !== 'localhost' && !host.includes(':')) {
     host = `${host}.onrender.com`;
   }
+  while (host.includes('.onrender.com.onrender.com')) {
+    host = host.replace('.onrender.com.onrender.com', '.onrender.com');
+  }
+
+  path = path.replace(/\/+$/, '');
 
   return `${protocol}${host}${path}`;
 };
 
 const rawServerUrl = import.meta.env.VITE_SERVER_URL;
-export const SERVER_BASE_URL = rawServerUrl
-  ? formatUrl(rawServerUrl)
-  : (import.meta.env.DEV ? 'http://localhost:8000' : '');
-
 const rawApiUrl = import.meta.env.VITE_API_URL;
-const API_BASE_URL = rawApiUrl ? formatUrl(rawApiUrl) : (SERVER_BASE_URL ? `${SERVER_BASE_URL}/api/v1` : '/api/v1');
+
+let parsedServerUrl = rawServerUrl ? formatUrl(rawServerUrl) : '';
+let parsedApiUrl = rawApiUrl ? formatUrl(rawApiUrl) : '';
+
+// Ensure parsedServerUrl does NOT end with /api/v1
+if (parsedServerUrl.endsWith('/api/v1')) {
+  parsedServerUrl = parsedServerUrl.slice(0, -7);
+}
+
+// Compute final API_BASE_URL ensuring /api/v1 is ALWAYS present
+let computedApiUrl = '';
+if (parsedApiUrl) {
+  if (parsedApiUrl.endsWith('/api/v1')) {
+    computedApiUrl = parsedApiUrl;
+  } else {
+    computedApiUrl = `${parsedApiUrl.replace(/\/+$/, '')}/api/v1`;
+  }
+} else if (parsedServerUrl) {
+  computedApiUrl = `${parsedServerUrl}/api/v1`;
+} else {
+  computedApiUrl = import.meta.env.DEV ? 'http://localhost:8000/api/v1' : '/api/v1';
+}
+
+export const API_BASE_URL = computedApiUrl;
+
+// Compute final SERVER_BASE_URL
+export const SERVER_BASE_URL = parsedServerUrl ||
+  (computedApiUrl.startsWith('http') ? computedApiUrl.replace(/\/api\/v1\/?$/, '') : '') ||
+  (import.meta.env.DEV ? 'http://localhost:8000' : '');
 
 const api = axios.create({
   baseURL: API_BASE_URL,

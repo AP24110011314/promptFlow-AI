@@ -151,7 +151,7 @@ class ResearchPaperExtractor:
             if if_q_val:
                 abstract += f"\n\n[Impact Factor & Quartile: {if_q_val}]"
 
-            ml_dept_res = ml_classifier.predict_department(f"{title} {abstract}")
+            ml_dept_res = ml_classifier.predict_department(full_text)
             predicted_dept = ml_dept_res["department"]
             ml_confidence = ml_dept_res["confidence"]
             
@@ -246,7 +246,7 @@ class ResearchPaperExtractor:
         if journal_match:
             journal = journal_match.group(0).strip().title()
 
-        ml_dept_res = ml_classifier.predict_department(f"{title} {abstract}")
+        ml_dept_res = ml_classifier.predict_department(full_text)
         predicted_dept = ml_dept_res["department"]
         ml_confidence = ml_dept_res["confidence"]
         

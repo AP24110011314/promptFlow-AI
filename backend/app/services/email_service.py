@@ -12,8 +12,8 @@ class EmailIngestionService:
         if not body:
             return [""]
         import re
-        # Find start indices of all "Title of the paper:" (including numbered, space-less, and asterisk variations)
-        matches = list(re.finditer(r'(?i)(?:\b\d+[\.\)]\s*(?:\*\s*)*)?Title(?:\s+of\s+the\s+paper)?[\s*\:\-\*]+', body))
+        # Find start indices of forwarded message headers or "Title of the paper:" markers
+        matches = list(re.finditer(r'(?i)(?:[\-\=]{3,}\s*forwarded\s+message\s*[\-\=]{3,}|(?:\b\d+[\.\)]\s*(?:\*\s*)*)?Title(?:\s+of\s+the\s+paper)?[\s*\:\-\*]+)', body))
         if len(matches) <= 1:
             return [body]
             
@@ -21,9 +21,11 @@ class EmailIngestionService:
         for i in range(len(matches)):
             start = matches[i].start()
             end = matches[i+1].start() if i + 1 < len(matches) else len(body)
-            sections.append(body[start:end])
+            sec = body[start:end].strip()
+            if len(sec) > 30:
+                sections.append(sec)
             
-        return sections
+        return sections if sections else [body]
 
     def process_simulated_email(self, db: Session, req: SimulateEmailRequest, pdf_path: str = None) -> EmailIngestionLog:
         """Processes an incoming simulated or real email, checking for multi-paper content and routing to the extraction pipeline."""

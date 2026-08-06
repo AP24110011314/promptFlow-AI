@@ -202,7 +202,8 @@ class EmailPoller:
                     raw_email = data[0][1]
                     msg = email.message_from_bytes(raw_email)
 
-                    # Extract body and attachments
+                    # Check for attached .eml files
+                    eml_messages = []
                     body = ""
                     pdf_path = None
 
@@ -210,8 +211,21 @@ class EmailPoller:
                         for part in msg.walk():
                             content_type = part.get_content_type()
                             content_disposition = str(part.get("Content-Disposition"))
+                            filename = part.get_filename()
+                            if filename:
+                                filename = self.decode_header_value(filename)
 
-                            # Extract body
+                            # Check for attached .eml message
+                            if (filename and filename.lower().endswith(".eml")) or content_type == "message/rfc822":
+                                try:
+                                    payload = part.get_payload(decode=True)
+                                    if payload:
+                                        nested_msg = email.message_from_bytes(payload)
+                                        eml_messages.append(nested_msg)
+                                except Exception as eml_err:
+                                    print(f"Email Poller: Error parsing attached .eml: {eml_err}", flush=True)
+
+                            # Extract body text
                             if content_type == "text/plain" and "attachment" not in content_disposition:
                                 try:
                                     body += part.get_payload(decode=True).decode(part.get_content_charset() or 'utf-8', errors='ignore')
@@ -224,28 +238,23 @@ class EmailPoller:
                                 except Exception:
                                     pass
                             
-                            # Extract attachment
+                            # Extract PDF attachment
                             if "attachment" in content_disposition:
-                                filename = part.get_filename()
-                                if filename:
-                                    filename = self.decode_header_value(filename)
-                                    if filename.lower().endswith(".pdf"):
-                                        payload = part.get_payload(decode=True)
+                                if filename and filename.lower().endswith(".pdf"):
+                                    payload = part.get_payload(decode=True)
+                                    safe_filename = "".join([c for c in filename if c.isalnum() or c in ['.', '_', '-']]).strip()
+                                    if not safe_filename:
+                                        safe_filename = "attachment.pdf"
                                         
-                                        # Ensure filename is unique or safe
-                                        safe_filename = "".join([c for c in filename if c.isalnum() or c in ['.', '_', '-']]).strip()
-                                        if not safe_filename:
-                                            safe_filename = "attachment.pdf"
-                                            
+                                    dest_path = os.path.join(settings.STORAGE_DIR, safe_filename)
+                                    if os.path.exists(dest_path):
+                                        safe_filename = f"{int(time.time())}_{safe_filename}"
                                         dest_path = os.path.join(settings.STORAGE_DIR, safe_filename)
-                                        if os.path.exists(dest_path):
-                                            safe_filename = f"{int(time.time())}_{safe_filename}"
-                                            dest_path = os.path.join(settings.STORAGE_DIR, safe_filename)
-                                            
-                                        with open(dest_path, "wb") as f:
-                                            f.write(payload)
-                                        pdf_path = dest_path
-                                        print(f"Email Poller: Saved attachment to {pdf_path}", flush=True)
+                                        
+                                    with open(dest_path, "wb") as f:
+                                        f.write(payload)
+                                    pdf_path = dest_path
+                                    print(f"Email Poller: Saved attachment to {pdf_path}", flush=True)
                     else:
                         content_type = msg.get_content_type()
                         if content_type == "text/plain":
@@ -257,32 +266,77 @@ class EmailPoller:
                             except Exception:
                                 pass
 
-                    print(f"Email Poller: Processing email - From: {sender}, Subject: {subject}", flush=True)
+                    # If attached .eml files exist, process each attached .eml
+                    if eml_messages:
+                        print(f"Email Poller: Detected {len(eml_messages)} attached .eml files inside '{subject}'. Processing each attached email...", flush=True)
+                        for eml_idx, emsg in enumerate(eml_messages):
+                            em_subj = self.decode_header_value(emsg.get("Subject")) or f"{subject} (Attached Email {eml_idx+1})"
+                            em_sender = self.decode_header_value(emsg.get("From")) or sender
+                            em_body = ""
+                            em_pdf = None
 
-                    # Reconstruct SimulateEmailRequest
-                    req = SimulateEmailRequest(
-                        sender=sender,
-                        subject=subject,
-                        body=body or subject,
-                        department_hint="General"
-                    )
+                            if emsg.is_multipart():
+                                for epart in emsg.walk():
+                                    etype = epart.get_content_type()
+                                    edisp = str(epart.get("Content-Disposition"))
+                                    efname = epart.get_filename()
+                                    if efname:
+                                        efname = self.decode_header_value(efname)
 
-                    # Pass to Ingestion Pipeline
-                    if settings.USE_CELERY:
-                        try:
-                            from app.tasks import process_email_async
-                            process_email_async.delay(
-                                sender=req.sender,
-                                subject=req.subject,
-                                body=req.body,
-                                pdf_path=pdf_path
+                                    if etype == "text/plain" and "attachment" not in edisp:
+                                        try:
+                                            em_body += epart.get_payload(decode=True).decode(epart.get_content_charset() or 'utf-8', errors='ignore')
+                                        except Exception: pass
+                                    elif etype == "text/html" and not em_body and "attachment" not in edisp:
+                                        try:
+                                            em_body += self.clean_html_to_text(epart.get_payload(decode=True).decode(epart.get_content_charset() or 'utf-8', errors='ignore'))
+                                        except Exception: pass
+
+                                    if "attachment" in edisp and efname and efname.lower().endswith(".pdf"):
+                                        epayload = epart.get_payload(decode=True)
+                                        esafe = "".join([c for c in efname if c.isalnum() or c in ['.', '_', '-']]).strip() or "attachment.pdf"
+                                        edest = os.path.join(settings.STORAGE_DIR, f"{int(time.time())}_{esafe}")
+                                        with open(edest, "wb") as f:
+                                            f.write(epayload)
+                                        em_pdf = edest
+                            else:
+                                if emsg.get_content_type() == "text/plain":
+                                    em_body = emsg.get_payload(decode=True).decode(emsg.get_content_charset() or 'utf-8', errors='ignore')
+                                elif emsg.get_content_type() == "text/html":
+                                    em_body = self.clean_html_to_text(emsg.get_payload(decode=True).decode(emsg.get_content_charset() or 'utf-8', errors='ignore'))
+
+                            em_req = SimulateEmailRequest(
+                                sender=em_sender,
+                                subject=em_subj,
+                                body=em_body or em_subj,
+                                department_hint="General"
                             )
-                            print("Email Poller: Dispatched email processing task to Celery async queue.", flush=True)
-                        except Exception as cel_err:
-                            print(f"Email Poller Celery dispatch error: {cel_err}. Falling back to sync.", flush=True)
-                            email_service.process_simulated_email(db, req, pdf_path=pdf_path)
+                            email_service.process_simulated_email(db, em_req, pdf_path=em_pdf)
                     else:
-                        email_service.process_simulated_email(db, req, pdf_path=pdf_path)
+                        print(f"Email Poller: Processing email - From: {sender}, Subject: {subject}", flush=True)
+
+                        req = SimulateEmailRequest(
+                            sender=sender,
+                            subject=subject,
+                            body=body or subject,
+                            department_hint="General"
+                        )
+
+                        if settings.USE_CELERY:
+                            try:
+                                from app.tasks import process_email_async
+                                process_email_async.delay(
+                                    sender=req.sender,
+                                    subject=req.subject,
+                                    body=req.body,
+                                    pdf_path=pdf_path
+                                )
+                                print("Email Poller: Dispatched email processing task to Celery async queue.", flush=True)
+                            except Exception as cel_err:
+                                print(f"Email Poller Celery dispatch error: {cel_err}. Falling back to sync.", flush=True)
+                                email_service.process_simulated_email(db, req, pdf_path=pdf_path)
+                        else:
+                            email_service.process_simulated_email(db, req, pdf_path=pdf_path)
 
                     # Mark email as seen so we don't process it again
                     mail.store(mail_id, "+FLAGS", "\\Seen")

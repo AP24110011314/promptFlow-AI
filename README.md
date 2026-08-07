@@ -4,6 +4,9 @@
 
 # promptFlow-AI (Automated Research Publication Tracking & Management System)
 
+[![Frontend Live Demo](https://img.shields.io/badge/Frontend-Live%20Demo-6366F1?style=for-the-badge&logo=render&logoColor=white)](https://promptflow-frontend-te2c.onrender.com)
+[![Backend API](https://img.shields.io/badge/Backend-Live%20API-06B6D4?style=for-the-badge&logo=render&logoColor=white)](https://promptflow-backend-1xub.onrender.com)
+
 promptFlow-AI is an automated, enterprise-grade research tracking and management system designed to streamline the ingestion, classification, parsing, and analysis of academic research publications announced via faculty email submissions and multi-PDF document uploads.
 
 The platform processes unstructured email text and PDF uploads, filters administrative noise and spam using machine learning models, extracts publication metadata, generates executive summaries, categorizes papers into academic departments and research domains, tracks author analytics and h-index metrics, and exports standardized academic citations.
@@ -190,8 +193,8 @@ To run the complete production environment using Docker Compose:
 docker compose up --build -d
 ```
 
-* Web Application UI: `http://localhost:3000`
-* FastAPI Swagger API Docs: `http://localhost:8000/docs`
+* Web Application UI: `http://localhost:3000` | Live Demo: [![Frontend Live Demo](https://img.shields.io/badge/Frontend-Live%20Demo-6366F1?style=flat-square&logo=render&logoColor=white)](https://promptflow-frontend-te2c.onrender.com)
+* FastAPI Swagger API Docs: `http://localhost:8000/docs` | Live API: [![Backend API](https://img.shields.io/badge/Backend-Live%20API-06B6D4?style=flat-square&logo=render&logoColor=white)](https://promptflow-backend-1xub.onrender.com)
 
 ### Manual Local Development Setup
 

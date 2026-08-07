@@ -70,7 +70,9 @@ The platform enforces strict Role-Based Access Control (RBAC) secured via JSON W
 
 The Executive Dashboard provides an overview of research productivity across the institution. It integrates real-time analytical summary cards, recent ingestion activities, notification drawers, and batch paper upload controls.
 
-![Dashboard View](https://github.com/user-attachments/assets/4a0bed79-b498-4b86-bf85-19750af4a50c)
+![Dashboard View](https://github.com/user-attachments/assets/974ef714-0393-4d52-bd41-c43cd8e2262e)
+
+
 
 * Features include:
   * Metrics overview showing total publications, active departments, category counts, and system activity status.

@@ -257,10 +257,3 @@ All API endpoints are hosted at `http://localhost:8000/api/v1` and require JWT B
 | `POST` | `/admin/retrain-ml` | Trigger model retraining on updated database corpus | Admin Only |
 
 ---
-
-## Default System Credentials
-
-The application includes pre-configured demo credentials for rapid testing:
-
-* **Administrator Account:** `admin@college.edu` / `admin123`
-* **Faculty Account:** `faculty@college.edu` / `faculty123`

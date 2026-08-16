@@ -27,6 +27,7 @@ session.md
 
 # ML Models & Local Databases
 *.pkl
+backend/storage/postgres_data/
 backend/storage/ml_models/*
 !backend/storage/ml_models/.gitkeep
 backend/storage/crd_database.db

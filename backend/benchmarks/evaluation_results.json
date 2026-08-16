@@ -1,0 +1,170 @@
+{
+  "timestamp": "2026-08-16 09:33:16",
+  "ml_relevance": {
+    "dataset_size": 100,
+    "positive_samples": 50,
+    "negative_samples": 50,
+    "majority_baseline": {
+      "accuracy": 0.5,
+      "precision": 0.5,
+      "recall": 1.0,
+      "f1": 0.6666666666666666
+    },
+    "keyword_baseline": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "naive_bayes_cv": {
+      "accuracy_mean": 0.9800000000000001,
+      "accuracy_std": 0.024494897427831803,
+      "precision_mean": 0.9636363636363636,
+      "recall_mean": 1.0,
+      "f1_mean": 0.980952380952381
+    },
+    "random_forest_cv": {
+      "accuracy_mean": 1.0,
+      "precision_mean": 1.0,
+      "recall_mean": 1.0,
+      "f1_mean": 1.0
+    },
+    "logistic_regression_cv": {
+      "accuracy_mean": 1.0,
+      "precision_mean": 1.0,
+      "recall_mean": 1.0,
+      "f1_mean": 1.0
+    },
+    "confusion_matrix": {
+      "TP": 50,
+      "FP": 2,
+      "TN": 48,
+      "FN": 0
+    },
+    "latency_ms": {
+      "mean": 0.9007814020733349,
+      "p50": 0.8836529996187892,
+      "p95": 1.0164769966650056,
+      "p99": 1.1464511126541765
+    }
+  },
+  "department_prediction": {
+    "total_samples": 50,
+    "num_departments": 8,
+    "top1_accuracy": 0.42,
+    "top2_accuracy": 0.6,
+    "weighted_f1": 0.3970179738562091,
+    "macro_f1": 0.22329452614379086,
+    "latency_ms": {
+      "mean": 0.8535821279219817,
+      "p50": 0.8175375005521346,
+      "p95": 1.0630603526806226
+    }
+  },
+  "metadata_extraction": {
+    "total_documents": 50,
+    "title_extraction_rate": 1.0,
+    "author_extraction_rate": 0.98,
+    "journal_extraction_rate": 1.0,
+    "doi_extraction_rate": 1.0,
+    "year_extraction_rate": 1.0,
+    "if_q_extraction_rate": 1.0,
+    "unique_faculty_authors_identified": 63,
+    "author_sanitization_accuracy": 1.0,
+    "latency_ms": {
+      "mean": 0.8858391000831034,
+      "p50": 0.6642279986408539,
+      "p95": 2.347288450982887,
+      "throughput_docs_per_sec": 1128.8731778786766
+    }
+  },
+  "extractive_summarizer": {
+    "abstracts_summarized": 50,
+    "mean_original_words": 31.1,
+    "mean_summary_words": 30.72,
+    "word_reduction_pct": 1.221864951768492,
+    "character_reduction_pct": 1.4205261830713578,
+    "latency_ms": {
+      "mean": 0.016320639988407493,
+      "p50": 0.01324299955740571,
+      "p95": 0.019004298883373846,
+      "throughput_summaries_per_sec": 61272.10701971843
+    }
+  },
+  "export_service": {
+    "excel": {
+      "10": {
+        "latency_ms": 25.22,
+        "size_kb": 5.99,
+        "records_per_sec": 396.6
+      },
+      "50": {
+        "latency_ms": 45.21,
+        "size_kb": 7.61,
+        "records_per_sec": 1106.1
+      },
+      "100": {
+        "latency_ms": 80.82,
+        "size_kb": 9.56,
+        "records_per_sec": 1237.4
+      },
+      "250": {
+        "latency_ms": 190.87,
+        "size_kb": 15.2,
+        "records_per_sec": 1309.8
+      },
+      "500": {
+        "latency_ms": 366.11,
+        "size_kb": 24.51,
+        "records_per_sec": 1365.7
+      }
+    },
+    "pdf": {
+      "10": {
+        "latency_ms": 15.51,
+        "size_kb": 2.9,
+        "records_per_sec": 644.7
+      },
+      "50": {
+        "latency_ms": 65.34,
+        "size_kb": 7.94,
+        "records_per_sec": 765.2
+      },
+      "100": {
+        "latency_ms": 128.68,
+        "size_kb": 13.38,
+        "records_per_sec": 777.1
+      },
+      "250": {
+        "latency_ms": 320.91,
+        "size_kb": 30.82,
+        "records_per_sec": 779.0
+      },
+      "500": {
+        "latency_ms": 745.71,
+        "size_kb": 60.28,
+        "records_per_sec": 670.5
+      }
+    }
+  },
+  "security_and_rbac": {
+    "pbkdf2_hash_latency_ms": {
+      "mean": 6.80290611970122,
+      "p50": 6.721075998939341
+    },
+    "pbkdf2_verify_latency_ms": {
+      "mean": 6.6737639396160375,
+      "p50": 6.64773200333002
+    },
+    "jwt_gen_latency_ms": {
+      "mean": 0.05311872418678831,
+      "p50": 0.028786500479327515
+    },
+    "jwt_verify_latency_ms": {
+      "mean": 0.04374659598397557,
+      "p50": 0.042550000216579065
+    },
+    "rbac_tests_passed": true,
+    "multi_tenant_isolation_passed": true
+  }
+}

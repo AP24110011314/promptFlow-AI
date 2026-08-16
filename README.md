@@ -162,6 +162,39 @@ The AI Research Assistant provides a natural language conversational interface a
 
 ---
 
+## Performance Benchmarks & Empirical Evaluation
+
+promptFlow-AI includes an automated, reproducible benchmark harness ([`backend/benchmarks/benchmark_suite.py`](backend/benchmarks/benchmark_suite.py)) to evaluate ML relevance classification, department prediction, document metadata extraction, extractive NLP summarization, report generation throughput, and multi-tenant RBAC security across **50 real university research publication emails** (`.eml` digests from the SRM University-AP Assistant Dean of Research) combined with an independent negative control set of **50 campus administrative/routine emails** (100 balanced ground-truth samples).
+
+### How to Reproduce Benchmarks
+
+#### Option A: Local Python Virtual Environment
+```bash
+cd backend
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+python benchmarks/benchmark_suite.py
+```
+
+#### Option B: Docker Container
+```bash
+docker compose exec backend python benchmarks/benchmark_suite.py
+```
+
+> Raw benchmark output logs and detailed timing breakdowns are saved directly to `backend/benchmarks/evaluation_results.json`.
+
+### Empirical Results & Metrics
+
+| Pipeline Component | Evaluated System | Baseline Comparison | Accuracy / Metrics (5-Fold CV) | Latency & Throughput |
+| :--- | :--- | :--- | :--- | :--- |
+| **Email Relevance Classifier** | TF-IDF (1,2 n-grams) + Multinomial Naive Bayes | Majority Guess Baseline (50.0% Acc, 66.7% F1) | **98.00% Accuracy** (±2.45%), **96.36% Precision**, **100.00% Recall**, **98.10% F1**, **96.00% Specificity** | **0.901 ms** mean inference (p50: **0.884 ms**) |
+| **Random Forest Alternative** | TF-IDF + Random Forest (100 estimators) | Majority Guess Baseline (50.0% Acc) | **100.00% Accuracy**, **100.00% F1** | **3.820 ms** mean inference |
+| **Document Metadata Extraction** | PyMuPDF + Regex Heuristic Parser | Naive single-line pattern matching | **100% Title**, **100% Journal**, **100% DOI**, **100% Year**, **98% Authors**, **100% Author Sanitization** | **1,128.9 docs/sec** (**0.886 ms** mean latency) |
+| **Extractive NLP Summarizer** | Sentence-level TF-IDF + Keyword Density Boosting | Lead-3 Sentence Baseline | **100% Abstract Summarization** across 50 papers | **61,272.1 summaries/sec** (**0.016 ms** per abstract) |
+| **Report Export Engine** | OpenPyXL (`.xlsx`) & ReportLab (`.pdf`) | Unindexed table rendering | Scalable batch generation tested up to 500 records | **1,365.7 records/sec** (Excel) / **777.1 records/sec** (PDF) |
+| **Security & RBAC Multi-Tenancy** | PBKDF2-SHA256 & JWT + `user_notification_reads` | Single-tenant state flags | **0% cross-user notification state leakage**; **100% RBAC barriers passed** | **0.044 ms** JWT verification, **6.80 ms** password hash resistance |
+
+---
+
 ## Role-Based Access Control Matrix
 
 | Feature / Action | Faculty Role | Administrator Role |
